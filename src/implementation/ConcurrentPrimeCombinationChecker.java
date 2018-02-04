@@ -83,16 +83,16 @@ public class ConcurrentPrimeCombinationChecker
             for (final Future<List<Long>> result : resultFromParts)
                 foundValidCombinations.addAll(result.get());
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            // TODO: Want a result.
+            //throw new RuntimeException(e);
         }
         return foundValidCombinations;
     }
 
     public List<Long> analyzeCombinations(BigInteger from, BigInteger end, int minCombinationLength, int maxCombinationLength, Long[] primes) {
         // TODO Fix return value
-        if (from.compareTo(BigInteger.ZERO) == 0){
-            int g =5;
-        }
+
+        int counter = 0;
         List<Long> list = new ArrayList<>();
         BitSet bitSet;
         Long[] currentPrimes = new Long[maxCombinationLength];
@@ -104,8 +104,12 @@ public class ConcurrentPrimeCombinationChecker
              bi = bi.add(BigInteger.ONE)) {
 
             bitSet = BitSet.valueOf(bi.toByteArray());
-            System.out.println(bi);
-
+            //System.out.println(bi);
+            counter++;
+            if (counter == 1000000000){
+                System.out.println(counter + " " + bi);
+                counter = 0;
+            }
 
             int countOfSetBits = bitSet.cardinality();
             //System.out.println(countOfSetBits);
