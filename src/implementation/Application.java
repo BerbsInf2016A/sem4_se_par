@@ -1,8 +1,14 @@
 package implementation;
 
 
+import java.lang.reflect.Array;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Application {
@@ -28,47 +34,61 @@ public class Application {
         // Generate
         ConcurrentPrimeFinder finder = new ConcurrentPrimeFinder();
         List<Long> p = finder.findPrimes(0, 1000);
-        System.out.println("elements found primes "  +  p.size());
+        System.out.println("Found primes "  +  p.size());
         p = p.stream().filter(t -> Validator.isCandidate(t)).collect(Collectors.toList());
-        System.out.println("elements found primes "  +  p.size());
-        System.out.println("runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart));
+        BigInteger maxValue = new BigInteger("2").pow(p.size());
+        System.out.println("Filtered valid primes "  +  p.size());
+        System.out.printf("There are %s^%s possible combinations: %s %n", 2, p.size(), maxValue);
 
-        p = p.stream().filter(t -> Validator.isCandidate(t)).collect(Collectors.toList());
+        Long[] primes = p.toArray(new Long[p.size()]);
 
-        List<Long> p1 = p.stream().filter(t -> countDigits(t) == 3).collect(Collectors.toList());
-        List<Long> p2 = p.stream().filter(t -> countDigits(t) == 3).collect(Collectors.toList());
-        List<Long> p3 = p.stream().filter(t -> countDigits(t) == 3).collect(Collectors.toList());
+        int oneDigitLongPrimesCount = (int) p.stream().filter(t -> countDigits(t) == 1).count();
+        int twoDigitLongPrimesCount = (int) p.stream().filter(t -> countDigits(t) == 2).count();
+        int threeDigitLongPrimesCount = (int) p.stream().filter(t -> countDigits(t) == 3).count();
 
-        System.out.println("elements found primes3 "  +  p3.size());
+        int numberOnNeededDigits = 45;
+        // TODO: Fix maxPrimeLength
+        Long maxPrimeLength = p.stream().max(Comparator.comparingInt(value -> value.toString().length())).get();
+        int minCombinationLength = numberOnNeededDigits / 3;
+        int maxCombinationLength = numberOnNeededDigits - oneDigitLongPrimesCount - twoDigitLongPrimesCount;
 
-        long runtimeStart3 = System.currentTimeMillis();
-        List<List<Long>> comb3 =  Combinations.combination(p3, 5);
-        System.out.println("runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart) + " and found " + comb3.size() + " combinations");
 
-/*
-        List<List<Long>> comb =  new ArrayList<>();
-        for (int i = 2; i <=24; i++ ){
-            System.out.println(i);
-            comb.addAll(Combinations.combination(p, i));
-            System.out.println(comb.size());
+        ConcurrentPrimeCombinationChecker checker = new ConcurrentPrimeCombinationChecker();
+        //checker.analyzeCombinations(BigInteger.ZERO,maxValue, minCombinationLength, maxCombinationLength, primes);
+        checker.findValidCombinations(minCombinationLength, maxCombinationLength,primes, maxValue);
+
+        int index_5 = Arrays.asList(primes).indexOf(new Long(5));
+        int index_7 = Arrays.asList(primes).indexOf(new Long(7));
+        int index_29 = Arrays.asList(primes).indexOf(new Long(29));
+        int index_47 = Arrays.asList(primes).indexOf(new Long(47));
+        int index_59 = Arrays.asList(primes).indexOf(new Long(59));
+        int index_61 = Arrays.asList(primes).indexOf(new Long(61));
+        int index_67 = Arrays.asList(primes).indexOf(new Long(67));
+        int index_79 = Arrays.asList(primes).indexOf(new Long(79));
+        int index_83 = Arrays.asList(primes).indexOf(new Long(83));
+        int index_89 = Arrays.asList(primes).indexOf(new Long(89));
+        int index_269 = Arrays.asList(primes).indexOf(new Long(269));
+        int index_463 = Arrays.asList(primes).indexOf(new Long(463));
+        int index_467 = Arrays.asList(primes).indexOf(new Long(467));
+        int index_487 = Arrays.asList(primes).indexOf(new Long(487));
+        int index_569 = Arrays.asList(primes).indexOf(new Long(569));
+        int index_599 = Arrays.asList(primes).indexOf(new Long(599));
+        int index_859 = Arrays.asList(primes).indexOf(new Long(859));
+        int index_883 = Arrays.asList(primes).indexOf(new Long(883));
+        int index_887 = Arrays.asList(primes).indexOf(new Long(887));
+        BitSet set = new BitSet(p.size());
+
+        List<Integer> indexList = Arrays.asList(index_5, index_7, index_29, index_47, index_59, index_61, index_67, index_79, index_83, index_89,
+                index_269, index_463, index_467, index_487, index_569, index_599, index_859, index_883, index_887);
+
+        for (Integer index : indexList ) {
+            set.set(index);
         }
-
-*/
-
-
-
-
-        System.out.println("elements found reduced primes "  +  p.size());
-        //System.out.println("combinations found primes "  +  comb.size());
-
+        BigInteger bi = new BigInteger(set.toByteArray());
 
         System.out.println("runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart));
 
 
-        // Parallel: Filter invalid PrimeNumbers
 
-        // Build Combination
-
-        // Parallel: Check and Sum
     }
 }
