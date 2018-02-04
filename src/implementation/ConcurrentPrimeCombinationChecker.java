@@ -148,7 +148,7 @@ public class ConcurrentPrimeCombinationChecker
             currentBigInt = from;
         }
 
-        ValidatingPrimeSet primeSet = new ValidatingPrimeSet(maxCombinationLength);
+        ValidatingPrimeSet primeSet = new ValidatingPrimeSet();
         while ( true ) {
             debugCounter++;
 

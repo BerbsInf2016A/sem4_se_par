@@ -9,6 +9,7 @@ import java.util.BitSet;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Application {
@@ -26,10 +27,7 @@ public class Application {
 
         return count;
     }
-    public static boolean filterForCharacterAndCount(long number, char value, int count) {
-        String stringValue = String.valueOf(number);
-        return stringValue.chars().filter(t -> t == value).count() == count;
-    }
+
 
     public void run() {
 
@@ -46,9 +44,18 @@ public class Application {
 
         Long[] primes = p.toArray(new Long[p.size()]);
 
-        List<Long> ones = p.stream().filter(t -> filterForCharacterAndCount(t, '1', 1)).collect(Collectors.toList());
-        List<Long> oneTwos = p.stream().filter(t -> filterForCharacterAndCount(t, '2', 1)).collect(Collectors.toList());
-        List<Long> twoTwos = p.stream().filter(t -> filterForCharacterAndCount(t, '2', 2)).collect(Collectors.toList());
+        PrimeCategorizer categorizer = new PrimeCategorizer(p);
+
+        ConcurrentPrimeCombinationFinder runner = new ConcurrentPrimeCombinationFinder(categorizer);
+        runner.run();
+        System.out.println("Strings: " + ConcurrentPrimeCombinationFinder.strings);
+        Set<String> duplicates = runner.findDuplicates(ConcurrentPrimeCombinationFinder.strings);
+        System.out.println("Duplicate strings: " + duplicates.size());
+        int z = 4;
+
+
+/*
+
 
         int oneDigitLongPrimesCount = (int) p.stream().filter(t -> countDigits(t) == 1).count();
         int twoDigitLongPrimesCount = (int) p.stream().filter(t -> countDigits(t) == 2).count();
@@ -105,7 +112,7 @@ public class Application {
         }
         BigInteger bi = new BigInteger(set.toByteArray());
 */
+
         System.out.println("runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart));
-        System.out.println("Found: " + checker.results.size());
     }
 }

@@ -3,21 +3,30 @@ package implementation;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ValidatingPrimeSet {
-    private int maxEntries;
+    private static List<Long> cloneList(List<Long> list) {
+        List<Long> clone = new ArrayList<>(list.size());
+        for (Long item : list) clone.add(new Long(item));
+        return clone;
+    }
 
-    public ArrayList<Long> getPrimes() {
+    public List<Long> getPrimes() {
         return entries;
     }
 
-    private ArrayList<Long> entries;
+    private List<Long> entries;
     int[] counts;
 
-    public ValidatingPrimeSet(int maxEntries) {
-        this.maxEntries = maxEntries;
-        this.entries = new ArrayList<>(maxEntries);
+    public ValidatingPrimeSet() {
+        this.entries = new ArrayList<>();
         this.counts = new int[10];
+    }
+
+    public ValidatingPrimeSet(ValidatingPrimeSet set) {
+        this.entries = cloneList(set.entries);
+        this.counts = set.counts.clone();
     }
 
     public void clear(){
@@ -25,7 +34,12 @@ public class ValidatingPrimeSet {
         Arrays.fill(this.counts, 0);
     }
 
+
+
     public boolean addEntry(Long newEntry) {
+        if (this.entries.contains(newEntry)){
+            return false;
+        }
         String prime = newEntry.toString();
         for (int i = 0; i < prime.length(); i++) {
             Character c = prime.charAt(i);
@@ -74,4 +88,15 @@ public class ValidatingPrimeSet {
         return true;
     }
 
+    public boolean countReached(int i) {
+        if (this.counts[i] == i) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public int countOfMissingDigit(int digit) {
+        return digit - this.counts[digit];
+    }
 }

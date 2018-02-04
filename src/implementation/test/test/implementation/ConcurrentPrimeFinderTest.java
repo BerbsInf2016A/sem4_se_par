@@ -18,7 +18,7 @@ public class ConcurrentPrimeFinderTest {
     @Test
     public void addEntry() throws Exception {
         // TODO Check
-        ValidatingPrimeSet set = new ValidatingPrimeSet(21);
+        ValidatingPrimeSet set = new ValidatingPrimeSet();
         List<Long> primes = Arrays.asList(5L,7L,29L,47L,59L,61L,67L,79L,83L,89L,269L,463L,467L,487L,569L,599L,859L,883L,887L);
         boolean isValid = true;
         for (Long prime : primes ) {
