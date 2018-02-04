@@ -26,6 +26,10 @@ public class Application {
 
         return count;
     }
+    public static boolean filterForCharacterAndCount(long number, char value, int count) {
+        String stringValue = String.valueOf(number);
+        return stringValue.chars().filter(t -> t == value).count() == count;
+    }
 
     public void run() {
 
@@ -42,6 +46,10 @@ public class Application {
 
         Long[] primes = p.toArray(new Long[p.size()]);
 
+        List<Long> ones = p.stream().filter(t -> filterForCharacterAndCount(t, '1', 1)).collect(Collectors.toList());
+        List<Long> oneTwos = p.stream().filter(t -> filterForCharacterAndCount(t, '2', 1)).collect(Collectors.toList());
+        List<Long> twoTwos = p.stream().filter(t -> filterForCharacterAndCount(t, '2', 2)).collect(Collectors.toList());
+
         int oneDigitLongPrimesCount = (int) p.stream().filter(t -> countDigits(t) == 1).count();
         int twoDigitLongPrimesCount = (int) p.stream().filter(t -> countDigits(t) == 2).count();
         int threeDigitLongPrimesCount = (int) p.stream().filter(t -> countDigits(t) == 3).count();
@@ -56,6 +64,17 @@ public class Application {
         ConcurrentPrimeCombinationChecker checker = new ConcurrentPrimeCombinationChecker();
         //checker.analyzeCombinations(BigInteger.ZERO,maxValue, minCombinationLength, maxCombinationLength, primes);
         checker.findValidCombinations(minCombinationLength, maxCombinationLength,primes, maxValue);
+
+/*
+        BigInteger maxTestValue = new BigInteger("2").pow(25);
+
+        // Checking the two versions:
+        long runtimeStartFirst = System.currentTimeMillis();
+        checker.analyzeCombinations(BigInteger.ONE,maxTestValue, minCombinationLength, maxCombinationLength, primes);
+        System.out.println("First runtime (ms)   : " + (System.currentTimeMillis() - runtimeStartFirst));
+        long runtimeStartSecond = System.currentTimeMillis();
+        checker.analyzeCombinations2(BigInteger.ONE,maxTestValue, minCombinationLength, maxCombinationLength, primes);
+        System.out.println("Second runtime (ms)   : " + (System.currentTimeMillis() - runtimeStartSecond));
 
         int index_5 = Arrays.asList(primes).indexOf(new Long(5));
         int index_7 = Arrays.asList(primes).indexOf(new Long(7));
@@ -85,7 +104,7 @@ public class Application {
             set.set(index);
         }
         BigInteger bi = new BigInteger(set.toByteArray());
-
+*/
         System.out.println("runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart));
         System.out.println("Found: " + checker.results.size());
     }

@@ -1,5 +1,7 @@
 package implementation;
 
+import jdk.nashorn.internal.ir.IfNode;
+
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 public class ConcurrentPrimeCombinationChecker
 {
     public final LinkedBlockingQueue<Long[]> results = new LinkedBlockingQueue<Long[]>();
+    public final LinkedBlockingQueue<ValidatingPrimeSet> resultSets = new LinkedBlockingQueue<ValidatingPrimeSet>();
 
     private List<PartitionSizes> getPartitions(BigInteger globalMinimum, BigInteger globalMaximum, int offset, int numberOfPartitions, BigInteger partitionSize ){
         List<PartitionSizes> partitions = new ArrayList<>();
@@ -59,7 +62,7 @@ public class ConcurrentPrimeCombinationChecker
             System.out.format("Using %d threads. SliceSize: %d \n", Configuration.instance.maximumNumberOfThreads, sliceSize);
             sizes = this.getPartitions(BigInteger.ZERO, maxValue, 0, Configuration.instance.maximumNumberOfThreads, new BigInteger("1000000000000000000000000000000000000000"));
             for (PartitionSizes size : sizes ) {
-                partitions.add(() -> analyzeCombinations(size.from, size.to, minCombinationLength, maxCombinationLength, primes));
+                partitions.add(() -> analyzeCombinationsEarlyLeave(size.from, size.to, minCombinationLength, maxCombinationLength, primes));
             }
 
 /*
@@ -106,10 +109,6 @@ public class ConcurrentPrimeCombinationChecker
             bitSet = BitSet.valueOf(bi.toByteArray());
             //System.out.println(bi);
             counter++;
-            if (counter == 1000000000){
-                System.out.println(counter + " " + bi);
-                counter = 0;
-            }
 
             int countOfSetBits = bitSet.cardinality();
             //System.out.println(countOfSetBits);
@@ -129,6 +128,54 @@ public class ConcurrentPrimeCombinationChecker
 
             if (isValid) {
                 results.add(currentPrimes);
+            }
+        }
+        System.out.println("First: " + counter);
+        return list;
+    }
+
+
+    public List<Long> analyzeCombinationsEarlyLeave(BigInteger from, BigInteger end, int minCombinationLength, int maxCombinationLength, Long[] primes) {
+        // TODO Fix return value
+
+        int debugCounter = -1;
+        List<Long> list = new ArrayList<>();
+        boolean isValid = true;
+        BigInteger currentBigInt;
+        if (!(from == BigInteger.ZERO)){
+            currentBigInt = from.subtract(BigInteger.ONE);
+        } else {
+            currentBigInt = from;
+        }
+
+        ValidatingPrimeSet primeSet = new ValidatingPrimeSet(maxCombinationLength);
+        while ( true ) {
+            debugCounter++;
+
+            currentBigInt = currentBigInt.add(BigInteger.ONE);
+            if (debugCounter == 10000000){
+                System.out.println(currentBigInt);
+                debugCounter = 0;
+            }
+            if (currentBigInt.compareTo(end) >= 0) { break; }
+
+            BitSet currentBitSet = BitSet.valueOf(currentBigInt.toByteArray());
+
+            int countOfSetBits = currentBitSet.cardinality();
+            if (  countOfSetBits > maxCombinationLength || countOfSetBits < minCombinationLength ) continue;
+
+            primeSet.clear();
+
+            for (int i = currentBitSet.nextSetBit(0); i != -1; i = currentBitSet.nextSetBit(i + 1)) {
+                if (! primeSet.addEntry(primes[i])) {
+                    isValid = false;
+                    break;
+                }
+
+            }
+
+            if (isValid) {
+                resultSets.add(primeSet);
             }
         }
         return list;
