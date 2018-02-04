@@ -87,8 +87,6 @@ public class Application {
         BigInteger bi = new BigInteger(set.toByteArray());
 
         System.out.println("runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart));
-
-
-
+        System.out.println("Found: " + checker.results.size());
     }
 }

@@ -10,11 +10,14 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class ConcurrentPrimeCombinationChecker
 {
+    public final LinkedBlockingQueue<Long[]> results = new LinkedBlockingQueue<Long[]>();
+
     private List<PartitionSizes> getPartitions(BigInteger globalMinimum, BigInteger globalMaximum, int offset, int numberOfPartitions, BigInteger partitionSize ){
         List<PartitionSizes> partitions = new ArrayList<>();
         BigInteger sliceSize = globalMaximum.divide(BigInteger.valueOf(new Long(Configuration.instance.maximumNumberOfThreads)));
@@ -121,11 +124,8 @@ public class ConcurrentPrimeCombinationChecker
 
 
             if (isValid) {
-                return list;
+                results.add(currentPrimes);
             }
-
-
-
         }
         return list;
     }

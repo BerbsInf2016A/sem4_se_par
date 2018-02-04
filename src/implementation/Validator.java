@@ -98,7 +98,7 @@ public class Validator {
         for (int i = 0; i < 10; i++) {
             int digitCount = array[i];
             if(digitCount > i) {
-                System.out.println("Validated: False Value: " + adjustedValue);
+                //System.out.println("Validated: False Value: " + adjustedValue);
                 return false;
             }
         }
