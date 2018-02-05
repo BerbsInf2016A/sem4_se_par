@@ -76,6 +76,7 @@ public class ValidatingPrimeSet {
         ValidatingPrimeSet otherSet = (ValidatingPrimeSet)other;
         if (this.entries.length != otherSet.entries.length) return false;
         Arrays.sort(this.entries);
+        // TODO Reverse would be better.
         Arrays.sort(otherSet.entries);
         return Arrays.equals(this.entries, otherSet.entries);
     }

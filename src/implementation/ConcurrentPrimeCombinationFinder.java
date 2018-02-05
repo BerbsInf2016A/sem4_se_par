@@ -32,11 +32,26 @@ public class ConcurrentPrimeCombinationFinder {
         this.categorizer = categorizer;
     }
 
+    private void printDebugDuplicates (List<ValidatingPrimeSet> sets) {
+        List<String> strings = new ArrayList<>();
+        for (ValidatingPrimeSet set: sets) {
+            List<Integer> list = Arrays.stream(set.getPrimes()).boxed().collect(Collectors.toList());
+            Collections.sort(list);
+            strings.add(list.stream().map(t -> t.toString()).collect(Collectors.joining(", ")));
+        }
+
+        System.out.println("Stringsize: " + strings.size() + " distinct count: " + strings.stream().distinct().count());
+        Set<ValidatingPrimeSet> duplicates = findDuplicates(sets);
+        System.out.println("duplicates: " + duplicates.size());
+    }
+
     public void run() {
         List<ValidatingPrimeSet> sets = this.runForOne();
         System.out.println(sets.size() + " sets after generating 1");
+        this.printDebugDuplicates(sets);
         sets = this.runForTwo(sets);
         System.out.println(sets.size() + " sets after generating 2");
+        this.printDebugDuplicates(sets);
 /*
         int sliceSize = sets.size() / Configuration.instance.maximumNumberOfThreads;
         List<IntegerPartitionSizes> partitions = new ArrayList<>();
@@ -56,17 +71,8 @@ public class ConcurrentPrimeCombinationFinder {
 
 */
         HashSet<ValidatingPrimeSet> replaceLaterSet = this.runForThree(sets);
-        StringBuilder sb = new StringBuilder();
-        List<String> strings = new ArrayList<>();
-        for (ValidatingPrimeSet set: replaceLaterSet) {
-            List<Integer> list = Arrays.stream(set.getPrimes()).boxed().collect(Collectors.toList());
-            Collections.sort(list);
-            strings.add(list.stream().map(t -> t.toString()).collect(Collectors.joining(", ")));
-        }
+        this.printDebugDuplicates((List<ValidatingPrimeSet>) replaceLaterSet);
 
-        System.out.println("Stringsize: " + strings.size() + " distinct count: " + strings.stream().distinct().count());
-        Set<ValidatingPrimeSet> duplicates = findDuplicates(sets);
-        System.out.println("duplicates: " + duplicates.size());
 
         //sets = this.runForThree(sets);
         System.out.println(replaceLaterSet.size() + " sets after generating 3");
