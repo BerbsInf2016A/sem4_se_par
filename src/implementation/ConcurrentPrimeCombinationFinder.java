@@ -71,7 +71,7 @@ public class ConcurrentPrimeCombinationFinder {
 
 */
         HashSet<ValidatingPrimeSet> replaceLaterSet = this.runForThree(sets);
-        this.printDebugDuplicates((List<ValidatingPrimeSet>) replaceLaterSet);
+        this.printDebugDuplicates(new ArrayList<>(replaceLaterSet));
 
 
         //sets = this.runForThree(sets);
