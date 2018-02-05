@@ -83,7 +83,7 @@ public class ConcurrentPrimeCombinationFinder {
         HashSet<ValidatingPrimeSet> replaceLaterSet = this.runForThree(sets);
         System.out.println(replaceLaterSet.size() + " sets after generating 3");
         this.printDebugDuplicates(new ArrayList<>(replaceLaterSet));
-        
+
        // System.out.println(newSets.size() + " new sets after generating 3");
         replaceLaterSet = this.runForFour(new ArrayList<>(replaceLaterSet));
         System.out.println(replaceLaterSet.size() + " sets after generating 4");

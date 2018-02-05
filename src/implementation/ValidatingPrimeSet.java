@@ -50,6 +50,8 @@ public class ValidatingPrimeSet {
         }
         this.entries[nextInsertIndex] = newEntry;
         nextInsertIndex++;
+        // TODO Reverse would be better.
+        Arrays.sort(this.entries);
         if (nextInsertIndex >= this.entries.length) {
             // TODO check!
             int g = 0;
@@ -75,14 +77,11 @@ public class ValidatingPrimeSet {
         if (!(other instanceof ValidatingPrimeSet))return false;
         ValidatingPrimeSet otherSet = (ValidatingPrimeSet)other;
         if (this.entries.length != otherSet.entries.length) return false;
-        Arrays.sort(this.entries);
-        // TODO Reverse would be better.
-        Arrays.sort(otherSet.entries);
         return Arrays.equals(this.entries, otherSet.entries);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.entries);
+        return Arrays.hashCode(this.entries);
     }
 }
