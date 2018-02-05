@@ -3,6 +3,7 @@ package implementation;
 
 import java.lang.reflect.Array;
 import java.math.BigInteger;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
@@ -77,6 +78,12 @@ public class Application {
         }
 
     }
+    int[] toIntArray(List<Integer> list){
+        int[] ret = new int[list.size()];
+        for(int i = 0;i < ret.length;i++)
+            ret[i] = list.get(i);
+        return ret;
+    }
 
     public void run() {
 
@@ -93,9 +100,11 @@ public class Application {
 
 
 
+
+
         this.printNumberCounts(p);
 
-        PrimeCategorizer categorizer = new PrimeCategorizer(p);
+        PrimeCategorizer categorizer = new PrimeCategorizer(toIntArray(p));
 
         ConcurrentPrimeCombinationFinder runner = new ConcurrentPrimeCombinationFinder(categorizer);
         runner.run();

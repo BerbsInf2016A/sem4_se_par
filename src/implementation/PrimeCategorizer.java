@@ -1,5 +1,6 @@
 package implementation;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,8 +8,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class PrimeCategorizer {
-    private final List<Integer> primes;
-    private final ConcurrentHashMap<String, List<Integer>> cache;
+    private final int[] primes;
+    private final ConcurrentHashMap<String, int[]> cache;
 
 
     public static boolean filterForCharacterAndCount(long number, char value, int count) {
@@ -16,18 +17,18 @@ public class PrimeCategorizer {
         return stringValue.chars().filter(t -> t == value).count() == count;
     }
 
-    public PrimeCategorizer(List<Integer> primes) {
+    public PrimeCategorizer(int[] primes) {
         this.cache = new ConcurrentHashMap<>();
         this.primes = primes;
     }
 
-    public List<Integer> getBucketForCharacterAndCharacterCount(int digit, int count){
+    public int[] getBucketForCharacterAndCharacterCount(int digit, int count){
         char charValue = Character.forDigit(digit, 10);
         String key = digit + "_" + count;
         if (this.cache.containsKey(key)){
             return this.cache.get(key);
         } else {
-            this.cache.put(key, this.primes.stream().filter(t -> filterForCharacterAndCount(t, charValue, count)).collect(Collectors.toList()));
+            this.cache.put(key, Arrays.stream(this.primes).filter(t -> filterForCharacterAndCount(t, charValue, count)).toArray());
         }
         return this.cache.get(key);
     }

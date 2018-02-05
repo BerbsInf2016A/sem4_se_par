@@ -12,35 +12,34 @@ public class ValidatingPrimeSet {
         return clone;
     }
 
-    public List<Integer> getPrimes() {
+    public int[] getPrimes() {
         return entries;
     }
+    int nextInsertIndex;
 
-    private List<Integer> entries;
+    private int[] entries;
 
     public ValidatingPrimeSet() {
-        this.entries = new ArrayList<>();
+
+        this.entries = new int[Configuration.instance.maxNumberOfPrimesPerSet];
+        this.nextInsertIndex = 0;
     }
 
     public ValidatingPrimeSet(ValidatingPrimeSet set) {
-        this.entries = cloneList(set.entries);
-    }
 
-    public void clear(){
-        this.entries.clear();
+        this.entries = Arrays.copyOf(set.entries, set.entries.length);
+        this.nextInsertIndex = set.nextInsertIndex;
     }
-
 
 
     private boolean isCountReached(Character value){
-        Long count = this.entries.stream().map(t -> t.toString()).collect(Collectors.joining())
-                .chars().filter( digit -> digit == value).count();
+        Long count = Arrays.toString(this.entries).chars().filter( digit -> digit == value).count();
         return Character.getNumericValue(value) == count;
     }
 
     public boolean addEntry(Integer newEntry) {
-        if (this.entries.contains(newEntry)){
-            return false;
+        for (int entry : this.entries ) {
+            if (entry == newEntry) return false;
         }
         String prime = newEntry.toString();
         for (int i = 0; i < prime.length(); i++) {
@@ -49,8 +48,13 @@ public class ValidatingPrimeSet {
                 return false;
             }
         }
-        this.entries.add(newEntry);
-        Collections.sort(this.entries);
+        this.entries[nextInsertIndex] = newEntry;
+        nextInsertIndex++;
+        if (nextInsertIndex >= this.entries.length) {
+            // TODO check!
+            int g = 0;
+        }
+
         return true;
     }
 
@@ -59,7 +63,7 @@ public class ValidatingPrimeSet {
     }
 
     public int countOfMissingDigit(int digitValue) {
-        String joinedString = this.entries.stream().map(t -> t.toString()).collect(Collectors.joining());
+        String joinedString = Arrays.toString(this.entries);
         long count = joinedString.chars().filter( d -> d-48 == digitValue).count();
         return digitValue - (int)count;
     }
@@ -70,11 +74,8 @@ public class ValidatingPrimeSet {
         if (other == this) return true;
         if (!(other instanceof ValidatingPrimeSet))return false;
         ValidatingPrimeSet otherSet = (ValidatingPrimeSet)other;
-        if (this.entries.size() != otherSet.entries.size()) return false;
-        for (int i = 0; i < this.entries.size(); i++) {
-            if (this.entries.get(i) != otherSet.entries.get(i)) return false;
-        }
-        return true;
+        if (this.entries.length != otherSet.entries.length) return false;
+        return Arrays.equals(this.entries, otherSet.entries);
     }
 
     @Override
