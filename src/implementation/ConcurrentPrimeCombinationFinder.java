@@ -43,6 +43,16 @@ public class ConcurrentPrimeCombinationFinder {
         System.out.println("Stringsize: " + strings.size() + " distinct count: " + strings.stream().distinct().count());
         Set<ValidatingPrimeSet> duplicates = findDuplicates(sets);
         System.out.println("duplicates: " + duplicates.size());
+
+        List<String> firstEncounteredStrings = new ArrayList();
+        for (String t : strings ) {
+            if (! firstEncounteredStrings.contains(t)) {
+                firstEncounteredStrings.add(t);
+            } else {
+                System.out.println(t);
+            }
+        }
+
     }
 
     public void run() {
@@ -71,12 +81,9 @@ public class ConcurrentPrimeCombinationFinder {
 
 */
         HashSet<ValidatingPrimeSet> replaceLaterSet = this.runForThree(sets);
-        this.printDebugDuplicates(new ArrayList<>(replaceLaterSet));
-
-
-        //sets = this.runForThree(sets);
         System.out.println(replaceLaterSet.size() + " sets after generating 3");
-
+        this.printDebugDuplicates(new ArrayList<>(replaceLaterSet));
+        
        // System.out.println(newSets.size() + " new sets after generating 3");
         replaceLaterSet = this.runForFour(new ArrayList<>(replaceLaterSet));
         System.out.println(replaceLaterSet.size() + " sets after generating 4");
