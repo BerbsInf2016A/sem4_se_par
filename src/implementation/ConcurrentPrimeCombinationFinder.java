@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -25,12 +26,11 @@ public class ConcurrentPrimeCombinationFinder {
 
     public void run() {
         List<ValidatingPrimeSet> sets = this.runForOne();
+        System.out.println(sets.size() + " sets after generating 1");
         sets = this.runForTwo(sets);
-        for (ValidatingPrimeSet set : sets ) {
-            System.out.println(set.getPrimes().stream().map(t -> t.toString()).collect(Collectors.joining(", ")));
-        }
-
+        System.out.println(sets.size() + " sets after generating 2");
         sets = this.runForThree(sets);
+        System.out.println(sets.size() + " sets after generating 3");
         sets = this.runForFour(sets);
         int g = 0;
     }
@@ -51,8 +51,9 @@ public class ConcurrentPrimeCombinationFinder {
                 if (to > sourceSets.size())
                     to = sourceSets.size();
                 final int end = to;
-                List<ValidatingPrimeSet> sublist = sourceSets.subList(from, end);
-                partitions.add(() -> generateSetsForThree(sublist));
+                ConcurrentLinkedQueue<ValidatingPrimeSet> sublist = new ConcurrentLinkedQueue<>();
+                sublist.addAll(sourceSets.subList(from, end));
+                partitions.add(() -> generateSetsForThree(sublist));;
             }
 
             final List<Future<List<ValidatingPrimeSet>>> resultFromParts = executorPool.invokeAll(partitions, 10000, TimeUnit.SECONDS);
@@ -87,7 +88,8 @@ public class ConcurrentPrimeCombinationFinder {
                 if (to > sourceSets.size())
                     to = sourceSets.size();
                 final int end = to;
-                List<ValidatingPrimeSet> sublist = sourceSets.subList(from, end);
+                ConcurrentLinkedQueue<ValidatingPrimeSet> sublist = new ConcurrentLinkedQueue<>();
+                sublist.addAll(sourceSets.subList(from, end));
                 partitions.add(() -> generateSetsForFour(sublist));
             }
 
@@ -106,19 +108,101 @@ public class ConcurrentPrimeCombinationFinder {
         return foundSets;
     }
 
-    private List<ValidatingPrimeSet> generateSetsForThree(List<ValidatingPrimeSet> sublist) {
+    private List<ValidatingPrimeSet> generateSetsForThree(ConcurrentLinkedQueue<ValidatingPrimeSet> sublist) {
         List<ValidatingPrimeSet> validSets = new ArrayList<>();
-        for (ValidatingPrimeSet set : sublist ) {
-            validSets.addAll(handleThree(set));
+        List<Long> oneThreeList = this.categorizer.getBucketForCharacterAndCharacterCount(3,1);
+        List<Long> twoThreeList = this.categorizer.getBucketForCharacterAndCharacterCount(3,2);
+        List<List<Long>> oneThreeCombinations = Combinations.combination(oneThreeList,2);
+        List<Long> singleThrees = this.categorizer.getBucketForCharacterAndCharacterCount(3,1);
+        List<Long> doubleThrees = this.categorizer.getBucketForCharacterAndCharacterCount(3,2);
+        List<Long> combined = new ArrayList<>();
+        combined.addAll(singleThrees);
+        combined.addAll(doubleThrees);
+        List<List<Long>> singleThreeDoubleThreeCombination = Combinations.combination(combined,3);
+        List<List<Long>> threeSingleThreeCombinations = Combinations.combination(singleThrees,3);
+
+        while (!sublist.isEmpty()) {
+            ValidatingPrimeSet set = sublist.poll();
+            if (set.countReached(3)) {
+                validSets.add(set);
+                continue;
+            }
+
+            int missingThrees = set.countOfMissingDigit(3);
+            switch (missingThrees) {
+                case 1:
+                    for (Long three : oneThreeList ) {
+                        ValidatingPrimeSet oneThreeSet = new ValidatingPrimeSet(set);
+                        if (oneThreeSet.addEntry(three)){
+                            validSets.add(oneThreeSet);
+                        }
+                    }
+                    break;
+                case 2:
+                    for (Long three : twoThreeList ) {
+                        ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                        if (newSet.addEntry(three)){
+                            validSets.add(newSet);
+                        }
+                    }
+                    validSets.addAll(handleCombinations(oneThreeCombinations, set));
+                    break;
+                case 3:
+                    validSets.addAll(this.handle3Missing3s(set, singleThreeDoubleThreeCombination, threeSingleThreeCombinations));
+                    break;
+
+            }
         }
         return validSets;
     }
 
-    private List<ValidatingPrimeSet> generateSetsForFour(List<ValidatingPrimeSet> sublist) {
+    private List<ValidatingPrimeSet> generateSetsForFour(ConcurrentLinkedQueue<ValidatingPrimeSet> sublist) {
         List<ValidatingPrimeSet> validSets = new ArrayList<>();
-        for (ValidatingPrimeSet set : sublist ) {
-            //validSets.addAll(handleFour(set));
-        }
+
+        List<Long> singleDigitFours = this.categorizer.getBucketForCharacterAndCharacterCount(4, 1);
+        List<List<Long>> singleDigitFoursCombinations = Combinations.combination(singleDigitFours, 2);
+        List<Long> doubleFours = this.categorizer.getBucketForCharacterAndCharacterCount(4,2);
+        List<Long> tripleFour = this.categorizer.getBucketForCharacterAndCharacterCount(4, 3);
+
+
+        List<Long> singleFoursList = this.categorizer.getBucketForCharacterAndCharacterCount(4,1);
+        List<Long> combined = new ArrayList<>();
+        combined.addAll(doubleFours);
+        combined.addAll(singleFoursList);
+        List<List<Long>> oneSingleDigitFourAndADoubleDigitFourCombinations = Combinations.combination(combined,2);
+
+        List<Long> quadrupleFours = this.categorizer.getBucketForCharacterAndCharacterCount(4,4);
+        List<List<Long>> doubleFoursCombinations = Combinations.combination(doubleFours, 2);
+        List<List<Long>> singleFourCombinations = Combinations.combination(singleDigitFours,4);
+
+        // One prime with three 4s and one prime with one 4.
+        List<Long> tripleAndSingleCombined = new ArrayList<>();
+        tripleAndSingleCombined.addAll(tripleFour);
+        tripleAndSingleCombined.addAll(singleDigitFours);
+        List<List<Long>> tripleAndSingleCombination = Combinations.combination(tripleAndSingleCombined,2);
+
+        while (!sublist.isEmpty()) {
+            ValidatingPrimeSet set = sublist.poll();
+            if (set.countReached(4)){
+                validSets.add(set);
+                continue;
+            }
+            int missingFours = set.countOfMissingDigit(4);
+            switch (missingFours){
+                case 1:
+                    validSets.addAll(this.handleOneMissingFour(set,singleDigitFours));
+                    break;
+                case 2:
+                    validSets.addAll(this.handleTwoMissingFours(set, doubleFours, singleDigitFoursCombinations));
+                    break;
+                case 3:
+                    validSets.addAll(this.handleThreeMissingFours(set, tripleFour, oneSingleDigitFourAndADoubleDigitFourCombinations));
+                    break;
+                case 4:
+                    validSets.addAll(this.handleFourMissingFours(set, quadrupleFours, doubleFoursCombinations, singleFourCombinations, tripleAndSingleCombination));
+                    break;
+            }
+            }
         return validSets;
     }
 
@@ -251,54 +335,20 @@ public class ConcurrentPrimeCombinationFinder {
         return validSets;
     }
 
-    private List<ValidatingPrimeSet> handleThree(ValidatingPrimeSet set) {
-        List<ValidatingPrimeSet> validSets = new ArrayList<>();
-        if (set.countReached(3)) {
-          validSets.add(set);
-        }
 
-        List<Long> oneThreeList = this.categorizer.getBucketForCharacterAndCharacterCount(3,1);
 
-        int missingThrees = set.countOfMissingDigit(3);
-        switch (missingThrees) {
-            case 1:
-                for (Long three : oneThreeList ) {
-                    ValidatingPrimeSet oneThreeSet = new ValidatingPrimeSet(set);
-                    if (oneThreeSet.addEntry(three)){
-                        validSets.add(oneThreeSet);
-                    }
-                }
-                break;
-            case 2:
-                List<Long> twoThreeList = this.categorizer.getBucketForCharacterAndCharacterCount(3,2);
-                for (Long three : twoThreeList ) {
-                    ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                    if (newSet.addEntry(three)){
-                        validSets.add(newSet);
-                    }
-                }
-                List<List<Long>> oneThreeCombinations = Combinations.combination(oneThreeList,2);
-                validSets.addAll(handleThreeCombination(oneThreeCombinations, set));
-                break;
-            case 3:
-                validSets.addAll(this.handle3Missing3s(set));
-                break;
-
-        }
-        return validSets;
-    }
-
-    private List<ValidatingPrimeSet> handle3Missing3s(ValidatingPrimeSet set) {
+    private List<ValidatingPrimeSet> handle3Missing3s(ValidatingPrimeSet set, List<List<Long>> singleThreeDoubleThreeCombination, List<List<Long>> threeSingleThreeCombinations) {
         List<ValidatingPrimeSet> validSets = new ArrayList<>();
         validSets.addAll(this.handleTrippleThree(set));
-        validSets.addAll(this.handleMixedThrees(set));
-        validSets.addAll(this.handleSingleThrees(set));
+        validSets.addAll(this.handleMixedThrees(set,singleThreeDoubleThreeCombination));
+        validSets.addAll(this.handleSingleThrees(set,threeSingleThreeCombinations));
         return validSets;
     }
 
-    // TODO CombinationHandling could be one method, if the next method could be added as parameter.
-    private List<ValidatingPrimeSet> handleThreeCombination(List<List<Long>> combinations, ValidatingPrimeSet set) {
+
+    private List<ValidatingPrimeSet> handleCombinations(List<List<Long>> combinations, ValidatingPrimeSet set) {
         List<ValidatingPrimeSet> validSets = new ArrayList<>();
+
         for (List<Long> combination: combinations) {
             ValidatingPrimeSet combinationSet = new ValidatingPrimeSet(set);
             boolean combinationInvalid = false;
@@ -313,35 +363,14 @@ public class ConcurrentPrimeCombinationFinder {
         }
         return validSets;
     }
-    private void handleFourCombination(List<List<Long>> combinations, ValidatingPrimeSet set) {
-        for (List<Long> combination: combinations) {
-            ValidatingPrimeSet combinationSet = new ValidatingPrimeSet(set);
-            boolean combinationInvalid = false;
-            for (Long four : combination ) {
-                if (!combinationSet.addEntry(four)) {
-                    combinationInvalid = true;
-                }
-                if (combinationInvalid) { break; }
-            }
-            if (combinationInvalid) { continue; }
-            this.handleFive(combinationSet);
-        }
+
+    private List<ValidatingPrimeSet> handleSingleThrees(ValidatingPrimeSet set, List<List<Long>> threeSingleThreeCombinations) {
+        return this.handleCombinations(threeSingleThreeCombinations, set);
     }
 
-    private List<ValidatingPrimeSet> handleSingleThrees(ValidatingPrimeSet set) {
-        List<Long> singleThrees = this.categorizer.getBucketForCharacterAndCharacterCount(3,1);
-        List<List<Long>> combinations = Combinations.combination(singleThrees,3);
-        return this.handleThreeCombination(combinations, set);
-    }
+    private List<ValidatingPrimeSet> handleMixedThrees(ValidatingPrimeSet set, List<List<Long>> singleThreeDoubleThreeCombination) {
 
-    private List<ValidatingPrimeSet> handleMixedThrees(ValidatingPrimeSet set) {
-        List<Long> singleThrees = this.categorizer.getBucketForCharacterAndCharacterCount(3,1);
-        List<Long> doubleThrees = this.categorizer.getBucketForCharacterAndCharacterCount(3,2);
-        List<Long> combined = new ArrayList<>();
-        combined.addAll(singleThrees);
-        combined.addAll(doubleThrees);
-        List<List<Long>> combinations = Combinations.combination(combined,3);
-        return this.handleThreeCombination(combinations, set);
+        return this.handleCombinations(singleThreeDoubleThreeCombination, set);
     }
 
     private List<ValidatingPrimeSet> handleTrippleThree(ValidatingPrimeSet set) {
@@ -356,105 +385,72 @@ public class ConcurrentPrimeCombinationFinder {
         return validSets;
     }
 
-    private void handleFour(ValidatingPrimeSet set) {
 
-        if (set.countReached(4)){
-            this.handleFive(set);
-        }
-        int missingFours = set.countOfMissingDigit(4);
-        switch (missingFours){
-            case 1:
-                this.handleOneMissingFour(set);
-                break;
-            case 2:
-                this.handleTwoMissingFours(set);
-                break;
-            case 3:
-                this.handleThreeMissingFours(set);
-                break;
-            case 4:
-                this.handleFourMissingFours(set);
-                break;
-        }
+    private List<ValidatingPrimeSet> handleFourMissingFours(ValidatingPrimeSet set, List<Long> quadrupleFours
+            , List<List<Long>> doubleFoursCombinations, List<List<Long>> singleFourCombinations, List<List<Long>> tripleAndSingleCombination) {
+        List<ValidatingPrimeSet> validSets = new ArrayList<>();
 
-    }
-
-    private void handleFourMissingFours(ValidatingPrimeSet set) {
         // A prime containing four 4s.
-        List<Long> quadrupleFour = this.categorizer.getBucketForCharacterAndCharacterCount(4,4);
-        for (Long four : quadrupleFour) {
+        for (Long four : quadrupleFours) {
             ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
             if (newSet.addEntry(four)){
-                this.handleFive(newSet);
+                validSets.add(newSet);
             }
         }
 
         // Two primes with two 4s.
-        List<Long> doubleFours = this.categorizer.getBucketForCharacterAndCharacterCount(4, 2);
-        List<List<Long>> doubleFoursCombinations = Combinations.combination(doubleFours, 2);
-        this.handleFourCombination(doubleFoursCombinations, set);
+        validSets.addAll(this.handleCombinations(doubleFoursCombinations, set));
 
         // Four primes with one 4.
-        List<Long> singleFours = this.categorizer.getBucketForCharacterAndCharacterCount(4, 1);
-        singleFours = singleFours.stream().filter(t -> !set.getPrimes().contains(t)).collect(Collectors.toList());
-        List<List<Long>> singleFourCombinations = Combinations.combination(singleFours,4);
-        this.handleFourCombination(singleFourCombinations, set);
+        validSets.addAll(this.handleCombinations(singleFourCombinations, set));
 
         // One prime with three 4s and one prime with one 4.
-        List<Long> tripleFours = this.categorizer.getBucketForCharacterAndCharacterCount(4,3);
-        List<Long> combined = new ArrayList<>();
-        combined.addAll(tripleFours);
-        combined.addAll(singleFours);
-        List<List<Long>> combinations = Combinations.combination(combined,2);
-        this.handleFourCombination(combinations, set);
+        validSets.addAll(this.handleCombinations(tripleAndSingleCombination, set));
+
+        return validSets;
     }
 
-    private void handleThreeMissingFours(ValidatingPrimeSet set) {
+    private List<ValidatingPrimeSet>  handleThreeMissingFours(ValidatingPrimeSet set, List<Long> tripleFours, List<List<Long>> onesingleDigitFourAndADoubleDigitFourCombinations) {
+        List<ValidatingPrimeSet> validSets = new ArrayList<>();
         // One prime with three fours.
-        List<Long> tripleFour = this.categorizer.getBucketForCharacterAndCharacterCount(4, 3);
-        for (Long four : tripleFour ) {
+        for (Long four : tripleFours ) {
             ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
             if (newSet.addEntry(four)) {
-                this.handleFive(newSet);
+                validSets.add(newSet);
             }
         }
 
         // A prime with two 4 and a prime with one 4.
-        List<Long> trippleFoursList = this.categorizer.getBucketForCharacterAndCharacterCount(4,2);
-        List<Long> singleFoursList = this.categorizer.getBucketForCharacterAndCharacterCount(4,1);
-        List<Long> combined = new ArrayList<>();
-        combined.addAll(trippleFoursList);
-        combined.addAll(singleFoursList);
-        List<List<Long>> combinations = Combinations.combination(combined,2);
-        this.handleFourCombination(combinations, set);
+        validSets.addAll(this.handleCombinations(onesingleDigitFourAndADoubleDigitFourCombinations, set));
+        return validSets;
     }
 
-    private void handleTwoMissingFours(ValidatingPrimeSet set) {
+    private List<ValidatingPrimeSet> handleTwoMissingFours(ValidatingPrimeSet set, List<Long> doubleFours, List<List<Long>> singleDigitFoursCombinations) {
+       List<ValidatingPrimeSet> validSets = new ArrayList<>();
         // Combination of two primes with one 4 each.
-        List<Long> singleFour = this.categorizer.getBucketForCharacterAndCharacterCount(4,1);
-        List<List<Long>> combinations = Combinations.combination(singleFour, 2);
-        this.handleFourCombination(combinations, set);
+        validSets.addAll(this.handleCombinations(singleDigitFoursCombinations, set));
 
         // A prime with two 4s.
-        List<Long> doubleFours = this.categorizer.getBucketForCharacterAndCharacterCount(4,2);
         for (Long doubleFour : doubleFours ) {
             ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
             if (newSet.addEntry(doubleFour)) {
-                this.handleFive(newSet);
+                validSets.add(newSet);
             }
         }
+        return validSets;
     }
 
 
 
-    private void handleOneMissingFour(ValidatingPrimeSet set) {
-        List<Long> fours = this.categorizer.getBucketForCharacterAndCharacterCount(4, 1);
-        for (Long four : fours ) {
+    private List<ValidatingPrimeSet> handleOneMissingFour(ValidatingPrimeSet set, List<Long> singleDigitFours) {
+        List<ValidatingPrimeSet> validSets = new ArrayList<>();
+        for (Long four : singleDigitFours ) {
             ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
             if (newSet.addEntry(four)){
-                this.handleFive(newSet);
+                validSets.add(newSet);
             }
         }
+        return validSets;
     }
 
     private void handleFive(ValidatingPrimeSet set) {
