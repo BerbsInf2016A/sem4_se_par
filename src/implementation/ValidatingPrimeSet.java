@@ -6,17 +6,17 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ValidatingPrimeSet {
-    private static List<Long> cloneList(List<Long> list) {
-        List<Long> clone = new ArrayList<>(list.size());
-        for (Long item : list) clone.add(new Long(item));
+    private static List<Integer> cloneList(List<Integer> list) {
+        List<Integer> clone = new ArrayList<>(list.size());
+        for (Integer item : list) clone.add(new Integer(item));
         return clone;
     }
 
-    public List<Long> getPrimes() {
+    public List<Integer> getPrimes() {
         return entries;
     }
 
-    private List<Long> entries;
+    private List<Integer> entries;
     int[] counts;
 
     public ValidatingPrimeSet() {
@@ -36,7 +36,7 @@ public class ValidatingPrimeSet {
 
 
 
-    public boolean addEntry(Long newEntry) {
+    public boolean addEntry(Integer newEntry) {
         if (this.entries.contains(newEntry)){
             return false;
         }

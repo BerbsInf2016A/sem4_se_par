@@ -7,8 +7,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 public class PrimeCategorizer {
-    private final List<Long> primes;
-    private final ConcurrentHashMap<String, List<Long>> cache;
+    private final List<Integer> primes;
+    private final ConcurrentHashMap<String, List<Integer>> cache;
 
 
     public static boolean filterForCharacterAndCount(long number, char value, int count) {
@@ -16,12 +16,12 @@ public class PrimeCategorizer {
         return stringValue.chars().filter(t -> t == value).count() == count;
     }
 
-    public PrimeCategorizer(List<Long> primes) {
+    public PrimeCategorizer(List<Integer> primes) {
         this.cache = new ConcurrentHashMap<>();
         this.primes = primes;
     }
 
-    public List<Long> getBucketForCharacterAndCharacterCount(int digit, int count){
+    public List<Integer> getBucketForCharacterAndCharacterCount(int digit, int count){
         char charValue = Character.forDigit(digit, 10);
         String key = digit + "_" + count;
         if (this.cache.containsKey(key)){

@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 public class Validator {
 
-    public static boolean isCandidate(Long value){
+    public static boolean isCandidate(Integer value){
         String str = value.toString();
         int[] array = new int[10];
        for (int i = 0; i < str.length(); i++) {
