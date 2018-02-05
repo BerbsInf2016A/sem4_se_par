@@ -1,9 +1,9 @@
 package implementation;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.nio.charset.CharacterCodingException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class ValidatingPrimeSet {
     private static List<Integer> cloneList(List<Integer> list) {
@@ -17,24 +17,26 @@ public class ValidatingPrimeSet {
     }
 
     private List<Integer> entries;
-    int[] counts;
 
     public ValidatingPrimeSet() {
         this.entries = new ArrayList<>();
-        this.counts = new int[10];
     }
 
     public ValidatingPrimeSet(ValidatingPrimeSet set) {
         this.entries = cloneList(set.entries);
-        this.counts = set.counts.clone();
     }
 
     public void clear(){
         this.entries.clear();
-        Arrays.fill(this.counts, 0);
     }
 
 
+
+    private boolean isCountReached(Character value){
+        Long count = this.entries.stream().map(t -> t.toString()).collect(Collectors.joining())
+                .chars().filter( digit -> digit == value).count();
+        return Character.getNumericValue(value) == count;
+    }
 
     public boolean addEntry(Integer newEntry) {
         if (this.entries.contains(newEntry)){
@@ -43,60 +45,40 @@ public class ValidatingPrimeSet {
         String prime = newEntry.toString();
         for (int i = 0; i < prime.length(); i++) {
             Character c = prime.charAt(i);
-            switch (c) {
-                case '0':
-                    return false;
-                case '1':
-                    if (this.counts[1] == 1) { return false; }
-                    this.counts[1] = this.counts[1] + 1;
-                    break;
-                case '2':
-                    if (this.counts[2] == 2) { return false; }
-                    this.counts[2] = this.counts[2] + 1;
-                    break;
-                case '3':
-                    if (this.counts[3] == 3) { return false; }
-                    this.counts[3] = this.counts[3] + 1;
-                    break;
-                case '4':
-                    if (this.counts[4] == 4) { return false; }
-                    this.counts[4] = this.counts[4] + 1;
-                    break;
-                case '5':
-                    if (this.counts[5] == 5) { return false; }
-                    this.counts[5] = this.counts[5] + 1;
-                    break;
-                case '6':
-                    if (this.counts[6] == 6) { return false; }
-                    this.counts[6] = this.counts[6] + 1;
-                    break;
-                case '7':
-                    if (this.counts[7] == 7) { return false; }
-                    this.counts[7] = this.counts[7] + 1;
-                    break;
-                case '8':
-                    if (this.counts[8] == 8) { return false; }
-                    this.counts[8] = this.counts[8] + 1;
-                    break;
-                case '9':
-                    if (this.counts[9] == 9) { return false; }
-                    this.counts[9] = this.counts[9] + 1;
-                    break;
+            if( isCountReached(c)) {
+                return false;
             }
         }
         this.entries.add(newEntry);
+        Collections.sort(this.entries);
         return true;
     }
 
     public boolean countReached(int i) {
-        if (this.counts[i] == i) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.isCountReached(Character.forDigit(i, 10));
     }
 
-    public int countOfMissingDigit(int digit) {
-        return digit - this.counts[digit];
+    public int countOfMissingDigit(int digitValue) {
+        String joinedString = this.entries.stream().map(t -> t.toString()).collect(Collectors.joining());
+        long count = joinedString.chars().filter( d -> d-48 == digitValue).count();
+        return digitValue - (int)count;
+    }
+
+    @Override
+    public boolean equals(Object other){
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof ValidatingPrimeSet))return false;
+        ValidatingPrimeSet otherSet = (ValidatingPrimeSet)other;
+        if (this.entries.size() != otherSet.entries.size()) return false;
+        for (int i = 0; i < this.entries.size(); i++) {
+            if (this.entries.get(i) != otherSet.entries.get(i)) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.entries);
     }
 }

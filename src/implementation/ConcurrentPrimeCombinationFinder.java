@@ -47,8 +47,8 @@ public class ConcurrentPrimeCombinationFinder {
         }
 
 */
-        sets = this.runForThree(sets);
-
+        HashSet<ValidatingPrimeSet> replaceLaterSet = this.runForThree(sets);
+/*
         List<String> strings = new ArrayList<>();
         for (ValidatingPrimeSet set: sets) {
             strings.add(set.getPrimes().stream().map(t -> t.toString()).collect(Collectors.joining(", ")));
@@ -57,23 +57,24 @@ public class ConcurrentPrimeCombinationFinder {
         System.out.println("Stringsize: " + strings.size() + " distinct count: " + strings.stream().distinct().count());
         Set<ValidatingPrimeSet> duplicates = findDuplicates(sets);
         System.out.println("duplicates: " + duplicates.size());
-
+*/
         //sets = this.runForThree(sets);
-        System.out.println(sets.size() + " sets after generating 3");
+        System.out.println(replaceLaterSet.size() + " sets after generating 3");
 
        // System.out.println(newSets.size() + " new sets after generating 3");
-        //sets = this.runForFour(sets);
+        replaceLaterSet = this.runForFour(new ArrayList<>(replaceLaterSet));
+        System.out.println(replaceLaterSet.size() + " sets after generating 4");
         int g = 0;
     }
-    private List<ValidatingPrimeSet> runForThree(List<ValidatingPrimeSet> sourceSets) {
-        List<ValidatingPrimeSet> foundSets = new ArrayList<>();
+    private HashSet<ValidatingPrimeSet> runForThree(List<ValidatingPrimeSet> sourceSets) {
+        HashSet<ValidatingPrimeSet> foundSets = new HashSet<>();
         try {
 
-            final List<Callable<List<ValidatingPrimeSet>>> partitions = new ArrayList<>();
+            final List<Callable<HashSet<ValidatingPrimeSet>>> partitions = new ArrayList<>();
             final ExecutorService executorPool = Executors.newFixedThreadPool(Configuration.instance.maximumNumberOfThreads);
 
             int sliceSize = sourceSets.size() / Configuration.instance.maximumNumberOfThreads;
-            System.out.format("Two: Using %d threads. SliceSize: %d \n", Configuration.instance.maximumNumberOfThreads, sliceSize);
+            System.out.format("Using %d threads. SliceSize: %d \n", Configuration.instance.maximumNumberOfThreads, sliceSize);
 
 
             for (int i = 0; i <= sourceSets.size(); i += sliceSize) {
@@ -87,12 +88,12 @@ public class ConcurrentPrimeCombinationFinder {
                 partitions.add(() -> generateSetsForThree(sublist));;
             }
 
-            final List<Future<List<ValidatingPrimeSet>>> resultFromParts = executorPool.invokeAll(partitions, 10000, TimeUnit.SECONDS);
+            final List<Future<HashSet<ValidatingPrimeSet>>> resultFromParts = executorPool.invokeAll(partitions, 10000, TimeUnit.SECONDS);
             executorPool.shutdown();
 
 
-            for (final Future<List<ValidatingPrimeSet>> result : resultFromParts) {
-                List<ValidatingPrimeSet> sets = result.get();
+            for (final Future<HashSet<ValidatingPrimeSet>> result : resultFromParts) {
+                HashSet<ValidatingPrimeSet> sets = result.get();
                 foundSets.addAll(sets);
             }
 
@@ -102,15 +103,15 @@ public class ConcurrentPrimeCombinationFinder {
         return foundSets;
     }
 
-    private List<ValidatingPrimeSet> runForFour(List<ValidatingPrimeSet> sourceSets) {
-        List<ValidatingPrimeSet> foundSets = new ArrayList<>();
+    private HashSet<ValidatingPrimeSet> runForFour(List<ValidatingPrimeSet> sourceSets) {
+        HashSet<ValidatingPrimeSet> foundSets = new HashSet<>();
         try {
 
-            final List<Callable<List<ValidatingPrimeSet>>> partitions = new ArrayList<>();
+            final List<Callable<HashSet<ValidatingPrimeSet>>> partitions = new ArrayList<>();
             final ExecutorService executorPool = Executors.newFixedThreadPool(Configuration.instance.maximumNumberOfThreads);
 
             int sliceSize = sourceSets.size() / Configuration.instance.maximumNumberOfThreads;
-            System.out.format("Two: Using %d threads. SliceSize: %d \n", Configuration.instance.maximumNumberOfThreads, sliceSize);
+            System.out.format("Using %d threads. SliceSize: %d \n", Configuration.instance.maximumNumberOfThreads, sliceSize);
 
 
             for (int i = 0; i <= sourceSets.size(); i += sliceSize) {
@@ -124,12 +125,12 @@ public class ConcurrentPrimeCombinationFinder {
                 partitions.add(() -> generateSetsForFour(sublist));
             }
 
-            final List<Future<List<ValidatingPrimeSet>>> resultFromParts = executorPool.invokeAll(partitions, 10000, TimeUnit.SECONDS);
+            final List<Future<HashSet<ValidatingPrimeSet>>> resultFromParts = executorPool.invokeAll(partitions, 10000, TimeUnit.SECONDS);
             executorPool.shutdown();
 
 
-            for (final Future<List<ValidatingPrimeSet>> result : resultFromParts) {
-                List<ValidatingPrimeSet> sets = result.get();
+            for (final Future<HashSet<ValidatingPrimeSet>> result : resultFromParts) {
+                HashSet<ValidatingPrimeSet> sets = result.get();
                 foundSets.addAll(sets);
             }
 
@@ -139,8 +140,9 @@ public class ConcurrentPrimeCombinationFinder {
         return foundSets;
     }
 
-    private List<ValidatingPrimeSet> generateSetsForThree(ConcurrentLinkedQueue<ValidatingPrimeSet> sublist) {
-        List<ValidatingPrimeSet> validSets = new ArrayList<>();
+    private HashSet<ValidatingPrimeSet> generateSetsForThree(ConcurrentLinkedQueue<ValidatingPrimeSet> sublist) {
+        HashSet<ValidatingPrimeSet> validSets = new HashSet<>();
+
         List<Integer> oneThreeList = this.categorizer.getBucketForCharacterAndCharacterCount(3,1);
         List<Integer> twoThreeList = this.categorizer.getBucketForCharacterAndCharacterCount(3,2);
         List<List<Integer>> oneThreeCombinations = Combinations.combination(oneThreeList,2);
@@ -176,10 +178,10 @@ public class ConcurrentPrimeCombinationFinder {
                             validSets.add(newSet);
                         }
                     }
-                    validSets.addAll(handleCombinations(oneThreeCombinations, set));
+                    handleCombinations(validSets, oneThreeCombinations, set);
                     break;
                 case 3:
-                    validSets.addAll(this.handle3Missing3s(set, singleThreeDoubleThreeCombination, threeSingleThreeCombinations));
+                    this.handle3Missing3s(validSets, set, singleThreeDoubleThreeCombination, threeSingleThreeCombinations);
                     break;
 
             }
@@ -187,8 +189,8 @@ public class ConcurrentPrimeCombinationFinder {
         return validSets;
     }
 
-    private List<ValidatingPrimeSet> generateSetsForFour(ConcurrentLinkedQueue<ValidatingPrimeSet> sublist) {
-        List<ValidatingPrimeSet> validSets = new ArrayList<>();
+    private HashSet<ValidatingPrimeSet> generateSetsForFour(ConcurrentLinkedQueue<ValidatingPrimeSet> sublist) {
+        HashSet<ValidatingPrimeSet> validSets = new HashSet<>();
 
         List<Integer> singleDigitFours = this.categorizer.getBucketForCharacterAndCharacterCount(4, 1);
         List<List<Integer>> singleDigitFoursCombinations = Combinations.combination(singleDigitFours, 2);
@@ -224,13 +226,13 @@ public class ConcurrentPrimeCombinationFinder {
                     validSets.addAll(this.handleOneMissingFour(set,singleDigitFours));
                     break;
                 case 2:
-                    validSets.addAll(this.handleTwoMissingFours(set, doubleFours, singleDigitFoursCombinations));
+                    this.handleTwoMissingFours(validSets, set, doubleFours, singleDigitFoursCombinations);
                     break;
                 case 3:
-                    validSets.addAll(this.handleThreeMissingFours(set, tripleFour, oneSingleDigitFourAndADoubleDigitFourCombinations));
+                    this.handleThreeMissingFours(validSets, set, tripleFour, oneSingleDigitFourAndADoubleDigitFourCombinations);
                     break;
                 case 4:
-                    validSets.addAll(this.handleFourMissingFours(set, quadrupleFours, doubleFoursCombinations, singleFourCombinations, tripleAndSingleCombination));
+                    this.handleFourMissingFours(validSets, set, quadrupleFours, doubleFoursCombinations, singleFourCombinations, tripleAndSingleCombination);
                     break;
             }
             }
@@ -245,7 +247,7 @@ public class ConcurrentPrimeCombinationFinder {
             final ExecutorService executorPool = Executors.newFixedThreadPool(Configuration.instance.maximumNumberOfThreads);
 
             int sliceSize = sourceSets.size() / Configuration.instance.maximumNumberOfThreads;
-            System.out.format("Two: Using %d threads. SliceSize: %d \n", Configuration.instance.maximumNumberOfThreads, sliceSize);
+            System.out.format("Using %d threads. SliceSize: %d \n", Configuration.instance.maximumNumberOfThreads, sliceSize);
 
 
             for (int i = 0; i <= sourceSets.size(); i += sliceSize) {
@@ -368,17 +370,14 @@ public class ConcurrentPrimeCombinationFinder {
 
 
 
-    private List<ValidatingPrimeSet> handle3Missing3s(ValidatingPrimeSet set, List<List<Integer>> singleThreeDoubleThreeCombination, List<List<Integer>> threeSingleThreeCombinations) {
-        List<ValidatingPrimeSet> validSets = new ArrayList<>();
-        validSets.addAll(this.handleTrippleThree(set));
-        validSets.addAll(this.handleMixedThrees(set,singleThreeDoubleThreeCombination));
-        validSets.addAll(this.handleSingleThrees(set,threeSingleThreeCombinations));
-        return validSets;
+    private void handle3Missing3s(HashSet<ValidatingPrimeSet> validSets, ValidatingPrimeSet set, List<List<Integer>> singleThreeDoubleThreeCombination, List<List<Integer>> threeSingleThreeCombinations) {
+        this.handleTrippleThree(validSets, set);
+        this.handleMixedThrees(validSets, set,singleThreeDoubleThreeCombination);
+        this.handleSingleThrees(validSets, set,threeSingleThreeCombinations);
     }
 
 
-    private List<ValidatingPrimeSet> handleCombinations(List<List<Integer>> combinations, ValidatingPrimeSet set) {
-        List<ValidatingPrimeSet> validSets = new ArrayList<>();
+    private void handleCombinations(HashSet<ValidatingPrimeSet> validSets, List<List<Integer>> combinations, ValidatingPrimeSet set) {
 
         for (List<Integer> combination: combinations) {
             ValidatingPrimeSet combinationSet = new ValidatingPrimeSet(set);
@@ -392,20 +391,17 @@ public class ConcurrentPrimeCombinationFinder {
             if (combinationInvalid) { continue; }
             validSets.add(combinationSet);
         }
-        return validSets;
     }
 
-    private List<ValidatingPrimeSet> handleSingleThrees(ValidatingPrimeSet set, List<List<Integer>> threeSingleThreeCombinations) {
-        return this.handleCombinations(threeSingleThreeCombinations, set);
+    private void handleSingleThrees(HashSet<ValidatingPrimeSet> validSets, ValidatingPrimeSet set, List<List<Integer>> threeSingleThreeCombinations) {
+        this.handleCombinations(validSets, threeSingleThreeCombinations, set);
     }
 
-    private List<ValidatingPrimeSet> handleMixedThrees(ValidatingPrimeSet set, List<List<Integer>> singleThreeDoubleThreeCombination) {
-
-        return this.handleCombinations(singleThreeDoubleThreeCombination, set);
+    private void handleMixedThrees(HashSet<ValidatingPrimeSet> validSets,ValidatingPrimeSet set, List<List<Integer>> singleThreeDoubleThreeCombination) {
+        this.handleCombinations(validSets, singleThreeDoubleThreeCombination, set);
     }
 
-    private List<ValidatingPrimeSet> handleTrippleThree(ValidatingPrimeSet set) {
-        List<ValidatingPrimeSet> validSets = new ArrayList<>();
+    private void handleTrippleThree(HashSet<ValidatingPrimeSet> validSets, ValidatingPrimeSet set) {
         // Add a single prime number with three 3s:
         for (Integer three : this.categorizer.getBucketForCharacterAndCharacterCount(3,3)) {
             ValidatingPrimeSet singleThreeSet = new ValidatingPrimeSet(set);
@@ -413,13 +409,11 @@ public class ConcurrentPrimeCombinationFinder {
                 validSets.add(singleThreeSet);
             }
         }
-        return validSets;
     }
 
 
-    private List<ValidatingPrimeSet> handleFourMissingFours(ValidatingPrimeSet set, List<Integer> quadrupleFours
+    private void handleFourMissingFours(HashSet<ValidatingPrimeSet> validSets,ValidatingPrimeSet set, List<Integer> quadrupleFours
             , List<List<Integer>> doubleFoursCombinations, List<List<Integer>> singleFourCombinations, List<List<Integer>> tripleAndSingleCombination) {
-        List<ValidatingPrimeSet> validSets = new ArrayList<>();
 
         // A prime containing four 4s.
         for (Integer four : quadrupleFours) {
@@ -430,19 +424,16 @@ public class ConcurrentPrimeCombinationFinder {
         }
 
         // Two primes with two 4s.
-        validSets.addAll(this.handleCombinations(doubleFoursCombinations, set));
+        this.handleCombinations(validSets, doubleFoursCombinations, set);
 
         // Four primes with one 4.
-        validSets.addAll(this.handleCombinations(singleFourCombinations, set));
+        this.handleCombinations(validSets, singleFourCombinations, set);
 
         // One prime with three 4s and one prime with one 4.
-        validSets.addAll(this.handleCombinations(tripleAndSingleCombination, set));
-
-        return validSets;
+        this.handleCombinations(validSets, tripleAndSingleCombination, set);
     }
 
-    private List<ValidatingPrimeSet>  handleThreeMissingFours(ValidatingPrimeSet set, List<Integer> tripleFours, List<List<Integer>> onesingleDigitFourAndADoubleDigitFourCombinations) {
-        List<ValidatingPrimeSet> validSets = new ArrayList<>();
+    private void handleThreeMissingFours(HashSet<ValidatingPrimeSet> validSets ,ValidatingPrimeSet set, List<Integer> tripleFours, List<List<Integer>> onesingleDigitFourAndADoubleDigitFourCombinations) {
         // One prime with three fours.
         for (Integer four : tripleFours ) {
             ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
@@ -452,14 +443,12 @@ public class ConcurrentPrimeCombinationFinder {
         }
 
         // A prime with two 4 and a prime with one 4.
-        validSets.addAll(this.handleCombinations(onesingleDigitFourAndADoubleDigitFourCombinations, set));
-        return validSets;
+        this.handleCombinations(validSets, onesingleDigitFourAndADoubleDigitFourCombinations, set);
     }
 
-    private List<ValidatingPrimeSet> handleTwoMissingFours(ValidatingPrimeSet set, List<Integer> doubleFours, List<List<Integer>> singleDigitFoursCombinations) {
-       List<ValidatingPrimeSet> validSets = new ArrayList<>();
+    private void handleTwoMissingFours(HashSet<ValidatingPrimeSet> validSets, ValidatingPrimeSet set, List<Integer> doubleFours, List<List<Integer>> singleDigitFoursCombinations) {
         // Combination of two primes with one 4 each.
-        validSets.addAll(this.handleCombinations(singleDigitFoursCombinations, set));
+        this.handleCombinations(validSets ,singleDigitFoursCombinations, set);
 
         // A prime with two 4s.
         for (Integer doubleFour : doubleFours ) {
@@ -468,7 +457,6 @@ public class ConcurrentPrimeCombinationFinder {
                 validSets.add(newSet);
             }
         }
-        return validSets;
     }
 
 
