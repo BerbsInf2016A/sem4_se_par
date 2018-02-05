@@ -8,7 +8,7 @@ import java.util.List;
 public class ValidatingPrimeSet {
     private static List<Long> cloneList(List<Long> list) {
         List<Long> clone = new ArrayList<>(list.size());
-        for (Long item : list) clone.add(new Long(item));
+        for (Long item : list) clone.add(item);
         return clone;
     }
 
