@@ -58,7 +58,7 @@ public class ConcurrentPrimeCombinationFinder {
         HashSet<ValidatingPrimeSet> replaceLaterSet = this.runForThree(sets);
         StringBuilder sb = new StringBuilder();
         List<String> strings = new ArrayList<>();
-        for (ValidatingPrimeSet set: sets) {
+        for (ValidatingPrimeSet set: replaceLaterSet) {
             List<Integer> list = Arrays.stream(set.getPrimes()).boxed().collect(Collectors.toList());
             Collections.sort(list);
             strings.add(list.stream().map(t -> t.toString()).collect(Collectors.joining(", ")));
