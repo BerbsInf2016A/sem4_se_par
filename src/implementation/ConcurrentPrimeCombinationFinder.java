@@ -309,7 +309,7 @@ public class ConcurrentPrimeCombinationFinder {
     private void handleFive(ValidatingPrimeSet set) {
         //int g = 0;
         //globalDebugCounter.incrementAndGet();
-        strings.add(set.getPrimes().stream().map(t -> t.toString()).collect(Collectors.joining(", ")));
+       // strings.add(set.getPrimes().stream().map(t -> t.toString()).collect(Collectors.joining(", ")));
         //Set <String> duplicates =this.findDuplicates(strings);
         //if (duplicates.size() > 0 ){
          //   int g5 = 0;
