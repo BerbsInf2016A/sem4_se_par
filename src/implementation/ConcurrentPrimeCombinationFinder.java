@@ -6,6 +6,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -55,16 +56,18 @@ public class ConcurrentPrimeCombinationFinder {
 
 */
         HashSet<ValidatingPrimeSet> replaceLaterSet = this.runForThree(sets);
-/*
+        StringBuilder sb = new StringBuilder();
         List<String> strings = new ArrayList<>();
         for (ValidatingPrimeSet set: sets) {
-            strings.add(set.getPrimes().stream().map(t -> t.toString()).collect(Collectors.joining(", ")));
+            List<Integer> list = Arrays.stream(set.getPrimes()).boxed().collect(Collectors.toList());
+            Collections.sort(list);
+            strings.add(list.stream().map(t -> t.toString()).collect(Collectors.joining(", ")));
         }
 
         System.out.println("Stringsize: " + strings.size() + " distinct count: " + strings.stream().distinct().count());
         Set<ValidatingPrimeSet> duplicates = findDuplicates(sets);
         System.out.println("duplicates: " + duplicates.size());
-*/
+
         //sets = this.runForThree(sets);
         System.out.println(replaceLaterSet.size() + " sets after generating 3");
 

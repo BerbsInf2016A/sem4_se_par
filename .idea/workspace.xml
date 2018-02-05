@@ -2,23 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4cc1f6a8-739a-43a3-aa78-c5838b2f0f78" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/implementation/Application.class" afterPath="$PROJECT_DIR$/build/implementation/Application.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/implementation/Combinations.class" afterPath="$PROJECT_DIR$/build/implementation/Combinations.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/implementation/ConcurrentPrimeCombinationFinder.class" afterPath="$PROJECT_DIR$/build/implementation/ConcurrentPrimeCombinationFinder.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/implementation/ConcurrentPrimeFinderTest.class" afterPath="$PROJECT_DIR$/build/implementation/ConcurrentPrimeFinderTest.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/implementation/PrimeCategorizer.class" afterPath="$PROJECT_DIR$/build/implementation/PrimeCategorizer.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/implementation/ValidatingPrimeSet.class" afterPath="$PROJECT_DIR$/build/implementation/ValidatingPrimeSet.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/implementation/ValidatingPrimeSetTest.class" afterPath="$PROJECT_DIR$/build/implementation/ValidatingPrimeSetTest.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/implementation/ValidatorTest.class" afterPath="$PROJECT_DIR$/build/implementation/ValidatorTest.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/Application.java" afterPath="$PROJECT_DIR$/src/implementation/Application.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/Combinations.java" afterPath="$PROJECT_DIR$/src/implementation/Combinations.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java" afterPath="$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/Configuration.java" afterPath="$PROJECT_DIR$/src/implementation/Configuration.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/PrimeCategorizer.java" afterPath="$PROJECT_DIR$/src/implementation/PrimeCategorizer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/ValidatingPrimeSet.java" afterPath="$PROJECT_DIR$/src/implementation/ValidatingPrimeSet.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/test/test/implementation/ConcurrentPrimeFinderTest.java" afterPath="$PROJECT_DIR$/src/implementation/test/test/implementation/ConcurrentPrimeFinderTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/test/test/implementation/ValidatingPrimeSetTest.java" afterPath="$PROJECT_DIR$/src/implementation/test/test/implementation/ValidatingPrimeSetTest.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -35,11 +25,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="ConcurrentPrimeCombinationFinder.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ConcurrentPrimeCombinationFinder.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="363">
-              <caret line="351" column="0" lean-forward="false" selection-start-line="351" selection-start-column="0" selection-end-line="351" selection-end-column="0" />
+            <state relative-caret-position="255">
+              <caret line="59" column="28" lean-forward="false" selection-start-line="59" selection-start-column="21" selection-end-line="59" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -47,11 +37,33 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/implementation/Main.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="4" column="4" lean-forward="true" selection-start-line="4" selection-start-column="4" selection-end-line="9" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="ValidatingPrimeSet.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/implementation/ValidatingPrimeSet.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="29" column="70" lean-forward="false" selection-start-line="29" selection-start-column="70" selection-end-line="29" selection-end-column="70" />
+            <state relative-caret-position="195">
+              <caret line="78" column="36" lean-forward="false" selection-start-line="78" selection-start-column="36" selection-end-line="78" selection-end-column="36" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ConcurrentPrimeFinderTest.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/implementation/test/test/implementation/ConcurrentPrimeFinderTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1394">
+              <caret line="94" column="0" lean-forward="false" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -62,8 +74,8 @@
       <file leaf-file-name="Application.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/implementation/Application.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="104" column="0" lean-forward="false" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
+            <state relative-caret-position="639">
+              <caret line="111" column="88" lean-forward="false" selection-start-line="111" selection-start-column="88" selection-end-line="111" selection-end-column="88" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -136,9 +148,9 @@
         <option value="$PROJECT_DIR$/src/implementation/PrimeCategorizer.java" />
         <option value="$PROJECT_DIR$/src/implementation/Application.java" />
         <option value="$PROJECT_DIR$/src/implementation/Combinations.java" />
-        <option value="$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java" />
         <option value="$PROJECT_DIR$/src/implementation/Configuration.java" />
         <option value="$PROJECT_DIR$/src/implementation/test/test/implementation/ValidatingPrimeSetTest.java" />
+        <option value="$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java" />
         <option value="$PROJECT_DIR$/src/implementation/test/test/implementation/ConcurrentPrimeFinderTest.java" />
         <option value="$PROJECT_DIR$/src/implementation/ValidatingPrimeSet.java" />
       </list>
@@ -323,7 +335,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager" selected="JUnit.ConcurrentPrimeFinderTest">
     <configuration name="All in implementation" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <module name="implementation" />
@@ -583,7 +595,7 @@
       <workItem from="1517823706057" duration="3593000" />
       <workItem from="1517850174041" duration="3813000" />
       <workItem from="1517855010228" duration="26000" />
-      <workItem from="1517856454221" duration="2978000" />
+      <workItem from="1517856454221" duration="4240000" />
     </task>
     <servers />
   </component>
@@ -609,21 +621,22 @@
     <history-entry file="ConcurrentPrimeFinderTest - 2018.02.05 at 20h 23m 33s.xml">
       <configuration name="ConcurrentPrimeFinderTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="ConcurrentPrimeFinderTest_addEntry - 2018.02.04 at 17h 36m 06s.xml">
-      <configuration name="ConcurrentPrimeFinderTest.addEntry" configurationId="JUnit" />
+    <history-entry file="ConcurrentPrimeFinderTest - 2018.02.05 at 20h 56m 57s.xml">
+      <configuration name="ConcurrentPrimeFinderTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="ConcurrentPrimeFinderTest_addEntry - 2018.02.04 at 17h 37m 57s.xml">
-      <configuration name="ConcurrentPrimeFinderTest.addEntry" configurationId="JUnit" />
+    <history-entry file="ConcurrentPrimeFinderTest - 2018.02.05 at 20h 57m 22s.xml">
+      <configuration name="ConcurrentPrimeFinderTest" configurationId="JUnit" />
     </history-entry>
-    <history-entry file="ConcurrentPrimeFinderTest_addEntry - 2018.02.04 at 17h 43m 09s.xml">
-      <configuration name="ConcurrentPrimeFinderTest.addEntry" configurationId="JUnit" />
+    <history-entry file="ConcurrentPrimeFinderTest - 2018.02.05 at 20h 58m 29s.xml">
+      <configuration name="ConcurrentPrimeFinderTest" configurationId="JUnit" />
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="78306000" />
+    <option name="totallyTimeSpent" value="79568000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -633,7 +646,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.52717394" sideWeight="0.5127932" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5326087" sideWeight="0.48720682" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.5326087" sideWeight="0.48720682" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -645,7 +658,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.39782608" sideWeight="0.48933902" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39782608" sideWeight="0.48933902" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -707,18 +720,6 @@
           <option name="timeStamp" value="81" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java</url>
-          <line>62</line>
-          <properties />
-          <option name="timeStamp" value="110" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java</url>
-          <line>58</line>
-          <properties />
-          <option name="timeStamp" value="115" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/implementation/Application.java</url>
           <line>104</line>
           <properties />
@@ -726,27 +727,21 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java</url>
-          <line>158</line>
+          <line>161</line>
           <properties />
           <option name="timeStamp" value="125" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/implementation/test/test/implementation/ConcurrentPrimeFinderTest.java</url>
-          <line>122</line>
+          <line>121</line>
           <properties />
           <option name="timeStamp" value="126" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java</url>
-          <line>36</line>
+          <line>37</line>
           <properties />
           <option name="timeStamp" value="127" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java</url>
-          <line>56</line>
-          <properties />
-          <option name="timeStamp" value="128" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/implementation/ValidatingPrimeSet.java</url>
@@ -756,24 +751,36 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java</url>
-          <line>280</line>
+          <line>283</line>
           <properties />
           <option name="timeStamp" value="130" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java</url>
-          <line>361</line>
+          <line>364</line>
           <properties />
           <option name="timeStamp" value="131" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java</url>
-          <line>347</line>
+          <line>350</line>
           <properties />
           <option name="timeStamp" value="132" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java</url>
+          <line>71</line>
+          <properties />
+          <option name="timeStamp" value="133" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java</url>
+          <line>57</line>
+          <properties />
+          <option name="timeStamp" value="134" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="133" />
+      <option name="time" value="135" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="Application">
@@ -998,13 +1005,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeFinder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="16" column="102" lean-forward="false" selection-start-line="16" selection-start-column="102" selection-end-line="16" selection-end-column="102" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/implementation/Validator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -1012,14 +1012,6 @@
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/implementation/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="4" lean-forward="true" selection-start-line="4" selection-start-column="4" selection-end-line="9" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1067,16 +1059,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/implementation/test/test/implementation/ConcurrentPrimeFinderTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2108">
-          <caret line="124" column="0" lean-forward="false" selection-start-line="124" selection-start-column="0" selection-end-line="124" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/implementation/PrimeCategorizer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
@@ -1087,20 +1069,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/implementation/ValidatingPrimeSet.java">
+    <entry file="file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeFinder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="29" column="70" lean-forward="false" selection-start-line="29" selection-start-column="70" selection-end-line="29" selection-end-column="70" />
+        <state relative-caret-position="272">
+          <caret line="16" column="102" lean-forward="false" selection-start-line="16" selection-start-column="102" selection-end-line="16" selection-end-column="102" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/implementation/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="4" lean-forward="true" selection-start-line="4" selection-start-column="4" selection-end-line="9" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/implementation/Application.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="104" column="0" lean-forward="false" selection-start-line="104" selection-start-column="0" selection-end-line="104" selection-end-column="0" />
+        <state relative-caret-position="639">
+          <caret line="111" column="88" lean-forward="false" selection-start-line="111" selection-start-column="88" selection-end-line="111" selection-end-column="88" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1109,8 +1099,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="363">
-          <caret line="351" column="0" lean-forward="false" selection-start-line="351" selection-start-column="0" selection-end-line="351" selection-end-column="0" />
+        <state relative-caret-position="255">
+          <caret line="59" column="28" lean-forward="false" selection-start-line="59" selection-start-column="21" selection-end-line="59" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/implementation/ValidatingPrimeSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="78" column="36" lean-forward="false" selection-start-line="78" selection-start-column="36" selection-end-line="78" selection-end-column="36" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/implementation/test/test/implementation/ConcurrentPrimeFinderTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1394">
+          <caret line="94" column="0" lean-forward="false" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

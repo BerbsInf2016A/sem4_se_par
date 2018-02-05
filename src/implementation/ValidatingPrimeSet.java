@@ -75,6 +75,8 @@ public class ValidatingPrimeSet {
         if (!(other instanceof ValidatingPrimeSet))return false;
         ValidatingPrimeSet otherSet = (ValidatingPrimeSet)other;
         if (this.entries.length != otherSet.entries.length) return false;
+        Arrays.sort(this.entries);
+        Arrays.sort(otherSet.entries);
         return Arrays.equals(this.entries, otherSet.entries);
     }
 

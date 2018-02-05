@@ -85,8 +85,8 @@ public class ConcurrentPrimeFinderTest {
     @Test
     public void equals_equals(){
         ValidatingPrimeSet set = new ValidatingPrimeSet();
-        set.addEntry(1);
         set.addEntry(3);
+        set.addEntry(1);
 
         ValidatingPrimeSet secondSet = new ValidatingPrimeSet();
         secondSet.addEntry(1);
@@ -107,7 +107,6 @@ public class ConcurrentPrimeFinderTest {
         secondSet.addEntry(3);
 
         Assert.assertTrue(set.hashCode() == secondSet.hashCode());
-
     }
     @Test
     public void hashcode_notEquals(){
