@@ -33,8 +33,20 @@ public class ValidatingPrimeSet {
 
 
     private boolean isCountReached(Character value){
-        Long count = Arrays.toString(this.entries).chars().filter( digit -> digit == value).count();
-        return Character.getNumericValue(value) == count;
+        if(this.nextInsertIndex == 0 ) return false;
+        int numericValue = Character.getNumericValue(value);
+        int counter = 0;
+        int[] entries1 = this.entries;
+        for (int i = 0, entries1Length = entries1.length; i < entries1Length; i++) {
+            int entry = entries1[i];
+            if (entry == 0 ) break;
+            counter += String.valueOf(entry).chars().filter(digit -> digit == value).count();
+        }
+        if (counter == numericValue) return true;
+        return false;
+
+        // Long count = Arrays.toString(this.entries).chars().filter( digit -> digit == value).count();
+        // return Character.getNumericValue(value) == count;
     }
 
     public boolean addEntry(Integer newEntry) {
@@ -50,8 +62,8 @@ public class ValidatingPrimeSet {
         }
         this.entries[nextInsertIndex] = newEntry;
         nextInsertIndex++;
-        // TODO Reverse would be better.
-        Arrays.sort(this.entries);
+        // TODO Reverse would be better, Sort is needed in combination with equals and hashcode
+        //Arrays.sort(this.entries);
         if (nextInsertIndex >= this.entries.length) {
             // TODO check!
             int g = 0;
