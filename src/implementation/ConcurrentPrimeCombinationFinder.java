@@ -236,7 +236,8 @@ public class ConcurrentPrimeCombinationFinder {
             }
         }
         if (result.hasCombinationResult()) {
-            for (int [] combination : result.getCombination() ) {
+            for (Iterator<int []> iterator = result.getCombination().iterator(); iterator.hasNext(); ) {
+                int[] combination = iterator.next();
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
                 boolean setIsValid = true;
                 for (int prime : combination) {
@@ -246,6 +247,7 @@ public class ConcurrentPrimeCombinationFinder {
                     }
                 }
                 if(setIsValid) { this.handleThree(newSet); }
+                iterator.remove();
             }
         }
     }
@@ -289,7 +291,8 @@ public class ConcurrentPrimeCombinationFinder {
             }
         }
         if (result.hasCombinationResult()) {
-            for (int [] combination : result.getCombination() ) {
+            for (Iterator<int []> iterator = result.getCombination().iterator(); iterator.hasNext();) {
+                int[] combination = iterator.next();
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
                 boolean setIsValid = true;
                 for (int prime : combination) {
@@ -299,6 +302,7 @@ public class ConcurrentPrimeCombinationFinder {
                     }
                 }
                 if(setIsValid) { this.handleSix(newSet); }
+                iterator.remove();
             }
         }
     }
@@ -345,7 +349,8 @@ public class ConcurrentPrimeCombinationFinder {
             }
         }
         if (result.hasCombinationResult()) {
-            for (int [] combination : result.getCombination() ) {
+            for (Iterator<int []> iterator = result.getCombination().iterator(); iterator.hasNext();) {
+                int[] combination = iterator.next();
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
 
                 boolean setIsValid = true;
@@ -357,6 +362,7 @@ public class ConcurrentPrimeCombinationFinder {
                 }
 
                 if(setIsValid) { this.handleSeven(newSet); }
+                iterator.remove();
             }
         }
     }
@@ -407,7 +413,8 @@ public class ConcurrentPrimeCombinationFinder {
             }
         }
         if (result.hasCombinationResult()) {
-            for (int [] combination : result.getCombination() ) {
+            for (Iterator<int []> iterator = result.getCombination().iterator(); iterator.hasNext(); ) {
+                int[] combination = iterator.next();
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
                 boolean setIsValid = true;
                 for (int prime : combination) {
@@ -417,6 +424,7 @@ public class ConcurrentPrimeCombinationFinder {
                     }
                 }
                 if(setIsValid) { this.handleEight(newSet); }
+                iterator.remove();
             }
         }
     }
@@ -471,7 +479,8 @@ public class ConcurrentPrimeCombinationFinder {
             }
         }
         if (result.hasCombinationResult()) {
-            for (int [] combination : result.getCombination() ) {
+            for (Iterator<int []> iterator = result.getCombination().iterator(); iterator.hasNext(); ) {
+                int[] combination = iterator.next();
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
                 boolean setIsValid = true;
                 for (int prime : combination) {
@@ -481,6 +490,7 @@ public class ConcurrentPrimeCombinationFinder {
                     }
                 }
                 if(setIsValid) { this.handleNine(newSet); }
+                iterator.remove();
             }
         }
     }
@@ -539,7 +549,8 @@ public class ConcurrentPrimeCombinationFinder {
             }
         }
         if (result.hasCombinationResult()) {
-            for (int [] combination : result.getCombination() ) {
+            for (Iterator<int []> iterator = result.getCombination().iterator(); iterator.hasNext(); ) {
+                int[] combination = iterator.next();
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
                 boolean setIsValid = true;
                 for (int prime : combination) {
@@ -549,6 +560,7 @@ public class ConcurrentPrimeCombinationFinder {
                     }
                 }
                 if(setIsValid) { this.handlePossibleResult(newSet); }
+                iterator.remove();
             }
         }
     }

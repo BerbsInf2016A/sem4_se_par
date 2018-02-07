@@ -2,7 +2,21 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4cc1f6a8-739a-43a3-aa78-c5838b2f0f78" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/implementation/ConcurrentPrimeCombinationFinder.class" afterPath="$PROJECT_DIR$/build/implementation/ConcurrentPrimeCombinationFinder.class" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/Application.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/Combinations.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/ConcurrentPrimeCombinationFinder.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/ConcurrentPrimeFinder.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/ConcurrentPrimeFinderTest.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/Configuration.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/Main.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/Partition.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/PartitionCombinationResult.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/PrimeCategorizer.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/ValidatingPrimeSet.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/ValidatingPrimeSetTest.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/Validator.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/ValidatorTest.class" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java" afterPath="$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -23,10 +37,10 @@
       <file leaf-file-name="ConcurrentPrimeCombinationFinder.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1395">
-              <caret line="633" column="41" lean-forward="false" selection-start-line="633" selection-start-column="35" selection-end-line="633" selection-end-column="41" />
+            <state relative-caret-position="1803">
+              <caret line="249" column="34" lean-forward="true" selection-start-line="249" selection-start-column="34" selection-end-line="249" selection-end-column="34" />
               <folding>
-                <marker date="1518031460800" expanded="true" signature="29056:29063" ph="{...}" />
+                <marker date="1518032030040" expanded="true" signature="29816:29823" ph="{...}" />
               </folding>
             </state>
           </provider>
@@ -607,7 +621,7 @@
       <workItem from="1517850174041" duration="3813000" />
       <workItem from="1517855010228" duration="26000" />
       <workItem from="1517856454221" duration="7297000" />
-      <workItem from="1518023350541" duration="5927000" />
+      <workItem from="1518023350541" duration="6484000" />
     </task>
     <servers />
   </component>
@@ -644,7 +658,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="88552000" />
+    <option name="totallyTimeSpent" value="89109000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1111,10 +1125,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/implementation/ConcurrentPrimeCombinationFinder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1395">
-          <caret line="633" column="41" lean-forward="false" selection-start-line="633" selection-start-column="35" selection-end-line="633" selection-end-column="41" />
+        <state relative-caret-position="1803">
+          <caret line="249" column="34" lean-forward="true" selection-start-line="249" selection-start-column="34" selection-end-line="249" selection-end-column="34" />
           <folding>
-            <marker date="1518031460800" expanded="true" signature="29056:29063" ph="{...}" />
+            <marker date="1518032030040" expanded="true" signature="29816:29823" ph="{...}" />
           </folding>
         </state>
       </provider>
