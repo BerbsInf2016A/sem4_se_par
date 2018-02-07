@@ -1,11 +1,7 @@
 package implementation;
 
-import com.sun.deploy.util.ArrayUtil;
-
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -13,7 +9,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static implementation.Combinations.merge;
 
@@ -139,93 +134,96 @@ public class ConcurrentPrimeCombinationFinder {
     }
 
     private void handleThree(ValidatingPrimeSet set){
-            if (set.countReached(3)) {
-                this.handleFour(set);
+        int valueOfDigit = 3;
+        int missing = set.countOfMissingDigit(valueOfDigit);
+        switch (missing){
+            case 0:
+                this.handleFive(set);
                 return;
-            }
+            case 1:
+                PartitionCombinationResult oneMissingCombinations =  this.getCombinations(1, valueOfDigit,set.getPrimes());
+                HandleThreeCombination(set, oneMissingCombinations);
+                return;
+            case 2:
+                PartitionCombinationResult twoMissingCombination =  this.getCombinations(2, valueOfDigit,set.getPrimes());
+                HandleThreeCombination(set, twoMissingCombination);
+                return;
+            case 3:
+                PartitionCombinationResult threeMissingCombination =  this.getCombinations(3, valueOfDigit,set.getPrimes());
+                HandleThreeCombination(set, threeMissingCombination);
+                return;
+        }
+        }
 
-            int missingThrees = set.countOfMissingDigit(3);
-            switch (missingThrees) {
-                case 1:
-                    for (int three : this.singleThrees ) {
-                        ValidatingPrimeSet oneThreeSet = new ValidatingPrimeSet(set);
-                        if (oneThreeSet.addEntry(three)){
-                            this.handleFour(oneThreeSet);
-                        }
-                    }
-                    break;
-                case 2:
-                    for (int three : this.doubleThrees ) {
-                        ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                        if (newSet.addEntry(three)){
-                            this.handleFour(newSet);
-                        }
-                    }
-                    ArrayList<ValidatingPrimeSet> combinationSetCase2 = new ArrayList<>();
-                    handleCombinations(combinationSetCase2, oneThreeCombinations, set);
-                    for (int i = 0, combinationSetCase2Size = combinationSetCase2.size(); i < combinationSetCase2Size; i++) {
-                        ValidatingPrimeSet validatingPrimeSet = combinationSetCase2.get(i);
-                        this.handleFour(validatingPrimeSet);
-                    }
-                    break;
-                case 3:
-                    ArrayList<ValidatingPrimeSet> combinationSetCase3 = new ArrayList<>();
-                    this.handle3Missing3s(combinationSetCase3, set, singleThreeDoubleThreeCombination, threeSingleThreeCombinations);
-                    for (int i = 0, combinationSetCase3Size = combinationSetCase3.size(); i < combinationSetCase3Size; i++) {
-                        ValidatingPrimeSet t = combinationSetCase3.get(i);
-                        this.handleFour(t);
-                    }
-                    break;
-
+    private void HandleThreeCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
+        if (result.hasSingleResult()) {
+            for (int singleResult : result.getSingle() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                if (newSet.addEntry(singleResult)) { this.handleFour(newSet); }
             }
         }
+        if (result.hasCombinationResult()) {
+            for (int [] combination : result.getCombination() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                boolean setIsValid = true;
+                for (int prime : combination) {
+                    if ( !newSet.addEntry(prime)) {
+                        setIsValid = false;
+                        break;
+                    }
+                }
+                if(setIsValid) { this.handleFour(newSet); }
+            }
+        }
+    }
 
     private void handleFour(ValidatingPrimeSet set) {
-
-        // One prime with three 4s and one prime with one 4.
-        if (set.countReached(4)){
-            this.handleFive(set);
-            return;
-        }
-        int missingFours = set.countOfMissingDigit(4);
-        switch (missingFours){
+        int valueOfDigit = 4;
+        int missing = set.countOfMissingDigit(valueOfDigit);
+        switch (missing){
+            case 0:
+                this.handleFive(set);
+                return;
             case 1:
-                ArrayList<ValidatingPrimeSet> combinationCase1 = new ArrayList<>();
-                this.handleOneMissingFour(combinationCase1, set,singleDigitFours);
-                for (int i = 0, combinationCase1Size = combinationCase1.size(); i < combinationCase1Size; i++) {
-                    ValidatingPrimeSet t1 = combinationCase1.get(i);
-                    this.handleFive(t1);
-                }
-                break;
+                PartitionCombinationResult oneMissingCombinations =  this.getCombinations(1, valueOfDigit,set.getPrimes());
+                HandleFourCombination(set, oneMissingCombinations);
+                return;
             case 2:
-                ArrayList<ValidatingPrimeSet> combinationCase2 = new ArrayList<>();
-                this.handleTwoMissingFours(combinationCase2, set, doubleFours, singleDigitFoursCombinations);
-                for (int i = 0, combinationCase2Size = combinationCase2.size(); i < combinationCase2Size; i++) {
-                    ValidatingPrimeSet primeSet = combinationCase2.get(i);
-                    this.handleFive(primeSet);
-                }
-                break;
+                PartitionCombinationResult twoMissingCombination =  this.getCombinations(2, valueOfDigit,set.getPrimes());
+                HandleFourCombination(set, twoMissingCombination);
+                return;
             case 3:
-                ArrayList<ValidatingPrimeSet> combinationCase3 = new ArrayList<>();
-                this.handleThreeMissingFours(combinationCase3, set, tripleFour, oneSingleDigitFourAndADoubleDigitFourCombinations);
-                for (int i = 0, combinationCase3Size = combinationCase3.size(); i < combinationCase3Size; i++) {
-                    ValidatingPrimeSet validatingPrimeSet = combinationCase3.get(i);
-                    this.handleFive(validatingPrimeSet);
-                }
-                break;
+                PartitionCombinationResult threeMissingCombination =  this.getCombinations(3, valueOfDigit,set.getPrimes());
+                HandleFourCombination(set, threeMissingCombination);
+                return;
             case 4:
-                ArrayList<ValidatingPrimeSet> combinationCase4 = new ArrayList<>();
-                this.handleFourMissingFours(combinationCase4, set, quadrupleFours, doubleFoursCombinations, singleFourCombinations, tripleAndSingleCombination);
-                for (int i = 0, combinationCase4Size = combinationCase4.size(); i < combinationCase4Size; i++) {
-                    ValidatingPrimeSet t = combinationCase4.get(i);
-                    this.handleFive(t);
+                PartitionCombinationResult fourMissingCombination =  this.getCombinations(4, valueOfDigit,set.getPrimes());
+                HandleFourCombination(set, fourMissingCombination);
+                return;
+        }
+        }
+
+    private void HandleFourCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
+        if (result.hasSingleResult()) {
+            for (int singleResult : result.getSingle() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                if (newSet.addEntry(singleResult)) { this.handleFive(newSet); }
+            }
+        }
+        if (result.hasCombinationResult()) {
+            for (int [] combination : result.getCombination() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                boolean setIsValid = true;
+                for (int prime : combination) {
+                    if ( !newSet.addEntry(prime)) {
+                        setIsValid = false;
+                        break;
+                    }
                 }
-                break;
+                if(setIsValid) { this.handleFive(newSet); }
+            }
         }
-        }
-
-
-
+    }
 
 
     public List<Boolean> runForOne(){
@@ -269,6 +267,7 @@ public class ConcurrentPrimeCombinationFinder {
 
 
     private Boolean generateSetsForOne(List<Integer> primes) {
+        // 5, 7, 29, 47, 59, 61, 67, 79, 83, 89, 269, 463, 467, 487, 569, 599, 859, 883, 887)
         for (int entry : primes) {
             ValidatingPrimeSet set = new ValidatingPrimeSet();
             if (set.addEntry(entry)) {
@@ -279,141 +278,359 @@ public class ConcurrentPrimeCombinationFinder {
     }
 
     private void handleTwo(ValidatingPrimeSet set) {
-
-
-        if (set.countReached(2)){
-            this.handleThree(set);
-            return;
+        int valueOfDigit = 2;
+        int missing = set.countOfMissingDigit(valueOfDigit);
+        switch (missing){
+            case 0:
+                this.handleThree(set);
+                return;
+            case 1:
+                PartitionCombinationResult oneMissingCombinations =  this.getCombinations(1, valueOfDigit,set.getPrimes());
+                HandleTwoCombination(set, oneMissingCombinations);
+                return;
+            case 2:
+                PartitionCombinationResult twoMissingCombination =  this.getCombinations(2, valueOfDigit,set.getPrimes());
+                HandleTwoCombination(set, twoMissingCombination);
+                return;
         }
+    }
 
-        // Handling two one digit two combinations.
-
-        for (int[] combination : oneTwoCombinations) {
-            ValidatingPrimeSet oneTwoSet = new ValidatingPrimeSet(set);
-            boolean combinationInvalid = false;
-            for (int two : combination) {
-                if (!oneTwoSet.addEntry(two)) {
-                    combinationInvalid = true;
+    private void HandleTwoCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
+        if (result.hasSingleResult()) {
+            for (int singleResult : result.getSingle() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                if (newSet.addEntry(singleResult)) { this.handleThree(newSet); }
+            }
+        }
+        if (result.hasCombinationResult()) {
+            for (int [] combination : result.getCombination() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                boolean setIsValid = true;
+                for (int prime : combination) {
+                    if ( !newSet.addEntry(prime)) {
+                        setIsValid = false;
+                        break;
+                    }
                 }
-            }
-            if (combinationInvalid) { continue; }
-            this.handleThree(oneTwoSet);
-        }
-
-        // Handling one prime with two twos.
-        for (int twoTwos : this.doubleTwos) {
-            ValidatingPrimeSet oneDoubleTwoSet = new ValidatingPrimeSet(set);
-            if (oneDoubleTwoSet.addEntry(twoTwos)) {
-                this.handleThree(oneDoubleTwoSet);
-            } else {
-                continue;
+                if(setIsValid) { this.handleThree(newSet); }
             }
         }
     }
 
-
-
-    private void handle3Missing3s(ArrayList<ValidatingPrimeSet> validSets, ValidatingPrimeSet set, List<int[]> singleThreeDoubleThreeCombination, List<int[]> threeSingleThreeCombinations) {
-        this.handleTrippleThree(validSets, set);
-        this.handleMixedThrees(validSets, set,singleThreeDoubleThreeCombination);
-        this.handleSingleThrees(validSets, set,threeSingleThreeCombinations);
-    }
-
-
-    private void handleCombinations(ArrayList<ValidatingPrimeSet> validSets, List<int[]> combinations, ValidatingPrimeSet set) {
-        for (int[] combination: combinations) {
-            ValidatingPrimeSet combinationSet = new ValidatingPrimeSet(set);
-            boolean combinationInvalid = false;
-            for (int three : combination ) {
-                if (!combinationSet.addEntry(three)) {
-                    combinationInvalid = true;
-                }
-                if (combinationInvalid) { break; }
-            }
-            if (combinationInvalid) { continue; }
-            validSets.add(combinationSet);
-        }
-    }
-
-    private void handleSingleThrees(ArrayList<ValidatingPrimeSet> validSets, ValidatingPrimeSet set, List<int[]> threeSingleThreeCombinations) {
-        this.handleCombinations(validSets, threeSingleThreeCombinations, set);
-    }
-
-    private void handleMixedThrees(ArrayList<ValidatingPrimeSet> validSets,ValidatingPrimeSet set, List<int[]> singleThreeDoubleThreeCombination) {
-        this.handleCombinations(validSets, singleThreeDoubleThreeCombination, set);
-    }
-
-    private void handleTrippleThree(ArrayList<ValidatingPrimeSet> validSets, ValidatingPrimeSet set) {
-        // Add a single prime number with three 3s:
-        for (int three : this.tripleThrees) {
-            ValidatingPrimeSet singleThreeSet = new ValidatingPrimeSet(set);
-            if (singleThreeSet.addEntry(three)) {
-                validSets.add(singleThreeSet);
-            }
-        }
-    }
-
-
-    private void handleFourMissingFours(ArrayList<ValidatingPrimeSet> validSets,ValidatingPrimeSet set, int[] quadrupleFours
-            , List<int[]> doubleFoursCombinations, List<int[]> singleFourCombinations, List<int[]> tripleAndSingleCombination) {
-
-        // A prime containing four 4s.
-        for (int four : quadrupleFours) {
-            ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-            if (newSet.addEntry(four)){
-                validSets.add(newSet);
-            }
-        }
-
-        // Two primes with two 4s.
-        this.handleCombinations(validSets, doubleFoursCombinations, set);
-
-        // Four primes with one 4.
-        this.handleCombinations(validSets, singleFourCombinations, set);
-
-        // One prime with three 4s and one prime with one 4.
-        this.handleCombinations(validSets, tripleAndSingleCombination, set);
-    }
-
-    private void handleThreeMissingFours(ArrayList<ValidatingPrimeSet> validSets ,ValidatingPrimeSet set, int[] tripleFours, List<int[]> onesingleDigitFourAndADoubleDigitFourCombinations) {
-        // One prime with three fours.
-        for (int four : tripleFours ) {
-            ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-            if (newSet.addEntry(four)) {
-                validSets.add(newSet);
-            }
-        }
-
-        // A prime with two 4 and a prime with one 4.
-        this.handleCombinations(validSets, onesingleDigitFourAndADoubleDigitFourCombinations, set);
-    }
-
-    private void handleTwoMissingFours(ArrayList<ValidatingPrimeSet> validSets, ValidatingPrimeSet set, int[] doubleFours, List<int[]> singleDigitFoursCombinations) {
-        // Combination of two primes with one 4 each.
-        this.handleCombinations(validSets ,singleDigitFoursCombinations, set);
-
-        // A prime with two 4s.
-        for (int doubleFour : doubleFours ) {
-            ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-            if (newSet.addEntry(doubleFour)) {
-                validSets.add(newSet);
-            }
-        }
-    }
-
-    private void handleOneMissingFour(ArrayList<ValidatingPrimeSet> validSets, ValidatingPrimeSet set, int[] singleDigitFours) {
-        for (int four : singleDigitFours ) {
-            ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-            if (newSet.addEntry(four)){
-                validSets.add(newSet);
-            }
-        }
-    }
 
     private void handleFive(ValidatingPrimeSet set) {
-        //this.printDebugSetData(set);
+        int valueOfDigit = 5;
+        int missing = set.countOfMissingDigit(valueOfDigit);
+        switch (missing){
+            case 0:
+                this.handleSix(set);
+                break;
+            case 1:
+                PartitionCombinationResult oneMissingCombinations =  this.getCombinations(1, valueOfDigit,set.getPrimes());
+                HandleFiveCombination(set, oneMissingCombinations);
+                break;
+            case 2:
+                PartitionCombinationResult twoMissingCombination =  this.getCombinations(2, valueOfDigit,set.getPrimes());
+                HandleFiveCombination(set, twoMissingCombination);
+                break;
+            case 3:
+                PartitionCombinationResult threeMissingCombination =  this.getCombinations(3, valueOfDigit,set.getPrimes());
+                HandleFiveCombination(set, threeMissingCombination);
+                break;
+            case 4:
+                PartitionCombinationResult fourMissingCombination =  this.getCombinations(4, valueOfDigit,set.getPrimes());
+                HandleFiveCombination(set, fourMissingCombination);
+                break;
+            case 5:
+                PartitionCombinationResult fiveMissingCombination =  this.getCombinations(5, valueOfDigit,set.getPrimes());
+                HandleFiveCombination(set, fiveMissingCombination);
+                break;
+        }
+    }
 
+    private void HandleFiveCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
+        if (result.hasSingleResult()) {
+            for (int singleResult : result.getSingle() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                if (newSet.addEntry(singleResult)) { this.handleSix(newSet); }
+            }
+        }
+        if (result.hasCombinationResult()) {
+            for (int [] combination : result.getCombination() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                boolean setIsValid = true;
+                for (int prime : combination) {
+                    if ( !newSet.addEntry(prime)) {
+                        setIsValid = false;
+                        break;
+                    }
+                }
+                if(setIsValid) { this.handleSix(newSet); }
+            }
+        }
+    }
 
+    private void handleSix(ValidatingPrimeSet set) {
+        int valueOfDigit = 6;
+        int missing = set.countOfMissingDigit(valueOfDigit);
+        switch (missing){
+            case 0:
+                this.handleSeven(set);
+                break;
+            case 1:
+                PartitionCombinationResult oneMissing =  this.getCombinations(1, valueOfDigit,set.getPrimes());
+                HandleSixCombination(set, oneMissing);
+                break;
+            case 2:
+                PartitionCombinationResult twoMissing =  this.getCombinations(2, valueOfDigit,set.getPrimes());
+                HandleSixCombination(set, twoMissing);
+                break;
+            case 3:
+                PartitionCombinationResult threeMissing =  this.getCombinations(3, valueOfDigit,set.getPrimes());
+                HandleSixCombination(set, threeMissing);
+                break;
+            case 4:
+                PartitionCombinationResult fourMissing =  this.getCombinations(4, valueOfDigit,set.getPrimes());
+                HandleSixCombination(set, fourMissing);
+                break;
+            case 5:
+                PartitionCombinationResult fiveMissing =  this.getCombinations(5, valueOfDigit,set.getPrimes());
+                HandleSixCombination(set, fiveMissing);
+                break;
+            case 6:
+                PartitionCombinationResult sixMissing =  this.getCombinations(6, valueOfDigit,set.getPrimes());
+                HandleSixCombination(set, sixMissing);
+                break;
+        }
+    }
+
+    private void HandleSixCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
+        if (result.hasSingleResult()) {
+            for (int singleResult : result.getSingle() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                if (newSet.addEntry(singleResult)) { this.handleSeven(newSet); }
+            }
+        }
+        if (result.hasCombinationResult()) {
+            for (int [] combination : result.getCombination() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+
+                boolean setIsValid = true;
+                for (int prime : combination) {
+                    if ( !newSet.addEntry(prime)) {
+                        setIsValid = false;
+                        break;
+                    } else { // TODO Remove
+                        int missing = newSet.countOfMissingDigit(7);
+                        if (missing == -1 ){
+                            int z = 3;
+                        }
+                    }
+                }
+
+                if(setIsValid) { this.handleSeven(newSet); }
+            }
+        }
+    }
+
+    private void handleSeven(ValidatingPrimeSet set) {
+        int valueOfDigit = 7;
+        int missing = set.countOfMissingDigit(valueOfDigit);
+        System.out.println("Handle Seven: Missing " + missing);
+        switch (missing){
+            case 0:
+                this.handleEight(set);
+                break;
+            case 1:
+                PartitionCombinationResult oneMissing =  this.getCombinations(1, valueOfDigit,set.getPrimes());
+                HandleSevenCombination(set, oneMissing);
+                break;
+            case 2:
+                PartitionCombinationResult twoMissing =  this.getCombinations(2, valueOfDigit,set.getPrimes());
+                HandleSevenCombination(set, twoMissing);
+                break;
+            case 3:
+                PartitionCombinationResult threeMissing =  this.getCombinations(3, valueOfDigit,set.getPrimes());
+                HandleSevenCombination(set, threeMissing);
+                break;
+            case 4:
+                PartitionCombinationResult fourMissing =  this.getCombinations(4, valueOfDigit,set.getPrimes());
+                HandleSevenCombination(set, fourMissing);
+                break;
+            case 5:
+                PartitionCombinationResult fiveMissing =  this.getCombinations(5, valueOfDigit,set.getPrimes());
+                HandleSevenCombination(set, fiveMissing);
+                break;
+            case 6:
+                PartitionCombinationResult sixMissing =  this.getCombinations(6, valueOfDigit,set.getPrimes());
+                HandleSevenCombination(set, sixMissing);
+                break;
+            case 7:
+                PartitionCombinationResult sevenMissing =  this.getCombinations(7, valueOfDigit,set.getPrimes());
+                HandleSevenCombination(set, sevenMissing);
+                break;
+        }
+    }
+
+    private void HandleSevenCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
+        if (result.hasSingleResult()) {
+            for (int singleResult : result.getSingle() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                if (newSet.addEntry(singleResult)) { this.handleEight(newSet); }
+            }
+        }
+        if (result.hasCombinationResult()) {
+            for (int [] combination : result.getCombination() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                boolean setIsValid = true;
+                for (int prime : combination) {
+                    if ( !newSet.addEntry(prime)) {
+                        setIsValid = false;
+                        break;
+                    }
+                }
+                if(setIsValid) { this.handleEight(newSet); }
+            }
+        }
+    }
+
+    private void handleEight(ValidatingPrimeSet set) {
+        int valueOfDigit = 8;
+        int missing = set.countOfMissingDigit(valueOfDigit);
+        System.out.println("Handle Eight: Missing " + missing);
+        switch (missing){
+            case 0:
+                this.handleNine(set);
+                break;
+            case 1:
+                PartitionCombinationResult oneMissing =  this.getCombinations(1, valueOfDigit,set.getPrimes());
+                HandleEightCombination(set, oneMissing);
+                break;
+            case 2:
+                PartitionCombinationResult twoMissing =  this.getCombinations(2, valueOfDigit,set.getPrimes());
+                HandleEightCombination(set, twoMissing);
+                break;
+            case 3:
+                PartitionCombinationResult threeMissing =  this.getCombinations(3, valueOfDigit,set.getPrimes());
+                HandleEightCombination(set, threeMissing);
+                break;
+            case 4:
+                PartitionCombinationResult fourMissing =  this.getCombinations(4, valueOfDigit,set.getPrimes());
+                HandleEightCombination(set, fourMissing);
+                break;
+            case 5:
+                PartitionCombinationResult fiveMissing =  this.getCombinations(5, valueOfDigit,set.getPrimes());
+                HandleEightCombination(set, fiveMissing);
+                break;
+            case 6:
+                PartitionCombinationResult sixMissing =  this.getCombinations(6, valueOfDigit,set.getPrimes());
+                HandleEightCombination(set, sixMissing);
+                break;
+            case 7:
+                PartitionCombinationResult sevenMissing =  this.getCombinations(7, valueOfDigit,set.getPrimes());
+                HandleEightCombination(set, sevenMissing);
+                break;
+            case 8:
+                PartitionCombinationResult eightMissing =  this.getCombinations(8, valueOfDigit,set.getPrimes());
+                HandleEightCombination(set, eightMissing);
+                break;
+        }
+    }
+
+    private void HandleEightCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
+        if (result.hasSingleResult()) {
+            for (int singleResult : result.getSingle() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                if (newSet.addEntry(singleResult)) { this.handleNine(newSet); }
+            }
+        }
+        if (result.hasCombinationResult()) {
+            for (int [] combination : result.getCombination() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                boolean setIsValid = true;
+                for (int prime : combination) {
+                    if ( !newSet.addEntry(prime)) {
+                        setIsValid = false;
+                        break;
+                    }
+                }
+                if(setIsValid) { this.handleNine(newSet); }
+            }
+        }
+    }
+
+    private void handleNine(ValidatingPrimeSet set) {
+        printDebugSetData(set);
+        int valueOfDigit = 9;
+        int missing = set.countOfMissingDigit(valueOfDigit);
+        System.out.println("Handle Seven: Missing " + missing);
+        switch (missing){
+            case 0:
+                this.handlePossibleResult(set);
+                break;
+            case 1:
+                PartitionCombinationResult oneMissing =  this.getCombinations(1, valueOfDigit,set.getPrimes());
+                HandleNineCombination(set, oneMissing);
+                break;
+            case 2:
+                PartitionCombinationResult twoMissing =  this.getCombinations(2, valueOfDigit,set.getPrimes());
+                HandleNineCombination(set, twoMissing);
+                break;
+            case 3:
+                PartitionCombinationResult threeMissing =  this.getCombinations(3, valueOfDigit,set.getPrimes());
+                HandleNineCombination(set, threeMissing);
+                break;
+            case 4:
+                PartitionCombinationResult fourMissing =  this.getCombinations(4, valueOfDigit,set.getPrimes());
+                HandleNineCombination(set, fourMissing);
+                break;
+            case 5:
+                PartitionCombinationResult fiveMissing =  this.getCombinations(5, valueOfDigit,set.getPrimes());
+                HandleNineCombination(set, fiveMissing);
+                break;
+            case 6:
+                PartitionCombinationResult sixMissing =  this.getCombinations(6, valueOfDigit,set.getPrimes());
+                HandleNineCombination(set, sixMissing);
+                break;
+            case 7:
+                PartitionCombinationResult sevenMissing =  this.getCombinations(7, valueOfDigit,set.getPrimes());
+                HandleNineCombination(set, sevenMissing);
+                break;
+            case 8:
+                PartitionCombinationResult eightMissing =  this.getCombinations(8, valueOfDigit,set.getPrimes());
+                HandleNineCombination(set, eightMissing);
+                break;
+            case 9:
+                PartitionCombinationResult nineMissing =  this.getCombinations(9, valueOfDigit,set.getPrimes());
+                HandleNineCombination(set, nineMissing);
+                break;
+        }
+    }
+
+    private void HandleNineCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
+        if (result.hasSingleResult()) {
+            for (int singleResult : result.getSingle() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                if (newSet.addEntry(singleResult)) { this.handlePossibleResult(newSet); }
+            }
+        }
+        if (result.hasCombinationResult()) {
+            for (int [] combination : result.getCombination() ) {
+                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+                boolean setIsValid = true;
+                for (int prime : combination) {
+                    if ( !newSet.addEntry(prime)) {
+                        setIsValid = false;
+                        break;
+                    }
+                }
+                if(setIsValid) { this.handlePossibleResult(newSet); }
+            }
+        }
+    }
+
+    private void handlePossibleResult(ValidatingPrimeSet set) {
+        printDebugSetData(set);
     }
 
     private void printDebugSetData(ValidatingPrimeSet set) {
@@ -437,5 +654,66 @@ public class ConcurrentPrimeCombinationFinder {
         }
 
         return duplicates;
+    }
+
+    private PartitionCombinationResult getCombinations(int countOfMissing, int value, int[] filterPrimes) {
+        ArrayList<ArrayList<Integer>> partitions = Partition.partition(countOfMissing);
+        return this.getCombinationsForPartionsAndValue(partitions, value, filterPrimes);
+    }
+
+
+    private PartitionCombinationResult getCombinationsForPartionsAndValue(ArrayList<ArrayList<Integer>> partitions, int value, int[] alreadyUsed) {
+
+        Map<Integer, int[]> values = new HashMap<>();
+        for (List<Integer> partition : partitions ) {
+            for (Integer numberOfOccurence : partition ) {
+                if (values.containsKey(numberOfOccurence)) continue;
+                values.put(numberOfOccurence, categorizer.getBucketForCharacterAndCharacterCount(value, numberOfOccurence));
+            }
+        }
+
+        List<Integer> filterValues = Arrays.stream(alreadyUsed).boxed().collect(Collectors.toList());
+        Map<Integer, int[]> filteredValues = new HashMap<>();
+
+        for (Map.Entry<Integer, int[]> entry : values.entrySet()) {
+            ArrayList<Integer> validEntries = new ArrayList<>();
+            for(int prime : entry.getValue()){
+                if (!filterValues.contains(prime)) validEntries.add(prime);
+            }
+            if (validEntries.size() > 0 ){
+                filteredValues.put(entry.getKey(), toIntArray(validEntries));
+            }
+        }
+
+        PartitionCombinationResult result = new PartitionCombinationResult();
+        for (List<Integer> partition : partitions ) {
+            if(partition.size() == 1 ){
+                int element = partition.get(0);
+                if (filteredValues.containsKey(element)) result.setSingle(filteredValues.get(element));
+            } else {
+                HashSet<Integer> distinctOccurrence = new HashSet<>();
+                int[] partitionCombination = new int[0];
+                for (int occurence : partition ) {
+                    if ( !filteredValues.containsKey(occurence)) continue;
+                    distinctOccurrence.add(occurence);
+                }
+
+                for (int occurrence : distinctOccurrence ) {
+                    partitionCombination = merge(partitionCombination, filteredValues.get(occurrence));
+                }
+
+                result.addCombination((Combinations.combination(partitionCombination, partition.size())));
+            }
+
+        }
+
+        return result;
+    }
+
+    int[] toIntArray(List<Integer> list){
+        int[] ret = new int[list.size()];
+        for(int i = 0;i < ret.length;i++)
+            ret[i] = list.get(i);
+        return ret;
     }
 }

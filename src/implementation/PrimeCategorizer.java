@@ -23,7 +23,6 @@ public class PrimeCategorizer {
     }
 
     public int[] getBucketForCharacterAndCharacterCount(int digit, int count){
-        System.out.println("Bucket called: " + digit + " " + count);
         char charValue = Character.forDigit(digit, 10);
         String key = digit + "_" + count;
         if (this.cache.containsKey(key)){

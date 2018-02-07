@@ -41,25 +41,51 @@ public class ValidatingPrimeSet {
             int entry = entries1[i];
             if (entry == 0 ) break;
             counter += String.valueOf(entry).chars().filter(digit -> digit == value).count();
+            if (counter == numericValue) return true;
         }
-        if (counter == numericValue) return true;
+
         return false;
 
         // Long count = Arrays.toString(this.entries).chars().filter( digit -> digit == value).count();
         // return Character.getNumericValue(value) == count;
     }
+    private Map<Character, Integer> countCharsInString(String value){
+        int len = value.length();
+        Map<Character, Integer> numChars = new HashMap<Character, Integer>(Math.min(len, 26));
 
+        for (int i = 0; i < len; ++i)        {
+            char charAt = value.charAt(i);
+            if (!numChars.containsKey(charAt))
+            {
+                numChars.put(charAt, 1);
+            }
+            else
+            {
+                numChars.put(charAt, numChars.get(charAt) + 1);
+            }
+        }
+        return numChars;
+    }
     public boolean addEntry(Integer newEntry) {
         for (int entry : this.entries ) {
-            if (entry == newEntry) return false;
-        }
-        String prime = newEntry.toString();
-        for (int i = 0; i < prime.length(); i++) {
-            Character c = prime.charAt(i);
-            if( isCountReached(c)) {
+            if (entry == 0) { break; }
+            if (entry == newEntry) {
                 return false;
             }
         }
+        if (this.nextInsertIndex != 0) {
+            String prime = newEntry.toString();
+            Map<Character, Integer> newPrimeCounts = this.countCharsInString(prime);
+            for (Map.Entry<Character, Integer> entry : newPrimeCounts.entrySet() ) {
+                int keyValue = entry.getKey() - 48;
+                int keyCount = entry.getValue();
+                 int missingCount = this.countOfMissingDigit(keyValue);
+                 if (keyCount > missingCount) {
+                     return false;
+                 }
+            }
+        }
+
         this.entries[nextInsertIndex] = newEntry;
         nextInsertIndex++;
         // TODO Reverse would be better, Sort is needed in combination with equals and hashcode

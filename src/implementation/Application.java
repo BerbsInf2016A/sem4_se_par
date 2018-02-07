@@ -113,20 +113,7 @@ public class Application {
 
 
         PrimeCategorizer categorizer = new PrimeCategorizer(toIntArray(p));
-        ArrayList<ArrayList<Integer>> partitions =  Partition.partition(3);
-        int[] filter = new int[2];
-        filter[0] = 5;
-        filter[1] = 59;
-        PartitionCombinationResult test = getCombinationsForPartionsAndValue(partitions, 5, filter, categorizer);
 
-        ArrayList<String> strings = new ArrayList<>();
-        for (int[] comb : test.getCombination() ) {
-            List<Integer> list = Arrays.stream(comb).boxed().collect(Collectors.toList());
-            Collections.sort(list);
-            strings.add(list.stream().map(t -> t.toString()).collect(Collectors.joining(", ")));
-        }
-
-        System.out.println("Stringsize: " + strings.size() + " distinct count: " + strings.stream().distinct().count());
         this.printNumberCounts(p);
 
         ConcurrentPrimeCombinationFinder runner = new ConcurrentPrimeCombinationFinder(categorizer);
@@ -140,49 +127,5 @@ public class Application {
         System.out.println("runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart));
     }
 
-    private PartitionCombinationResult getCombinationsForPartionsAndValue(ArrayList<ArrayList<Integer>> partitions, int value, int[] alreadyUsed, PrimeCategorizer categorizer) {
 
-        Map<Integer, int[]> values = new HashMap<>();
-        for (List<Integer> partition : partitions ) {
-            for (Integer numberOfOccurence : partition ) {
-                if (values.containsKey(numberOfOccurence)) continue;
-                values.put(numberOfOccurence, categorizer.getBucketForCharacterAndCharacterCount(value, numberOfOccurence));
-            }
-        }
-
-        List<Integer> filterValues = Arrays.stream(alreadyUsed).boxed().collect(Collectors.toList());
-        Map<Integer, int[]> filteredValues = new HashMap<>();
-
-        for (Map.Entry<Integer, int[]> entry : values.entrySet()) {
-            ArrayList<Integer> validEntries = new ArrayList<>();
-            for(int prime : entry.getValue()){
-                if (!filterValues.contains(prime)) validEntries.add(prime);
-            }
-            filteredValues.put(entry.getKey(), toIntArray(validEntries));
-        }
-
-        PartitionCombinationResult result = new PartitionCombinationResult();
-        for (List<Integer> partition : partitions ) {
-            if(partition.size() == 1 ){
-                int element = partition.get(0);
-                if (filteredValues.containsKey(element)) result.setSingle(filteredValues.get(element));
-            } else {
-                HashSet<Integer> distinctOccurrence = new HashSet<>();
-                int[] partitionCombination = new int[0];
-                for (int occurence : partition ) {
-                    if ( !filteredValues.containsKey(occurence)) continue;
-                    distinctOccurrence.add(occurence);
-                }
-
-                for (int occurrence : distinctOccurrence ) {
-                    partitionCombination = merge(partitionCombination, filteredValues.get(occurrence));
-                }
-
-                result.addCombination((Combinations.combination(partitionCombination, partition.size())));
-            }
-
-        }
-
-        return result;
-    }
 }

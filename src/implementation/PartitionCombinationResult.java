@@ -25,6 +25,6 @@ public class PartitionCombinationResult {
     private List<int[]> combination;
 
     public boolean hasSingleResult() {return this.single != null;}
-    public boolean hasCombinationSResult() {return this.combination != null && this.combination.size() > 0 ;};
+    public boolean hasCombinationResult() {return this.combination != null && this.combination.size() > 0 ;};
 
 }

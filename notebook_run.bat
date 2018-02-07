@@ -1,0 +1,2 @@
+"C:\Program Files\Java\jdk1.8.0_161\bin\java" -server -Xms14G -Xmx14G -XX:MaxDirectMemorySize=1024M -XX:NewSize=1G -XX:MaxNewSize=1G -XX:+UseParNewGC -XX:MaxTenuringThreshold=2 -XX:SurvivorRatio=8 -XX:+UnlockDiagnosticVMOptions -XX:ParGCCardsPerStrideChunk=32768 -classpath build implementation.Main
+pause
