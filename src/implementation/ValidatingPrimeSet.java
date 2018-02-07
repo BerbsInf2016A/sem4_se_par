@@ -6,6 +6,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ValidatingPrimeSet {
+    public ValidatingPrimeSet(int[] values) {
+        this.entries = Arrays.copyOf(values, Configuration.instance.maxNumberOfPrimesPerSet);
+        this.nextInsertIndex = (int) Arrays.stream(this.entries).filter(t -> t != 0).count();
+    }
+
     private static List<Integer> cloneList(List<Integer> list) {
         List<Integer> clone = new ArrayList<>(list.size());
         for (Integer item : list) clone.add(new Integer(item));

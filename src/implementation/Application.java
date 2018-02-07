@@ -102,27 +102,29 @@ public class Application {
         List<Integer> p = finder.findPrimes(0, 1000);
         System.out.println("Found primes "  +  p.size());
         p = p.stream().filter(t -> Validator.isCandidate(t)).collect(Collectors.toList());
-        BigInteger maxValue = new BigInteger("2").pow(p.size());
         System.out.println("Filtered valid primes "  +  p.size());
-        System.out.printf("There are %s^%s possible combinations: %s %n", 2, p.size(), maxValue);
 
-        int[] primesContainingNine = this.getNumbersContainingDigit(p, 9);
-
-
-        //List<int[]> combs =  Combinations.combination(primesContainingNine, 9);
-
-
+        // Preset some combinations:
+        int[] primesContainingNine = this.getNumbersContainingDigit(p, 8);
+        List<int[]> combs =  Combinations.combination(primesContainingNine, 8);
         PrimeCategorizer categorizer = new PrimeCategorizer(toIntArray(p));
 
+        List<ValidatingPrimeSet> sets = new ArrayList<>();
+        for (int[] preGeneratedValue : combs ) {
+            ValidatingPrimeSet set = new ValidatingPrimeSet();
+            boolean isValid = true;
+            for (int prime : preGeneratedValue ) {
+                if (!set.addEntry(prime)){
+                    isValid = false;
+                    break;
+                }
+            }
+            if (isValid) { sets.add(set); }
+        }
         this.printNumberCounts(p);
 
         ConcurrentPrimeCombinationFinder runner = new ConcurrentPrimeCombinationFinder(categorizer);
-        runner.run();
-        System.out.println("Strings: " + ConcurrentPrimeCombinationFinder.strings);
-        Set<String> duplicates = runner.findDuplicates(ConcurrentPrimeCombinationFinder.strings);
-        System.out.println("Duplicate strings: " + duplicates.size());
-        int z = 4;
-
+        runner.run(sets);
 
         System.out.println("runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart));
     }

@@ -1,5 +1,6 @@
 package implementation;
 
+import java.util.Arrays;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -103,6 +104,57 @@ public class Validator {
             }
         }
         System.out.println("Validated: True Value: " + adjustedValue);
+        return true;
+    }
+
+    public static boolean validateFinalSet(ValidatingPrimeSet set) {
+        int[] counts = new int[10];
+        int[] primes = Arrays.stream(set.getPrimes()).filter(t -> t != 0).toArray();
+        for (int prime : primes) {
+            String primeString = String.valueOf(prime);
+            for (int i = 0; i < String.valueOf(prime).length(); i++) {
+                Character c = primeString.charAt(i);
+                switch (c) {
+                    case ',':
+                        continue;
+                    case '0':
+                        return false;
+                    case '1':
+                        counts[1] = counts[1] + 1;
+                        break;
+                    case '2':
+                        counts[2] = counts[2] + 1;
+                        break;
+                    case '3':
+                        counts[3] = counts[3] + 1;
+                        break;
+                    case '4':
+                        counts[4] = counts[4] + 1;
+                        break;
+                    case '5':
+                        counts[5] = counts[5] + 1;
+                        break;
+                    case '6':
+                        counts[6] = counts[6] + 1;
+                        break;
+                    case '7':
+                        counts[7] = counts[7] + 1;
+                        break;
+                    case '8':
+                        counts[8] = counts[8] + 1;
+                        break;
+                    case '9':
+                        counts[9] = counts[9] + 1;
+                        break;
+                }
+            }
+        }
+        for (int i = 1; i <= 9; i++) {
+            int count = counts[i];
+            if(count != i) {
+                return false;
+            }
+        }
         return true;
     }
 }

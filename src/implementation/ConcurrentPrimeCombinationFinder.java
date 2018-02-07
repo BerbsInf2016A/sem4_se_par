@@ -43,102 +43,24 @@ public class ConcurrentPrimeCombinationFinder {
 
     }
 
-    public void run() {
+    public void run(List<ValidatingPrimeSet> sets) {
         // TODO Just get a chance to connect with visual vm
-        this.initCachedData();
         try {
             Thread.sleep(10000);
+            this.runConcurrent(sets);
         } catch (InterruptedException e) {
+
             e.printStackTrace();
         }
-        List<Boolean> sets = this.runForOne();
-        System.out.println(sets.size() + " sets after generating 1");
-        System.out.println("Atomic global counter: " + globalDebugCounter.get());
-        //this.printDebugDuplicates(sets);
-        //sets = this.runForTwo(sets);
-        //System.out.println(sets.size() + " sets after generating 2");
-        //this.printDebugDuplicates(sets);
-
-
-
-/*
-        int sliceSize = sets.size() / Configuration.instance.maximumNumberOfThreads;
-        List<IntegerPartitionSizes> partitions = new ArrayList<>();
-        for (int i = 0; i <= sets.size(); i += sliceSize) {
-            final int from = i;
-            int to = i + sliceSize;
-            if (to > sets.size())
-                to = sets.size();
-            final int end = to;
-            partitions.add(new IntegerPartitionSizes(from, end));
-        }
-        List<ValidatingPrimeSet> newSets = new ArrayList<>();
-        for (IntegerPartitionSizes partition : partitions) {
-            newSets.addAll(this.runForThree(sets.subList(partition.from, partition.to)));
-            int g = 0;
-        }
-
-*/
-       // HashSet<ValidatingPrimeSet> replaceLaterSet = this.runForThree(sets);
-        //System.out.println(replaceLaterSet.size() + " sets after generating 3");
-        //this.printDebugDuplicates(new ArrayList<>(replaceLaterSet));
-
-       // System.out.println(newSets.size() + " new sets after generating 3");
-        //replaceLaterSet = this.runForFour(new ArrayList<>(replaceLaterSet));
-        //System.out.println(replaceLaterSet.size() + " sets after generating 4");
-        int g = 0;
     }
 
-    private List<int[]> oneThreeCombinations;
-    private int[] singleThrees;
-    private int[] doubleThrees;
-    private List<int[]> singleThreeDoubleThreeCombination;
-    private  List<int[]> threeSingleThreeCombinations;
-    private int[] singleDigitFours;
-    private List<int[]> singleDigitFoursCombinations;
-    private int[] doubleFours;
-    private int[] tripleFour;
-    int[] singleFoursList;
-    private List<int[]> oneSingleDigitFourAndADoubleDigitFourCombinations;
-    int[] quadrupleFours;
-    List<int[]> doubleFoursCombinations;
-    List<int[]> singleFourCombinations;
-    List<int[]> tripleAndSingleCombination;
-    List<int[]> oneTwoCombinations;
-    int[] doubleTwos;
-    int[] tripleThrees;
-
-    private void initCachedData(){
-        this.tripleThrees = this.categorizer.getBucketForCharacterAndCharacterCount(3,3);
-        this.doubleTwos = this.categorizer.getBucketForCharacterAndCharacterCount(2,2);
-        this.oneTwoCombinations = Combinations.combination(this.categorizer.getBucketForCharacterAndCharacterCount(2,1),2);
-        this.singleThrees = this.categorizer.getBucketForCharacterAndCharacterCount(3,1);
-        this.doubleThrees = this.categorizer.getBucketForCharacterAndCharacterCount(3,2);
-        this.oneThreeCombinations = Combinations.combination(this.singleThrees,2);
-        // TODO Check the merge!
-        int[] combined = merge(singleThrees, doubleThrees);
-        this.singleThreeDoubleThreeCombination = Combinations.combination(combined,3);
-        this.threeSingleThreeCombinations = Combinations.combination(singleThrees,3);
-        this.singleDigitFours = this.categorizer.getBucketForCharacterAndCharacterCount(4, 1);
-        this.singleDigitFoursCombinations =  Combinations.combination(singleDigitFours, 2);
-        this.doubleFours = this.categorizer.getBucketForCharacterAndCharacterCount(4,2);
-        this.tripleFour = this.categorizer.getBucketForCharacterAndCharacterCount(4, 3);
-        this.singleFoursList = this.categorizer.getBucketForCharacterAndCharacterCount(4,1);
-        int[] combinedFours = merge(doubleFours, singleFoursList);
-        oneSingleDigitFourAndADoubleDigitFourCombinations = Combinations.combination(combinedFours,2);
-        this.quadrupleFours = this.categorizer.getBucketForCharacterAndCharacterCount(4,4);
-        this.doubleFoursCombinations = Combinations.combination(doubleFours, 2);
-        this.singleFourCombinations = Combinations.combination(singleDigitFours,4);
-        int[] tripleAndSingleCombined = merge(tripleFour, singleDigitFours);
-        this.tripleAndSingleCombination = Combinations.combination(tripleAndSingleCombined,2);
-    }
 
     private void handleThree(ValidatingPrimeSet set){
         int valueOfDigit = 3;
         int missing = set.countOfMissingDigit(valueOfDigit);
         switch (missing){
             case 0:
-                this.handleFive(set);
+                this.handleFour(set);
                 return;
             case 1:
                 PartitionCombinationResult oneMissingCombinations =  this.getCombinations(1, valueOfDigit,set.getPrimes());
@@ -226,55 +148,66 @@ public class ConcurrentPrimeCombinationFinder {
     }
 
 
-    public List<Boolean> runForOne(){
-        List<Boolean> foundSets = new ArrayList<>();
+    public void runConcurrent(List<ValidatingPrimeSet> sets){
         try {
-            // The ones are the starting point.
-            int[] ones = this.categorizer.getBucketForCharacterAndCharacterCount(1,1);
-            List<Integer> onesList = Arrays.stream(ones).boxed().collect(Collectors.toList());
+
             final List<Callable<Boolean>> partitions = new ArrayList<>();
             final ExecutorService executorPool = Executors.newFixedThreadPool(Configuration.instance.maximumNumberOfThreads);
 
-            int sliceSize = onesList.size() / Configuration.instance.maximumNumberOfThreads;
+            int sliceSize = sets.size() / Configuration.instance.maximumNumberOfThreads;
             System.out.format("Using %d threads. SliceSize: %d \n", Configuration.instance.maximumNumberOfThreads, sliceSize);
 
 
-            for (int i = 0; i <= onesList.size(); i += sliceSize) {
+            for (int i = 0; i <= sets.size(); i += sliceSize) {
                 final int from = i;
                 int to = i + sliceSize;
-                if (to > onesList.size())
-                    to = onesList.size();
+                if (to > sets.size())
+                    to = sets.size();
                 final int end = to;
-                List<Integer> sublist = onesList.subList(from, end);
-                partitions.add(() -> generateSetsForOne(sublist));
+                    List<ValidatingPrimeSet> sublist = sets.subList(from, end);
+                partitions.add(() -> generateSets(sublist));
             }
 
-            final List<Future<Boolean>> resultFromParts = executorPool.invokeAll(partitions, 900, TimeUnit.SECONDS);
+            final List<Future<Boolean>> resultFromParts = executorPool.invokeAll(partitions, 10, TimeUnit.SECONDS);
             executorPool.shutdown();
 
 
-            for (final Future<Boolean> result : resultFromParts) {
-                Boolean sets = result.get();
-                foundSets.add(sets);
-            }
-
         } catch (Exception e) {
-            System.out.println("Global counter: " + globalDebugCounter.get());
+            System.out.println("Concurrent run aborted.");
             throw new RuntimeException(e);
         }
-        return foundSets;
     }
 
 
-    private Boolean generateSetsForOne(List<Integer> primes) {
-        // 5, 7, 29, 47, 59, 61, 67, 79, 83, 89, 269, 463, 467, 487, 569, 599, 859, 883, 887)
-        for (int entry : primes) {
-            ValidatingPrimeSet set = new ValidatingPrimeSet();
-            if (set.addEntry(entry)) {
-                this.handleTwo(set);
-            }
+    private boolean generateSets(List<ValidatingPrimeSet> sets) {
+        for (ValidatingPrimeSet entry : sets) {
+            ValidatingPrimeSet set = new ValidatingPrimeSet(entry);
+                this.handleOne(set);
         }
         return true;
+    }
+
+    private void handleOne(ValidatingPrimeSet set) {
+        int valueOfDigit = 1;
+        int missing = set.countOfMissingDigit(valueOfDigit);
+        switch (missing){
+            case 0:
+                this.handleTwo(set);
+                return;
+            case 1:
+                int[] oneMissingCombinations = this.categorizer.getBucketForCharacterAndCharacterCount(1, 1);
+                HandleMissingOne(set, oneMissingCombinations);
+                return;
+        }
+    }
+
+    private void HandleMissingOne(ValidatingPrimeSet set, int[] oneMissingCombinations) {
+        for (int entry : oneMissingCombinations ) {
+            ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
+            if (newSet.addEntry(entry)) {
+                this.handleTwo(newSet);
+            }
+        }
     }
 
     private void handleTwo(ValidatingPrimeSet set) {
@@ -420,11 +353,6 @@ public class ConcurrentPrimeCombinationFinder {
                     if ( !newSet.addEntry(prime)) {
                         setIsValid = false;
                         break;
-                    } else { // TODO Remove
-                        int missing = newSet.countOfMissingDigit(7);
-                        if (missing == -1 ){
-                            int z = 3;
-                        }
                     }
                 }
 
@@ -436,7 +364,6 @@ public class ConcurrentPrimeCombinationFinder {
     private void handleSeven(ValidatingPrimeSet set) {
         int valueOfDigit = 7;
         int missing = set.countOfMissingDigit(valueOfDigit);
-        System.out.println("Handle Seven: Missing " + missing);
         switch (missing){
             case 0:
                 this.handleEight(set);
@@ -497,7 +424,6 @@ public class ConcurrentPrimeCombinationFinder {
     private void handleEight(ValidatingPrimeSet set) {
         int valueOfDigit = 8;
         int missing = set.countOfMissingDigit(valueOfDigit);
-        System.out.println("Handle Eight: Missing " + missing);
         switch (missing){
             case 0:
                 this.handleNine(set);
@@ -560,10 +486,8 @@ public class ConcurrentPrimeCombinationFinder {
     }
 
     private void handleNine(ValidatingPrimeSet set) {
-        printDebugSetData(set);
         int valueOfDigit = 9;
         int missing = set.countOfMissingDigit(valueOfDigit);
-        System.out.println("Handle Seven: Missing " + missing);
         switch (missing){
             case 0:
                 this.handlePossibleResult(set);
@@ -630,7 +554,17 @@ public class ConcurrentPrimeCombinationFinder {
     }
 
     private void handlePossibleResult(ValidatingPrimeSet set) {
-        printDebugSetData(set);
+        boolean isValid = Validator.validateFinalSet(set);
+        if (isValid) {
+            calculateResultAndPrintSet(set);
+        }
+    }
+
+    private void calculateResultAndPrintSet(ValidatingPrimeSet set) {
+        int[] primes = Arrays.stream(set.getPrimes()).filter(t -> t != 0).toArray();
+        primes = Arrays.stream(primes).sorted().toArray();
+        int sum = Arrays.stream(primes).sum();
+        System.out.println("Found: Sum: " + sum + " " + Arrays.toString(primes));
     }
 
     private void printDebugSetData(ValidatingPrimeSet set) {
