@@ -561,9 +561,18 @@ public class ConcurrentPrimeCombinationFinder {
     }
 
     private void calculateResultAndPrintSet(ValidatingPrimeSet set) {
+        int counter = globalDebugCounter.incrementAndGet();
+        if (counter % 10 == 0 ){
+            System.out.println("---------------------------- Counter: " + counter);
+        }
+        if (counter % 100 == 0 ){
+            System.out.println("Stringsize: " + strings.size() + " distinct count: " + strings.stream().distinct().count());
+        }
         int[] primes = Arrays.stream(set.getPrimes()).filter(t -> t != 0).toArray();
         primes = Arrays.stream(primes).sorted().toArray();
         int sum = Arrays.stream(primes).sum();
+        // TODO Remove global string array
+        strings.add(Arrays.toString(primes));
         System.out.println("Found: Sum: " + sum + " " + Arrays.toString(primes));
     }
 
@@ -639,11 +648,12 @@ public class ConcurrentPrimeCombinationFinder {
                 for (int occurrence : distinctOccurrence ) {
                     partitionCombination = merge(partitionCombination, filteredValues.get(occurrence));
                 }
-
                 generatedCombinations.addAll((Combinations.combination(partitionCombination, partition.size())));
             }
         }
 
+        // TODO This slowed the generation..
+        /*
         // Filter invalid combinations:
         List<int[]> validCombinations = new ArrayList<>();
         int[] existingSetCounters = ValidatingPrimeSet.countOfDigits(alreadyUsed);
@@ -663,8 +673,11 @@ public class ConcurrentPrimeCombinationFinder {
                 }
             }
         }
-        result.setCombination(validCombinations);
+        // result.setCombination(validCombinations);
 
+
+        */
+        result.setCombination(generatedCombinations);
         return result;
     }
 
