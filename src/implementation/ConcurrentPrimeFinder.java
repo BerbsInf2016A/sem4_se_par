@@ -9,31 +9,31 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class ConcurrentPrimeFinder {
-    public List<Long> findPrimes(long min, long max) {
-        List<Long> primes = new ArrayList<>();
+    public List<Integer> findPrimes(int min, int max) {
+        List<Integer> primes = new ArrayList<>();
 
         try {
-            final List<Callable<List<Long>>> partitions = new ArrayList<>();
+            final List<Callable<List<Integer>>> partitions = new ArrayList<>();
             final ExecutorService executorPool = Executors.newFixedThreadPool(Configuration.instance.maximumNumberOfThreads);
 
-            Long sliceSize = max / Configuration.instance.maximumNumberOfThreads;
+            Integer sliceSize = max / Configuration.instance.maximumNumberOfThreads;
             System.out.format("Using %d threads. SliceSize: %d \n", Configuration.instance.maximumNumberOfThreads, sliceSize);
 
 
-            for (long i = min; i <= max; i += sliceSize) {
-                final Long from = i;
-                Long to = i + sliceSize;
+            for (int i = min; i <= max; i += sliceSize) {
+                final Integer from = i;
+                Integer to = i + sliceSize;
                 if (to > max)
                     to = max;
-                final Long end = to;
+                final Integer end = to;
                 partitions.add(() -> findPrimesInRange(from, end));
             }
 
-            final List<Future<List<Long>>> resultFromParts = executorPool.invokeAll(partitions, 10000, TimeUnit.SECONDS);
+            final List<Future<List<Integer>>> resultFromParts = executorPool.invokeAll(partitions, 10000, TimeUnit.SECONDS);
             executorPool.shutdown();
 
 
-            for (final Future<List<Long>> result : resultFromParts)
+            for (final Future<List<Integer>> result : resultFromParts)
                 primes.addAll(result.get());
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -41,10 +41,10 @@ public class ConcurrentPrimeFinder {
         return primes;
     }
 
-    private List<Long> findPrimesInRange(Long from, Long end) {
-        List<Long> primes = new ArrayList<>();
+    private List<Integer> findPrimesInRange(Integer from, Integer end) {
+        List<Integer> primes = new ArrayList<>();
 
-        for (long i = from; i <= end; i++){
+        for (int i = from; i <= end; i++){
             if(i == 2) primes.add(i);
             if(i == 1) continue;
 
