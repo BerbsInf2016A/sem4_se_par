@@ -16,12 +16,12 @@ public class PartitionCombinationResult {
         return combination;
     }
 
-    public void addCombination(List<int[]> combination) {
-        if (this.combination == null) {this.combination = new ArrayList<>();}
+    private int[] single;
+
+    public void setCombination(List<int[]> combination) {
         this.combination = combination;
     }
 
-    private int[] single;
     private List<int[]> combination;
 
     public boolean hasSingleResult() {return this.single != null;}

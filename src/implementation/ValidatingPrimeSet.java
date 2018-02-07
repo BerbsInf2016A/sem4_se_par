@@ -1,5 +1,7 @@
 package implementation;
 
+import com.sun.deploy.util.StringUtils;
+
 import java.lang.reflect.Array;
 import java.nio.charset.CharacterCodingException;
 import java.util.*;
@@ -107,6 +109,15 @@ public class ValidatingPrimeSet {
         return this.isCountReached(Character.forDigit(i, 10));
     }
 
+    int countOccurrences(int arr[], int n, int x)
+    {
+        int res = 0;
+        for (int i=0; i<n; i++)
+            if (x == arr[i])
+                res++;
+        return res;
+    }
+
     public int countOfMissingDigit(int digitValue) {
         String joinedString = Arrays.toString(this.entries);
         long count = joinedString.chars().filter( d -> d-48 == digitValue).count();
@@ -126,5 +137,20 @@ public class ValidatingPrimeSet {
     @Override
     public int hashCode() {
         return Arrays.hashCode(this.entries);
+    }
+
+    public static int[] countOfDigits(int[] primes) {
+        String joinedString = Arrays.toString(primes);
+        int[] counts = new int[9];
+        counts[0] =  joinedString.length() - joinedString.replace("1", "").length();
+        counts[1] =  joinedString.length() - joinedString.replace("2", "").length();
+        counts[2] =  joinedString.length() - joinedString.replace("3", "").length();
+        counts[3] =  joinedString.length() - joinedString.replace("4", "").length();
+        counts[4] =  joinedString.length() - joinedString.replace("5", "").length();
+        counts[5] =  joinedString.length() - joinedString.replace("6", "").length();
+        counts[6] =  joinedString.length() - joinedString.replace("7", "").length();
+        counts[7] =  joinedString.length() - joinedString.replace("8", "").length();
+        counts[8] =  joinedString.length() - joinedString.replace("9", "").length();
+        return counts;
     }
 }

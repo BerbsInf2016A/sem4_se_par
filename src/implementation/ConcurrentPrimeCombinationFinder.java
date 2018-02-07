@@ -598,6 +598,7 @@ public class ConcurrentPrimeCombinationFinder {
 
     private PartitionCombinationResult getCombinationsForPartionsAndValue(ArrayList<ArrayList<Integer>> partitions, int value, int[] alreadyUsed) {
 
+        // Combine the possible candidates with the partitions.
         Map<Integer, int[]> values = new HashMap<>();
         for (List<Integer> partition : partitions ) {
             for (Integer numberOfOccurence : partition ) {
@@ -606,6 +607,7 @@ public class ConcurrentPrimeCombinationFinder {
             }
         }
 
+        // Filter out the primes, which are already in the set --> This will reduce the created combinations.
         List<Integer> filterValues = Arrays.stream(alreadyUsed).boxed().collect(Collectors.toList());
         Map<Integer, int[]> filteredValues = new HashMap<>();
 
@@ -619,7 +621,9 @@ public class ConcurrentPrimeCombinationFinder {
             }
         }
 
+        // Generate the combinations.
         PartitionCombinationResult result = new PartitionCombinationResult();
+        List<int[]> generatedCombinations = new ArrayList<>();
         for (List<Integer> partition : partitions ) {
             if(partition.size() == 1 ){
                 int element = partition.get(0);
@@ -636,10 +640,30 @@ public class ConcurrentPrimeCombinationFinder {
                     partitionCombination = merge(partitionCombination, filteredValues.get(occurrence));
                 }
 
-                result.addCombination((Combinations.combination(partitionCombination, partition.size())));
+                generatedCombinations.addAll((Combinations.combination(partitionCombination, partition.size())));
             }
-
         }
+
+        // Filter invalid combinations:
+        List<int[]> validCombinations = new ArrayList<>();
+        int[] existingSetCounters = ValidatingPrimeSet.countOfDigits(alreadyUsed);
+        if (result.hasCombinationResult()) {
+            List<int[]> combinations = generatedCombinations;
+            for (int[] combination : combinations) {
+                int[] newCounters = ValidatingPrimeSet.countOfDigits(combination);
+                boolean suitableCombination = true;
+                for (int i = 0; i<9; i++) {
+                    if (newCounters[i] + existingSetCounters[i] > (i+1)){
+                        suitableCombination = false;
+                        break;
+                    }
+                }
+                if (suitableCombination) {
+                    validCombinations.add(combination);
+                }
+            }
+        }
+        result.setCombination(validCombinations);
 
         return result;
     }
