@@ -57,6 +57,7 @@ public class ConcurrentPrimeCombinationFinder {
 
     private void handleThree(ValidatingPrimeSet set){
         int valueOfDigit = 3;
+        if(!precheck(set, valueOfDigit)) return;
         int missing = set.countOfMissingDigit(valueOfDigit);
         switch (missing){
             case 0:
@@ -101,6 +102,7 @@ public class ConcurrentPrimeCombinationFinder {
 
     private void handleFour(ValidatingPrimeSet set) {
         int valueOfDigit = 4;
+        if(!precheck(set, valueOfDigit)) return;
         int missing = set.countOfMissingDigit(valueOfDigit);
         switch (missing){
             case 0:
@@ -201,6 +203,7 @@ public class ConcurrentPrimeCombinationFinder {
         }
     }
 
+
     private void HandleMissingOne(ValidatingPrimeSet set, int[] oneMissingCombinations) {
         for (int entry : oneMissingCombinations ) {
             ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
@@ -212,6 +215,7 @@ public class ConcurrentPrimeCombinationFinder {
 
     private void handleTwo(ValidatingPrimeSet set) {
         int valueOfDigit = 2;
+        if(!precheck(set, valueOfDigit)) return;
         int missing = set.countOfMissingDigit(valueOfDigit);
         switch (missing){
             case 0:
@@ -226,6 +230,10 @@ public class ConcurrentPrimeCombinationFinder {
                 HandleTwoCombination(set, twoMissingCombination);
                 return;
         }
+    }
+
+    private boolean precheck(ValidatingPrimeSet set, int i) {
+        return set.countReached(i - 1 );
     }
 
     private void HandleTwoCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
@@ -253,31 +261,32 @@ public class ConcurrentPrimeCombinationFinder {
 
     private void handleFive(ValidatingPrimeSet set) {
         int valueOfDigit = 5;
+        if(!precheck(set, valueOfDigit)) return;
         int missing = set.countOfMissingDigit(valueOfDigit);
         switch (missing){
             case 0:
                 this.handleSix(set);
-                break;
+                return;
             case 1:
                 PartitionCombinationResult oneMissingCombinations =  this.getCombinations(1, valueOfDigit,set.getPrimes());
                 HandleFiveCombination(set, oneMissingCombinations);
-                break;
+                return;
             case 2:
                 PartitionCombinationResult twoMissingCombination =  this.getCombinations(2, valueOfDigit,set.getPrimes());
                 HandleFiveCombination(set, twoMissingCombination);
-                break;
+                return;
             case 3:
                 PartitionCombinationResult threeMissingCombination =  this.getCombinations(3, valueOfDigit,set.getPrimes());
                 HandleFiveCombination(set, threeMissingCombination);
-                break;
+                return;
             case 4:
                 PartitionCombinationResult fourMissingCombination =  this.getCombinations(4, valueOfDigit,set.getPrimes());
                 HandleFiveCombination(set, fourMissingCombination);
-                break;
+                return;
             case 5:
                 PartitionCombinationResult fiveMissingCombination =  this.getCombinations(5, valueOfDigit,set.getPrimes());
                 HandleFiveCombination(set, fiveMissingCombination);
-                break;
+                return;
         }
     }
 
@@ -305,35 +314,36 @@ public class ConcurrentPrimeCombinationFinder {
 
     private void handleSix(ValidatingPrimeSet set) {
         int valueOfDigit = 6;
+        if(!precheck(set, valueOfDigit)) return;
         int missing = set.countOfMissingDigit(valueOfDigit);
         switch (missing){
             case 0:
                 this.handleSeven(set);
-                break;
+                return;
             case 1:
                 PartitionCombinationResult oneMissing =  this.getCombinations(1, valueOfDigit,set.getPrimes());
                 HandleSixCombination(set, oneMissing);
-                break;
+                return;
             case 2:
                 PartitionCombinationResult twoMissing =  this.getCombinations(2, valueOfDigit,set.getPrimes());
                 HandleSixCombination(set, twoMissing);
-                break;
+                return;
             case 3:
                 PartitionCombinationResult threeMissing =  this.getCombinations(3, valueOfDigit,set.getPrimes());
                 HandleSixCombination(set, threeMissing);
-                break;
+                return;
             case 4:
                 PartitionCombinationResult fourMissing =  this.getCombinations(4, valueOfDigit,set.getPrimes());
                 HandleSixCombination(set, fourMissing);
-                break;
+                return;
             case 5:
                 PartitionCombinationResult fiveMissing =  this.getCombinations(5, valueOfDigit,set.getPrimes());
                 HandleSixCombination(set, fiveMissing);
-                break;
+                return;
             case 6:
                 PartitionCombinationResult sixMissing =  this.getCombinations(6, valueOfDigit,set.getPrimes());
                 HandleSixCombination(set, sixMissing);
-                break;
+                return;
         }
     }
 
@@ -363,39 +373,40 @@ public class ConcurrentPrimeCombinationFinder {
 
     private void handleSeven(ValidatingPrimeSet set) {
         int valueOfDigit = 7;
+        if(!precheck(set, valueOfDigit)) return;
         int missing = set.countOfMissingDigit(valueOfDigit);
         switch (missing){
             case 0:
                 this.handleEight(set);
-                break;
+                return;
             case 1:
                 PartitionCombinationResult oneMissing =  this.getCombinations(1, valueOfDigit,set.getPrimes());
                 HandleSevenCombination(set, oneMissing);
-                break;
+                return;
             case 2:
                 PartitionCombinationResult twoMissing =  this.getCombinations(2, valueOfDigit,set.getPrimes());
                 HandleSevenCombination(set, twoMissing);
-                break;
+                return;
             case 3:
                 PartitionCombinationResult threeMissing =  this.getCombinations(3, valueOfDigit,set.getPrimes());
                 HandleSevenCombination(set, threeMissing);
-                break;
+                return;
             case 4:
                 PartitionCombinationResult fourMissing =  this.getCombinations(4, valueOfDigit,set.getPrimes());
                 HandleSevenCombination(set, fourMissing);
-                break;
+                return;
             case 5:
                 PartitionCombinationResult fiveMissing =  this.getCombinations(5, valueOfDigit,set.getPrimes());
                 HandleSevenCombination(set, fiveMissing);
-                break;
+                return;
             case 6:
                 PartitionCombinationResult sixMissing =  this.getCombinations(6, valueOfDigit,set.getPrimes());
                 HandleSevenCombination(set, sixMissing);
-                break;
+                return;
             case 7:
                 PartitionCombinationResult sevenMissing =  this.getCombinations(7, valueOfDigit,set.getPrimes());
                 HandleSevenCombination(set, sevenMissing);
-                break;
+                return;
         }
     }
 
@@ -423,43 +434,44 @@ public class ConcurrentPrimeCombinationFinder {
 
     private void handleEight(ValidatingPrimeSet set) {
         int valueOfDigit = 8;
+        if(!precheck(set, valueOfDigit)) return;
         int missing = set.countOfMissingDigit(valueOfDigit);
         switch (missing){
             case 0:
                 this.handleNine(set);
-                break;
+                return;
             case 1:
                 PartitionCombinationResult oneMissing =  this.getCombinations(1, valueOfDigit,set.getPrimes());
                 HandleEightCombination(set, oneMissing);
-                break;
+                return;
             case 2:
                 PartitionCombinationResult twoMissing =  this.getCombinations(2, valueOfDigit,set.getPrimes());
                 HandleEightCombination(set, twoMissing);
-                break;
+                return;
             case 3:
                 PartitionCombinationResult threeMissing =  this.getCombinations(3, valueOfDigit,set.getPrimes());
                 HandleEightCombination(set, threeMissing);
-                break;
+                return;
             case 4:
                 PartitionCombinationResult fourMissing =  this.getCombinations(4, valueOfDigit,set.getPrimes());
                 HandleEightCombination(set, fourMissing);
-                break;
+                return;
             case 5:
                 PartitionCombinationResult fiveMissing =  this.getCombinations(5, valueOfDigit,set.getPrimes());
                 HandleEightCombination(set, fiveMissing);
-                break;
+                return;
             case 6:
                 PartitionCombinationResult sixMissing =  this.getCombinations(6, valueOfDigit,set.getPrimes());
                 HandleEightCombination(set, sixMissing);
-                break;
+                return;
             case 7:
                 PartitionCombinationResult sevenMissing =  this.getCombinations(7, valueOfDigit,set.getPrimes());
                 HandleEightCombination(set, sevenMissing);
-                break;
+                return;
             case 8:
                 PartitionCombinationResult eightMissing =  this.getCombinations(8, valueOfDigit,set.getPrimes());
                 HandleEightCombination(set, eightMissing);
-                break;
+                return;
         }
     }
 
@@ -487,47 +499,48 @@ public class ConcurrentPrimeCombinationFinder {
 
     private void handleNine(ValidatingPrimeSet set) {
         int valueOfDigit = 9;
+        if(!precheck(set, valueOfDigit)) return;
         int missing = set.countOfMissingDigit(valueOfDigit);
         switch (missing){
             case 0:
                 this.handlePossibleResult(set);
-                break;
+                return;
             case 1:
                 PartitionCombinationResult oneMissing =  this.getCombinations(1, valueOfDigit,set.getPrimes());
                 HandleNineCombination(set, oneMissing);
-                break;
+                return;
             case 2:
                 PartitionCombinationResult twoMissing =  this.getCombinations(2, valueOfDigit,set.getPrimes());
                 HandleNineCombination(set, twoMissing);
-                break;
+                return;
             case 3:
                 PartitionCombinationResult threeMissing =  this.getCombinations(3, valueOfDigit,set.getPrimes());
                 HandleNineCombination(set, threeMissing);
-                break;
+                return;
             case 4:
                 PartitionCombinationResult fourMissing =  this.getCombinations(4, valueOfDigit,set.getPrimes());
                 HandleNineCombination(set, fourMissing);
-                break;
+                return;
             case 5:
                 PartitionCombinationResult fiveMissing =  this.getCombinations(5, valueOfDigit,set.getPrimes());
                 HandleNineCombination(set, fiveMissing);
-                break;
+                return;
             case 6:
                 PartitionCombinationResult sixMissing =  this.getCombinations(6, valueOfDigit,set.getPrimes());
                 HandleNineCombination(set, sixMissing);
-                break;
+                return;
             case 7:
                 PartitionCombinationResult sevenMissing =  this.getCombinations(7, valueOfDigit,set.getPrimes());
                 HandleNineCombination(set, sevenMissing);
-                break;
+                return;
             case 8:
                 PartitionCombinationResult eightMissing =  this.getCombinations(8, valueOfDigit,set.getPrimes());
                 HandleNineCombination(set, eightMissing);
-                break;
+                return;
             case 9:
                 PartitionCombinationResult nineMissing =  this.getCombinations(9, valueOfDigit,set.getPrimes());
                 HandleNineCombination(set, nineMissing);
-                break;
+                return;
         }
     }
 
@@ -561,9 +574,18 @@ public class ConcurrentPrimeCombinationFinder {
     }
 
     private void calculateResultAndPrintSet(ValidatingPrimeSet set) {
+        int counter = globalDebugCounter.incrementAndGet();
+        if (counter % 10 == 0 ){
+            System.out.println("---------------------------- Counter: " + counter);
+        }
+        if (counter % 100 == 0 ){
+            System.out.println("Stringsize: " + strings.size() + " distinct count: " + strings.stream().distinct().count());
+        }
         int[] primes = Arrays.stream(set.getPrimes()).filter(t -> t != 0).toArray();
         primes = Arrays.stream(primes).sorted().toArray();
         int sum = Arrays.stream(primes).sum();
+        // TODO Remove global string array
+        strings.add(Arrays.toString(primes));
         System.out.println("Found: Sum: " + sum + " " + Arrays.toString(primes));
     }
 
@@ -630,20 +652,27 @@ public class ConcurrentPrimeCombinationFinder {
                 if (filteredValues.containsKey(element)) result.setSingle(filteredValues.get(element));
             } else {
                 HashSet<Integer> distinctOccurrence = new HashSet<>();
+                // Check if all parts for this partition are available.
+                boolean necessaryDataAvailable = true;
+                for (int numberOfValueDigits : partition ) {
+                    if (!filteredValues.containsKey(numberOfValueDigits)) necessaryDataAvailable = false;
+                }
+                if (!necessaryDataAvailable) continue;
+
                 int[] partitionCombination = new int[0];
                 for (int occurence : partition ) {
-                    if ( !filteredValues.containsKey(occurence)) continue;
                     distinctOccurrence.add(occurence);
                 }
 
                 for (int occurrence : distinctOccurrence ) {
                     partitionCombination = merge(partitionCombination, filteredValues.get(occurrence));
                 }
-
                 generatedCombinations.addAll((Combinations.combination(partitionCombination, partition.size())));
             }
         }
 
+        // TODO This slowed the generation..
+        /*
         // Filter invalid combinations:
         List<int[]> validCombinations = new ArrayList<>();
         int[] existingSetCounters = ValidatingPrimeSet.countOfDigits(alreadyUsed);
@@ -663,8 +692,11 @@ public class ConcurrentPrimeCombinationFinder {
                 }
             }
         }
-        result.setCombination(validCombinations);
+        // result.setCombination(validCombinations);
 
+
+        */
+        result.setCombination(generatedCombinations);
         return result;
     }
 
