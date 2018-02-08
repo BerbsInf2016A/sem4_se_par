@@ -8,8 +8,36 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-public class ConcurrentPrimeFinder {
-    public List<Integer> findPrimes(int min, int max) {
+/**
+ * A concurrent prime finder.
+ */
+public class ConcurrentPrimeFilter {
+    /**
+     * A method to check, if a long is a prime.
+     *
+     * @param n The value to check.
+     * @return True, if a prime, false if not.
+     */
+    // Copied from https://www.mkyong.com/java/how-to-determine-a-prime-number-in-java/
+    public static boolean isPrime(long n) {
+        //check if n is a multiple of 2
+        if (n % 2 == 0) return false;
+        //if not, then just check the odds
+        for (int i = 3; i * i <= n; i += 2) {
+            if (n % i == 0)
+                return false;
+        }
+        return true;
+    }
+
+    /**
+     * Filter the prime integers in the range from min to max.
+     *
+     * @param min The lower limit.
+     * @param max The upper limit.
+     * @return The found primes.
+     */
+    public List<Integer> filterPrimes(int min, int max) {
         List<Integer> primes = new ArrayList<>();
 
         try {
@@ -17,7 +45,7 @@ public class ConcurrentPrimeFinder {
             final ExecutorService executorPool = Executors.newFixedThreadPool(Configuration.instance.maximumNumberOfThreads);
 
             Integer sliceSize = max / Configuration.instance.maximumNumberOfThreads;
-            System.out.format("Using %d threads. SliceSize: %d \n", Configuration.instance.maximumNumberOfThreads, sliceSize);
+            System.out.format("Using %d threads for the prime filter. SliceSize: %d \n", Configuration.instance.maximumNumberOfThreads, sliceSize);
 
 
             for (int i = min; i <= max; i += sliceSize) {
@@ -41,6 +69,13 @@ public class ConcurrentPrimeFinder {
         return primes;
     }
 
+    /**
+     * Find the primes in a given range.
+     *
+     * @param from The lower limit of the range.
+     * @param end  The upper limit of the range.
+     * @return A list of found primes.
+     */
     private List<Integer> findPrimesInRange(Integer from, Integer end) {
         List<Integer> primes = new ArrayList<>();
 
@@ -54,17 +89,5 @@ public class ConcurrentPrimeFinder {
         }
 
         return primes;
-    }
-
-    // Copied from https://www.mkyong.com/java/how-to-determine-a-prime-number-in-java/
-    boolean isPrime(long n) {
-        //check if n is a multiple of 2
-        if (n % 2 == 0) return false;
-        //if not, then just check the odds
-        for (int i = 3; i * i <= n; i += 2) {
-            if (n % i == 0)
-                return false;
-        }
-        return true;
     }
 }

@@ -18,6 +18,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static implementation.Combinations.merge;
@@ -28,10 +29,10 @@ public class ConcurrentPrimeCombinationFinder {
     public static AtomicInteger globalMinimumSum = new AtomicInteger();
     public static AtomicReference<String> globalMinimumSet = new AtomicReference<>();
     public static LinkedBlockingQueue<String> strings = new LinkedBlockingQueue<>();
-    private final PrimeCategorizer categorizer;
+    private final CachedPrimeCategories categories;
 
-    public ConcurrentPrimeCombinationFinder(PrimeCategorizer categorizer) {
-        this.categorizer = categorizer;
+    public ConcurrentPrimeCombinationFinder(CachedPrimeCategories categories) {
+        this.categories = categories;
     }
 
     public void run(List<ValidatingPrimeSet> sets) throws RuntimeException, InterruptedException {
@@ -47,7 +48,7 @@ public class ConcurrentPrimeCombinationFinder {
     private void handleThree(ValidatingPrimeSet set) {
         int valueOfDigit = 3;
         if (!precheck(set, valueOfDigit)) return;
-        int missing = set.countOfMissingDigit(valueOfDigit);
+        int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
                 this.handleFour(set);
@@ -71,17 +72,17 @@ public class ConcurrentPrimeCombinationFinder {
         if (result.hasSingleResult()) {
             for (int singleResult : result.getSingle()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.addEntry(singleResult)) {
+                if (newSet.tryToAddEntry(singleResult)) {
                     this.handleFour(newSet);
                 }
             }
         }
         if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombination()) {
+            for (int[] combination : result.getCombinations()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
                 boolean setIsValid = true;
                 for (int prime : combination) {
-                    if (!newSet.addEntry(prime)) {
+                    if (!newSet.tryToAddEntry(prime)) {
                         setIsValid = false;
                         break;
                     }
@@ -96,7 +97,7 @@ public class ConcurrentPrimeCombinationFinder {
     private void handleFour(ValidatingPrimeSet set) {
         int valueOfDigit = 4;
         if (!precheck(set, valueOfDigit)) return;
-        int missing = set.countOfMissingDigit(valueOfDigit);
+        int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
                 this.handleFive(set);
@@ -124,17 +125,17 @@ public class ConcurrentPrimeCombinationFinder {
         if (result.hasSingleResult()) {
             for (int singleResult : result.getSingle()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.addEntry(singleResult)) {
+                if (newSet.tryToAddEntry(singleResult)) {
                     this.handleFive(newSet);
                 }
             }
         }
         if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombination()) {
+            for (int[] combination : result.getCombinations()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
                 boolean setIsValid = true;
                 for (int prime : combination) {
-                    if (!newSet.addEntry(prime)) {
+                    if (!newSet.tryToAddEntry(prime)) {
                         setIsValid = false;
                         break;
                     }
@@ -193,13 +194,13 @@ public class ConcurrentPrimeCombinationFinder {
 
     private void handleOne(ValidatingPrimeSet set) {
         int valueOfDigit = 1;
-        int missing = set.countOfMissingDigit(valueOfDigit);
+        int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
                 this.handleTwo(set);
                 return;
             case 1:
-                int[] oneMissingCombinations = this.categorizer.getBucketForCharacterAndCharacterCount(1, 1);
+                int[] oneMissingCombinations = this.categories.getBucketForCharacterAndCharacterCount(1, 1);
                 HandleMissingOne(set, oneMissingCombinations);
                 return;
         }
@@ -208,7 +209,7 @@ public class ConcurrentPrimeCombinationFinder {
     private void HandleMissingOne(ValidatingPrimeSet set, int[] oneMissingCombinations) {
         for (int entry : oneMissingCombinations) {
             ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-            if (newSet.addEntry(entry)) {
+            if (newSet.tryToAddEntry(entry)) {
                 this.handleTwo(newSet);
             }
         }
@@ -217,7 +218,7 @@ public class ConcurrentPrimeCombinationFinder {
     private void handleTwo(ValidatingPrimeSet set) {
         int valueOfDigit = 2;
         if (!precheck(set, valueOfDigit)) return;
-        int missing = set.countOfMissingDigit(valueOfDigit);
+        int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
                 this.handleThree(set);
@@ -246,17 +247,17 @@ public class ConcurrentPrimeCombinationFinder {
         if (result.hasSingleResult()) {
             for (int singleResult : result.getSingle()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.addEntry(singleResult)) {
+                if (newSet.tryToAddEntry(singleResult)) {
                     this.handleThree(newSet);
                 }
             }
         }
         if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombination()) {
+            for (int[] combination : result.getCombinations()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
                 boolean setIsValid = true;
                 for (int prime : combination) {
-                    if (!newSet.addEntry(prime)) {
+                    if (!newSet.tryToAddEntry(prime)) {
                         setIsValid = false;
                         break;
                     }
@@ -271,7 +272,7 @@ public class ConcurrentPrimeCombinationFinder {
     private void handleFive(ValidatingPrimeSet set) {
         int valueOfDigit = 5;
         if (!precheck(set, valueOfDigit)) return;
-        int missing = set.countOfMissingDigit(valueOfDigit);
+        int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
                 this.handleSix(set);
@@ -303,17 +304,17 @@ public class ConcurrentPrimeCombinationFinder {
         if (result.hasSingleResult()) {
             for (int singleResult : result.getSingle()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.addEntry(singleResult)) {
+                if (newSet.tryToAddEntry(singleResult)) {
                     this.handleSix(newSet);
                 }
             }
         }
         if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombination()) {
+            for (int[] combination : result.getCombinations()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
                 boolean setIsValid = true;
                 for (int prime : combination) {
-                    if (!newSet.addEntry(prime)) {
+                    if (!newSet.tryToAddEntry(prime)) {
                         setIsValid = false;
                         break;
                     }
@@ -328,7 +329,7 @@ public class ConcurrentPrimeCombinationFinder {
     private void handleSix(ValidatingPrimeSet set) {
         int valueOfDigit = 6;
         if (!precheck(set, valueOfDigit)) return;
-        int missing = set.countOfMissingDigit(valueOfDigit);
+        int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
                 this.handleSeven(set);
@@ -364,18 +365,18 @@ public class ConcurrentPrimeCombinationFinder {
         if (result.hasSingleResult()) {
             for (int singleResult : result.getSingle()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.addEntry(singleResult)) {
+                if (newSet.tryToAddEntry(singleResult)) {
                     this.handleSeven(newSet);
                 }
             }
         }
         if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombination()) {
+            for (int[] combination : result.getCombinations()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
 
                 boolean setIsValid = true;
                 for (int prime : combination) {
-                    if (!newSet.addEntry(prime)) {
+                    if (!newSet.tryToAddEntry(prime)) {
                         setIsValid = false;
                         break;
                     }
@@ -391,7 +392,7 @@ public class ConcurrentPrimeCombinationFinder {
     private void handleSeven(ValidatingPrimeSet set) {
         int valueOfDigit = 7;
         if (!precheck(set, valueOfDigit)) return;
-        int missing = set.countOfMissingDigit(valueOfDigit);
+        int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
                 this.handleEight(set);
@@ -431,17 +432,17 @@ public class ConcurrentPrimeCombinationFinder {
         if (result.hasSingleResult()) {
             for (int singleResult : result.getSingle()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.addEntry(singleResult)) {
+                if (newSet.tryToAddEntry(singleResult)) {
                     this.handleEight(newSet);
                 }
             }
         }
         if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombination()) {
+            for (int[] combination : result.getCombinations()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
                 boolean setIsValid = true;
                 for (int prime : combination) {
-                    if (!newSet.addEntry(prime)) {
+                    if (!newSet.tryToAddEntry(prime)) {
                         setIsValid = false;
                         break;
                     }
@@ -456,7 +457,7 @@ public class ConcurrentPrimeCombinationFinder {
     private void handleEight(ValidatingPrimeSet set) {
         int valueOfDigit = 8;
         if (!precheck(set, valueOfDigit)) return;
-        int missing = set.countOfMissingDigit(valueOfDigit);
+        int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
                 this.handleNine(set);
@@ -500,17 +501,17 @@ public class ConcurrentPrimeCombinationFinder {
         if (result.hasSingleResult()) {
             for (int singleResult : result.getSingle()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.addEntry(singleResult)) {
+                if (newSet.tryToAddEntry(singleResult)) {
                     this.handleNine(newSet);
                 }
             }
         }
         if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombination()) {
+            for (int[] combination : result.getCombinations()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
                 boolean setIsValid = true;
                 for (int prime : combination) {
-                    if (!newSet.addEntry(prime)) {
+                    if (!newSet.tryToAddEntry(prime)) {
                         setIsValid = false;
                         break;
                     }
@@ -525,7 +526,7 @@ public class ConcurrentPrimeCombinationFinder {
     private void handleNine(ValidatingPrimeSet set) {
         int valueOfDigit = 9;
         if (!precheck(set, valueOfDigit)) return;
-        int missing = set.countOfMissingDigit(valueOfDigit);
+        int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
                 this.handlePossibleResult(set);
@@ -573,17 +574,17 @@ public class ConcurrentPrimeCombinationFinder {
         if (result.hasSingleResult()) {
             for (int singleResult : result.getSingle()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.addEntry(singleResult)) {
+                if (newSet.tryToAddEntry(singleResult)) {
                     this.handlePossibleResult(newSet);
                 }
             }
         }
         if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombination()) {
+            for (int[] combination : result.getCombinations()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
                 boolean setIsValid = true;
                 for (int prime : combination) {
-                    if (!newSet.addEntry(prime)) {
+                    if (!newSet.tryToAddEntry(prime)) {
                         setIsValid = false;
                         break;
                     }
@@ -642,34 +643,20 @@ public class ConcurrentPrimeCombinationFinder {
         System.out.println(list.stream().map(t -> t.toString()).collect(Collectors.joining(", ")));
     }
 
-    public <T> Set<T> findDuplicates(Collection<T> list) {
-
-        Set<T> duplicates = new LinkedHashSet<T>();
-        Set<T> uniques = new HashSet<T>();
-
-        for (T t : list) {
-            if (!uniques.add(t)) {
-                duplicates.add(t);
-            }
-        }
-
-        return duplicates;
-    }
-
     private PartitionCombinationResult getCombinations(int countOfMissing, int value, int[] filterPrimes) {
-        ArrayList<ArrayList<Integer>> partitions = Partition.partition(countOfMissing);
-        return this.getCombinationsForPartionsAndValue(partitions, value, filterPrimes);
+        ArrayList<ArrayList<Integer>> partitions = CachedPartition.partition(countOfMissing);
+        return this.getCombinationsForPartitionsAndValue(partitions, value, filterPrimes);
     }
 
 
-    private PartitionCombinationResult getCombinationsForPartionsAndValue(ArrayList<ArrayList<Integer>> partitions, int value, int[] alreadyUsed) {
+    private PartitionCombinationResult getCombinationsForPartitionsAndValue(ArrayList<ArrayList<Integer>> partitions, int value, int[] alreadyUsed) {
 
         // Combine the possible candidates with the partitions.
         Map<Integer, int[]> values = new HashMap<>();
         for (List<Integer> partition : partitions) {
-            for (Integer numberOfOccurence : partition) {
-                if (values.containsKey(numberOfOccurence)) continue;
-                values.put(numberOfOccurence, categorizer.getBucketForCharacterAndCharacterCount(value, numberOfOccurence));
+            for (Integer numberOfOccurrence : partition) {
+                if (values.containsKey(numberOfOccurrence)) continue;
+                values.put(numberOfOccurrence, categories.getBucketForCharacterAndCharacterCount(value, numberOfOccurrence));
             }
         }
 
@@ -737,7 +724,6 @@ public class ConcurrentPrimeCombinationFinder {
             }
         }
         // result.setCombination(validCombinations);
-
 
         */
         result.setCombination(generatedCombinations);

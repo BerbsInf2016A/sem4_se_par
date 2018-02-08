@@ -3,26 +3,41 @@ package implementation;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A class to build combinations and some necessary helper methods.
+ */
 public class Combinations {
 
-    final static
-    public int[] merge(final int[]... arrays) {
+    /**
+     * Merges several arrays into one.
+     *
+     * @param arrays The arrays which should be merged.
+     * @return The merged array.
+     */
+    static public int[] merge(final int[]... arrays) {
         int size = 0;
         for (int[] a : arrays)
             size += a.length;
 
-        int[] res = new int[size];
+        int[] result = new int[size];
 
         int destPos = 0;
         for (int i = 0; i < arrays.length; i++) {
             if (i > 0) destPos += arrays[i - 1].length;
             int length = arrays[i].length;
-            System.arraycopy(arrays[i], 0, res, destPos, length);
+            System.arraycopy(arrays[i], 0, result, destPos, length);
         }
 
-        return res;
+        return result;
     }
 
+    /**
+     * Gets a subset from an array.
+     *
+     * @param input  The input array, which is the source of the values, which should be copied.
+     * @param subset An array containing the wanted subset indices.
+     * @return The subset.
+     */
     private static int[] getSubset(int[] input, int[] subset) {
         int[] result = new int[subset.length];
         for (int i = 0; i < subset.length; i++)
@@ -30,8 +45,15 @@ public class Combinations {
         return result;
     }
 
+    /**
+     * Builds the combination of a given length, out of the given elements.
+     *
+     * @param elements The elements to combine.
+     * @param length   The length of the wanted combinations.
+     * @return The combinations of the elements in the given length.
+     */
     public static List<int[]> combination(int[] elements, int length) {
-
+// TODO Fix comments.
         List<int[]> subsets = new ArrayList<>();
 
         int[] s = new int[length];                  // here we'll keep indices
@@ -57,36 +79,4 @@ public class Combinations {
         }
         return subsets;
     }
-    /*
-
-    public static <T> List<List<T>> combination(List<T> values, int size) {
-
-        if (0 == size) {
-            return Collections.singletonList(Collections.<T> emptyList());
-        }
-
-        if (values.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        List<List<T>> combination = new LinkedList<List<T>>();
-
-        T actual = values.iterator().next();
-
-        List<T> subSet = new LinkedList<T>(values);
-        subSet.remove(actual);
-
-        List<List<T>> subSetCombination = combination(subSet, size - 1);
-
-        for (List<T> set : subSetCombination) {
-            List<T> newSet = new LinkedList<T>(set);
-            newSet.add(0, actual);
-            combination.add(newSet);
-        }
-
-        combination.addAll(combination(subSet, size));
-
-        return combination;
-    }
-    */
 }
