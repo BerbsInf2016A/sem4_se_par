@@ -2,13 +2,10 @@ package implementation;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutorService;
@@ -29,7 +26,7 @@ public class ConcurrentPrimeCombinationFinder {
     public static AtomicInteger globalMinimumSum = new AtomicInteger();
     public static AtomicReference<String> globalMinimumSet = new AtomicReference<>();
     public static LinkedBlockingQueue<String> strings = new LinkedBlockingQueue<>();
-    private final CachedPrimeCategories categories;
+    private static CachedPrimeCategories categories;
 
     public ConcurrentPrimeCombinationFinder(CachedPrimeCategories categories) {
         this.categories = categories;
@@ -45,40 +42,42 @@ public class ConcurrentPrimeCombinationFinder {
         }
     }
 
-    private void handleThree(ValidatingPrimeSet set) {
+    private static Void handleThree(ValidatingPrimeSet set) {
         int valueOfDigit = 3;
-        if (!precheck(set, valueOfDigit)) return;
+        if (!preCheckConditions(set, valueOfDigit)) return null;
+        Function<ValidatingPrimeSet, Void> nextFunction = ConcurrentPrimeCombinationFinder::handleFour;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
-                this.handleFour(set);
-                return;
+                handleFour(set);
+                return null;
             case 1:
-                PartitionCombinationResult oneMissingCombinations = this.getCombinations(1, valueOfDigit, set.getPrimes());
-                HandleThreeCombination(set, oneMissingCombinations);
-                return;
+                PartitionCombinationResult oneMissingCombinations = getCombinations(1, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, oneMissingCombinations, nextFunction);
+                return null;
             case 2:
-                PartitionCombinationResult twoMissingCombination = this.getCombinations(2, valueOfDigit, set.getPrimes());
-                HandleThreeCombination(set, twoMissingCombination);
-                return;
+                PartitionCombinationResult twoMissingCombination = getCombinations(2, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, twoMissingCombination, nextFunction);
+                return null;
             case 3:
-                PartitionCombinationResult threeMissingCombination = this.getCombinations(3, valueOfDigit, set.getPrimes());
-                HandleThreeCombination(set, threeMissingCombination);
-                return;
+                PartitionCombinationResult threeMissingCombination = getCombinations(3, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, threeMissingCombination, nextFunction);
+                return null;
         }
+        return null;
     }
 
-    private void HandleThreeCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
-        if (result.hasSingleResult()) {
-            for (int singleResult : result.getSingle()) {
+    private static void handleCombinationsWithNextFunction(ValidatingPrimeSet set, PartitionCombinationResult combinations, Function<ValidatingPrimeSet,Void> nextFunction){
+        if (combinations.hasSingleResult()) {
+            for (int singleResult : combinations.getSingle()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
                 if (newSet.tryToAddEntry(singleResult)) {
-                    this.handleFour(newSet);
+                    nextFunction.apply(newSet);
                 }
             }
         }
-        if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombinations()) {
+        if (combinations.hasCombinationResult()) {
+            for (int[] combination : combinations.getCombinations()) {
                 ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
                 boolean setIsValid = true;
                 for (int prime : combination) {
@@ -88,64 +87,44 @@ public class ConcurrentPrimeCombinationFinder {
                     }
                 }
                 if (setIsValid) {
-                    this.handleFour(newSet);
+                    nextFunction.apply(newSet);
                 }
             }
         }
     }
 
-    private void handleFour(ValidatingPrimeSet set) {
+
+
+    private static Void handleFour(ValidatingPrimeSet set) {
         int valueOfDigit = 4;
-        if (!precheck(set, valueOfDigit)) return;
+        if (!preCheckConditions(set, valueOfDigit)) return null;
+        Function<ValidatingPrimeSet, Void> nextFunction = ConcurrentPrimeCombinationFinder::handleFive;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
-                this.handleFive(set);
-                return;
+                handleFive(set);
+                return null;
             case 1:
-                PartitionCombinationResult oneMissingCombinations = this.getCombinations(1, valueOfDigit, set.getPrimes());
-                HandleFourCombination(set, oneMissingCombinations);
-                return;
+                PartitionCombinationResult oneMissingCombinations = getCombinations(1, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, oneMissingCombinations, nextFunction);
+                return null;
             case 2:
-                PartitionCombinationResult twoMissingCombination = this.getCombinations(2, valueOfDigit, set.getPrimes());
-                HandleFourCombination(set, twoMissingCombination);
-                return;
+                PartitionCombinationResult twoMissingCombination = getCombinations(2, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, twoMissingCombination, nextFunction);
+                return null;
             case 3:
-                PartitionCombinationResult threeMissingCombination = this.getCombinations(3, valueOfDigit, set.getPrimes());
-                HandleFourCombination(set, threeMissingCombination);
-                return;
+                PartitionCombinationResult threeMissingCombination = getCombinations(3, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, threeMissingCombination, nextFunction);
+                return null;
             case 4:
-                PartitionCombinationResult fourMissingCombination = this.getCombinations(4, valueOfDigit, set.getPrimes());
-                HandleFourCombination(set, fourMissingCombination);
-                return;
+                PartitionCombinationResult fourMissingCombination = getCombinations(4, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, fourMissingCombination, nextFunction);
+                return null;
         }
+        return null;
     }
 
-    private void HandleFourCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
-        if (result.hasSingleResult()) {
-            for (int singleResult : result.getSingle()) {
-                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.tryToAddEntry(singleResult)) {
-                    this.handleFive(newSet);
-                }
-            }
-        }
-        if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombinations()) {
-                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                boolean setIsValid = true;
-                for (int prime : combination) {
-                    if (!newSet.tryToAddEntry(prime)) {
-                        setIsValid = false;
-                        break;
-                    }
-                }
-                if (setIsValid) {
-                    this.handleFive(newSet);
-                }
-            }
-        }
-    }
+
 
     public void runConcurrent(List<ValidatingPrimeSet> sets) {
         try {
@@ -215,26 +194,28 @@ public class ConcurrentPrimeCombinationFinder {
         }
     }
 
-    private void handleTwo(ValidatingPrimeSet set) {
+    private Void handleTwo(ValidatingPrimeSet set) {
         int valueOfDigit = 2;
-        if (!precheck(set, valueOfDigit)) return;
+        if (!preCheckConditions(set, valueOfDigit)) return null;
+        Function<ValidatingPrimeSet, Void> nextFunction = ConcurrentPrimeCombinationFinder::handleThree;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
                 this.handleThree(set);
-                return;
+                return null;
             case 1:
                 PartitionCombinationResult oneMissingCombinations = this.getCombinations(1, valueOfDigit, set.getPrimes());
-                HandleTwoCombination(set, oneMissingCombinations);
-                return;
+                handleCombinationsWithNextFunction(set, oneMissingCombinations, nextFunction);
+                return null;
             case 2:
                 PartitionCombinationResult twoMissingCombination = this.getCombinations(2, valueOfDigit, set.getPrimes());
-                HandleTwoCombination(set, twoMissingCombination);
-                return;
+                handleCombinationsWithNextFunction(set, twoMissingCombination, nextFunction);
+                return null;
         }
+        return null;
     }
 
-    private boolean precheck(ValidatingPrimeSet set, int i) {
+    private static boolean preCheckConditions(ValidatingPrimeSet set, int i) {
         if (Thread.interrupted()) {
             // Executor has probably asked us to stop
             System.out.println(Thread.currentThread().toString() + " has been interrupted!");
@@ -243,364 +224,226 @@ public class ConcurrentPrimeCombinationFinder {
         return set.countReached(i - 1);
     }
 
-    private void HandleTwoCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
-        if (result.hasSingleResult()) {
-            for (int singleResult : result.getSingle()) {
-                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.tryToAddEntry(singleResult)) {
-                    this.handleThree(newSet);
-                }
-            }
-        }
-        if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombinations()) {
-                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                boolean setIsValid = true;
-                for (int prime : combination) {
-                    if (!newSet.tryToAddEntry(prime)) {
-                        setIsValid = false;
-                        break;
-                    }
-                }
-                if (setIsValid) {
-                    this.handleThree(newSet);
-                }
-            }
-        }
-    }
 
-    private void handleFive(ValidatingPrimeSet set) {
+
+    private static Void handleFive(ValidatingPrimeSet set) {
         int valueOfDigit = 5;
-        if (!precheck(set, valueOfDigit)) return;
+        if (!preCheckConditions(set, valueOfDigit)) return null;
+        Function<ValidatingPrimeSet, Void> nextFunction = ConcurrentPrimeCombinationFinder::handleSix;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
-                this.handleSix(set);
-                return;
+                handleSix(set);
+                return null;
             case 1:
-                PartitionCombinationResult oneMissingCombinations = this.getCombinations(1, valueOfDigit, set.getPrimes());
-                HandleFiveCombination(set, oneMissingCombinations);
-                return;
+                PartitionCombinationResult oneMissingCombinations = getCombinations(1, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, oneMissingCombinations, nextFunction);
+                return null;
             case 2:
-                PartitionCombinationResult twoMissingCombination = this.getCombinations(2, valueOfDigit, set.getPrimes());
-                HandleFiveCombination(set, twoMissingCombination);
-                return;
+                PartitionCombinationResult twoMissingCombination = getCombinations(2, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, twoMissingCombination, nextFunction);
+                return null;
             case 3:
-                PartitionCombinationResult threeMissingCombination = this.getCombinations(3, valueOfDigit, set.getPrimes());
-                HandleFiveCombination(set, threeMissingCombination);
-                return;
+                PartitionCombinationResult threeMissingCombination = getCombinations(3, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, threeMissingCombination, nextFunction);
+                return null;
             case 4:
-                PartitionCombinationResult fourMissingCombination = this.getCombinations(4, valueOfDigit, set.getPrimes());
-                HandleFiveCombination(set, fourMissingCombination);
-                return;
+                PartitionCombinationResult fourMissingCombination = getCombinations(4, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, fourMissingCombination, nextFunction);
+                return null;
             case 5:
-                PartitionCombinationResult fiveMissingCombination = this.getCombinations(5, valueOfDigit, set.getPrimes());
-                HandleFiveCombination(set, fiveMissingCombination);
-                return;
+                PartitionCombinationResult fiveMissingCombination = getCombinations(5, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, fiveMissingCombination, nextFunction);
+                return null;
         }
+        return null;
     }
 
-    private void HandleFiveCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
-        if (result.hasSingleResult()) {
-            for (int singleResult : result.getSingle()) {
-                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.tryToAddEntry(singleResult)) {
-                    this.handleSix(newSet);
-                }
-            }
-        }
-        if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombinations()) {
-                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                boolean setIsValid = true;
-                for (int prime : combination) {
-                    if (!newSet.tryToAddEntry(prime)) {
-                        setIsValid = false;
-                        break;
-                    }
-                }
-                if (setIsValid) {
-                    this.handleSix(newSet);
-                }
-            }
-        }
-    }
 
-    private void handleSix(ValidatingPrimeSet set) {
+    private static Void handleSix(ValidatingPrimeSet set) {
         int valueOfDigit = 6;
-        if (!precheck(set, valueOfDigit)) return;
+        if (!preCheckConditions(set, valueOfDigit)) return null;
+        Function<ValidatingPrimeSet, Void> nextFunction = ConcurrentPrimeCombinationFinder::handleSeven;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
-                this.handleSeven(set);
-                return;
+                handleSeven(set);
+                return null;
             case 1:
-                PartitionCombinationResult oneMissing = this.getCombinations(1, valueOfDigit, set.getPrimes());
-                HandleSixCombination(set, oneMissing);
-                return;
+                PartitionCombinationResult oneMissing = getCombinations(1, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, oneMissing, nextFunction);
+                return null;
             case 2:
-                PartitionCombinationResult twoMissing = this.getCombinations(2, valueOfDigit, set.getPrimes());
-                HandleSixCombination(set, twoMissing);
-                return;
+                PartitionCombinationResult twoMissing = getCombinations(2, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, twoMissing, nextFunction);
+                return null;
             case 3:
-                PartitionCombinationResult threeMissing = this.getCombinations(3, valueOfDigit, set.getPrimes());
-                HandleSixCombination(set, threeMissing);
-                return;
+                PartitionCombinationResult threeMissing = getCombinations(3, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, threeMissing, nextFunction);
+                return null;
             case 4:
-                PartitionCombinationResult fourMissing = this.getCombinations(4, valueOfDigit, set.getPrimes());
-                HandleSixCombination(set, fourMissing);
-                return;
+                PartitionCombinationResult fourMissing = getCombinations(4, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, fourMissing, nextFunction);
+                return null;
             case 5:
-                PartitionCombinationResult fiveMissing = this.getCombinations(5, valueOfDigit, set.getPrimes());
-                HandleSixCombination(set, fiveMissing);
-                return;
+                PartitionCombinationResult fiveMissing = getCombinations(5, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, fiveMissing, nextFunction);
+                return null;
             case 6:
-                PartitionCombinationResult sixMissing = this.getCombinations(6, valueOfDigit, set.getPrimes());
-                HandleSixCombination(set, sixMissing);
-                return;
+                PartitionCombinationResult sixMissing = getCombinations(6, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, sixMissing, nextFunction);
+                return null;
         }
+        return null;
     }
 
-    private void HandleSixCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
-        if (result.hasSingleResult()) {
-            for (int singleResult : result.getSingle()) {
-                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.tryToAddEntry(singleResult)) {
-                    this.handleSeven(newSet);
-                }
-            }
-        }
-        if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombinations()) {
-                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
 
-                boolean setIsValid = true;
-                for (int prime : combination) {
-                    if (!newSet.tryToAddEntry(prime)) {
-                        setIsValid = false;
-                        break;
-                    }
-                }
 
-                if (setIsValid) {
-                    this.handleSeven(newSet);
-                }
-            }
-        }
-    }
-
-    private void handleSeven(ValidatingPrimeSet set) {
+    private static Void handleSeven(ValidatingPrimeSet set) {
         int valueOfDigit = 7;
-        if (!precheck(set, valueOfDigit)) return;
+        if (!preCheckConditions(set, valueOfDigit)) return null;
+        Function<ValidatingPrimeSet, Void> nextFunction = ConcurrentPrimeCombinationFinder::handleEight;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
-                this.handleEight(set);
-                return;
+                handleEight(set);
+                return null;
             case 1:
-                PartitionCombinationResult oneMissing = this.getCombinations(1, valueOfDigit, set.getPrimes());
-                HandleSevenCombination(set, oneMissing);
-                return;
+                PartitionCombinationResult oneMissing = getCombinations(1, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, oneMissing, nextFunction);
+                return null;
             case 2:
-                PartitionCombinationResult twoMissing = this.getCombinations(2, valueOfDigit, set.getPrimes());
-                HandleSevenCombination(set, twoMissing);
-                return;
+                PartitionCombinationResult twoMissing = getCombinations(2, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, twoMissing, nextFunction);
+                return null;
             case 3:
-                PartitionCombinationResult threeMissing = this.getCombinations(3, valueOfDigit, set.getPrimes());
-                HandleSevenCombination(set, threeMissing);
-                return;
+                PartitionCombinationResult threeMissing = getCombinations(3, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, threeMissing, nextFunction);
+                return null;
             case 4:
-                PartitionCombinationResult fourMissing = this.getCombinations(4, valueOfDigit, set.getPrimes());
-                HandleSevenCombination(set, fourMissing);
-                return;
+                PartitionCombinationResult fourMissing = getCombinations(4, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, fourMissing, nextFunction);
+                return null;
             case 5:
-                PartitionCombinationResult fiveMissing = this.getCombinations(5, valueOfDigit, set.getPrimes());
-                HandleSevenCombination(set, fiveMissing);
-                return;
+                PartitionCombinationResult fiveMissing = getCombinations(5, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, fiveMissing, nextFunction);
+                return null;
             case 6:
-                PartitionCombinationResult sixMissing = this.getCombinations(6, valueOfDigit, set.getPrimes());
-                HandleSevenCombination(set, sixMissing);
-                return;
+                PartitionCombinationResult sixMissing = getCombinations(6, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, sixMissing, nextFunction);
+                return null;
             case 7:
-                PartitionCombinationResult sevenMissing = this.getCombinations(7, valueOfDigit, set.getPrimes());
-                HandleSevenCombination(set, sevenMissing);
-                return;
+                PartitionCombinationResult sevenMissing = getCombinations(7, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, sevenMissing, nextFunction);
+                return null;
         }
+        return null;
     }
 
-    private void HandleSevenCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
-        if (result.hasSingleResult()) {
-            for (int singleResult : result.getSingle()) {
-                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.tryToAddEntry(singleResult)) {
-                    this.handleEight(newSet);
-                }
-            }
-        }
-        if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombinations()) {
-                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                boolean setIsValid = true;
-                for (int prime : combination) {
-                    if (!newSet.tryToAddEntry(prime)) {
-                        setIsValid = false;
-                        break;
-                    }
-                }
-                if (setIsValid) {
-                    this.handleEight(newSet);
-                }
-            }
-        }
-    }
 
-    private void handleEight(ValidatingPrimeSet set) {
+    private static Void handleEight(ValidatingPrimeSet set) {
         int valueOfDigit = 8;
-        if (!precheck(set, valueOfDigit)) return;
+        if (!preCheckConditions(set, valueOfDigit)) return null;
+        Function<ValidatingPrimeSet, Void> nextFunction = ConcurrentPrimeCombinationFinder::handleNine;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
-                this.handleNine(set);
-                return;
+                handleNine(set);
+                return null;
             case 1:
-                PartitionCombinationResult oneMissing = this.getCombinations(1, valueOfDigit, set.getPrimes());
-                HandleEightCombination(set, oneMissing);
-                return;
+                PartitionCombinationResult oneMissing = getCombinations(1, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, oneMissing, nextFunction);
+                return null;
             case 2:
-                PartitionCombinationResult twoMissing = this.getCombinations(2, valueOfDigit, set.getPrimes());
-                HandleEightCombination(set, twoMissing);
-                return;
+                PartitionCombinationResult twoMissing = getCombinations(2, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, twoMissing, nextFunction);
+                return null;
             case 3:
-                PartitionCombinationResult threeMissing = this.getCombinations(3, valueOfDigit, set.getPrimes());
-                HandleEightCombination(set, threeMissing);
-                return;
+                PartitionCombinationResult threeMissing = getCombinations(3, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, threeMissing, nextFunction);
+                return null;
             case 4:
-                PartitionCombinationResult fourMissing = this.getCombinations(4, valueOfDigit, set.getPrimes());
-                HandleEightCombination(set, fourMissing);
-                return;
+                PartitionCombinationResult fourMissing = getCombinations(4, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, fourMissing, nextFunction);
+                return null;
             case 5:
-                PartitionCombinationResult fiveMissing = this.getCombinations(5, valueOfDigit, set.getPrimes());
-                HandleEightCombination(set, fiveMissing);
-                return;
+                PartitionCombinationResult fiveMissing = getCombinations(5, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, fiveMissing, nextFunction);
+                return null;
             case 6:
-                PartitionCombinationResult sixMissing = this.getCombinations(6, valueOfDigit, set.getPrimes());
-                HandleEightCombination(set, sixMissing);
-                return;
+                PartitionCombinationResult sixMissing = getCombinations(6, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, sixMissing, nextFunction);
+                return null;
             case 7:
-                PartitionCombinationResult sevenMissing = this.getCombinations(7, valueOfDigit, set.getPrimes());
-                HandleEightCombination(set, sevenMissing);
-                return;
+                PartitionCombinationResult sevenMissing = getCombinations(7, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, sevenMissing, nextFunction);
+                return null;
             case 8:
-                PartitionCombinationResult eightMissing = this.getCombinations(8, valueOfDigit, set.getPrimes());
-                HandleEightCombination(set, eightMissing);
-                return;
+                PartitionCombinationResult eightMissing = getCombinations(8, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, eightMissing, nextFunction);
+                return null;
         }
+        return null;
     }
 
-    private void HandleEightCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
-        if (result.hasSingleResult()) {
-            for (int singleResult : result.getSingle()) {
-                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.tryToAddEntry(singleResult)) {
-                    this.handleNine(newSet);
-                }
-            }
-        }
-        if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombinations()) {
-                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                boolean setIsValid = true;
-                for (int prime : combination) {
-                    if (!newSet.tryToAddEntry(prime)) {
-                        setIsValid = false;
-                        break;
-                    }
-                }
-                if (setIsValid) {
-                    this.handleNine(newSet);
-                }
-            }
-        }
-    }
 
-    private void handleNine(ValidatingPrimeSet set) {
+    private static Void handleNine(ValidatingPrimeSet set) {
         int valueOfDigit = 9;
-        if (!precheck(set, valueOfDigit)) return;
+        if (!preCheckConditions(set, valueOfDigit)) return null;
+        Function<ValidatingPrimeSet, Void> nextFunction = ConcurrentPrimeCombinationFinder::handlePossibleResult;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
             case 0:
-                this.handlePossibleResult(set);
-                return;
+                handlePossibleResult(set);
+                return null;
             case 1:
-                PartitionCombinationResult oneMissing = this.getCombinations(1, valueOfDigit, set.getPrimes());
-                HandleNineCombination(set, oneMissing);
-                return;
+                PartitionCombinationResult oneMissing = getCombinations(1, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, oneMissing, nextFunction);
+                return null;
             case 2:
-                PartitionCombinationResult twoMissing = this.getCombinations(2, valueOfDigit, set.getPrimes());
-                HandleNineCombination(set, twoMissing);
-                return;
+                PartitionCombinationResult twoMissing = getCombinations(2, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, twoMissing, nextFunction);
+                return null;
             case 3:
-                PartitionCombinationResult threeMissing = this.getCombinations(3, valueOfDigit, set.getPrimes());
-                HandleNineCombination(set, threeMissing);
-                return;
+                PartitionCombinationResult threeMissing = getCombinations(3, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, threeMissing, nextFunction);
+                return null;
             case 4:
-                PartitionCombinationResult fourMissing = this.getCombinations(4, valueOfDigit, set.getPrimes());
-                HandleNineCombination(set, fourMissing);
-                return;
+                PartitionCombinationResult fourMissing = getCombinations(4, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, fourMissing, nextFunction);
+                return null;
             case 5:
-                PartitionCombinationResult fiveMissing = this.getCombinations(5, valueOfDigit, set.getPrimes());
-                HandleNineCombination(set, fiveMissing);
-                return;
+                PartitionCombinationResult fiveMissing = getCombinations(5, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, fiveMissing, nextFunction);
+                return null;
             case 6:
-                PartitionCombinationResult sixMissing = this.getCombinations(6, valueOfDigit, set.getPrimes());
-                HandleNineCombination(set, sixMissing);
-                return;
+                PartitionCombinationResult sixMissing = getCombinations(6, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, sixMissing, nextFunction);
+                return null;
             case 7:
-                PartitionCombinationResult sevenMissing = this.getCombinations(7, valueOfDigit, set.getPrimes());
-                HandleNineCombination(set, sevenMissing);
-                return;
+                PartitionCombinationResult sevenMissing = getCombinations(7, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, sevenMissing, nextFunction);
+                return null;
             case 8:
-                PartitionCombinationResult eightMissing = this.getCombinations(8, valueOfDigit, set.getPrimes());
-                HandleNineCombination(set, eightMissing);
-                return;
+                PartitionCombinationResult eightMissing = getCombinations(8, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, eightMissing, nextFunction);
+                return null;
             case 9:
-                PartitionCombinationResult nineMissing = this.getCombinations(9, valueOfDigit, set.getPrimes());
-                HandleNineCombination(set, nineMissing);
-                return;
+                PartitionCombinationResult nineMissing = getCombinations(9, valueOfDigit, set.getPrimes());
+                handleCombinationsWithNextFunction(set, nineMissing, nextFunction);
+                return null;
         }
+        return null;
     }
 
-    private void HandleNineCombination(ValidatingPrimeSet set, PartitionCombinationResult result) {
-        if (result.hasSingleResult()) {
-            for (int singleResult : result.getSingle()) {
-                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                if (newSet.tryToAddEntry(singleResult)) {
-                    this.handlePossibleResult(newSet);
-                }
-            }
-        }
-        if (result.hasCombinationResult()) {
-            for (int[] combination : result.getCombinations()) {
-                ValidatingPrimeSet newSet = new ValidatingPrimeSet(set);
-                boolean setIsValid = true;
-                for (int prime : combination) {
-                    if (!newSet.tryToAddEntry(prime)) {
-                        setIsValid = false;
-                        break;
-                    }
-                }
-                if (setIsValid) {
-                    this.handlePossibleResult(newSet);
-                }
-            }
-        }
-    }
 
-    private void handlePossibleResult(ValidatingPrimeSet set) {
+
+    private static Void handlePossibleResult(ValidatingPrimeSet set) {
         boolean isValid = Validator.validateFinalSet(set);
         if (isValid) {
             calculateResultAndPrintSet(set);
         }
+        return null;
     }
 
     /**
@@ -608,7 +451,7 @@ public class ConcurrentPrimeCombinationFinder {
      *
      * @param set The set of primes.
      */
-    private void calculateResultAndPrintSet(ValidatingPrimeSet set) {
+    private static void calculateResultAndPrintSet(ValidatingPrimeSet set) {
         int counter = globalDebugCounter.incrementAndGet();
         if (counter % Configuration.instance.printFoundSetsCounterInterval == 0) {
             System.out.println("Found valid sets: " + counter);
@@ -643,13 +486,13 @@ public class ConcurrentPrimeCombinationFinder {
         System.out.println(list.stream().map(t -> t.toString()).collect(Collectors.joining(", ")));
     }
 
-    private PartitionCombinationResult getCombinations(int countOfMissing, int value, int[] filterPrimes) {
+    private static PartitionCombinationResult getCombinations(int countOfMissing, int value, int[] filterPrimes) {
         ArrayList<ArrayList<Integer>> partitions = CachedPartition.partition(countOfMissing);
-        return this.getCombinationsForPartitionsAndValue(partitions, value, filterPrimes);
+        return getCombinationsForPartitionsAndValue(partitions, value, filterPrimes);
     }
 
 
-    private PartitionCombinationResult getCombinationsForPartitionsAndValue(ArrayList<ArrayList<Integer>> partitions, int value, int[] alreadyUsed) {
+    private static PartitionCombinationResult getCombinationsForPartitionsAndValue(ArrayList<ArrayList<Integer>> partitions, int value, int[] alreadyUsed) {
 
         // Combine the possible candidates with the partitions.
         Map<Integer, int[]> values = new HashMap<>();

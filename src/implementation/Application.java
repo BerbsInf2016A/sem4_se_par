@@ -41,7 +41,13 @@ public class Application {
         List<ValidatingPrimeSet> sets = new ArrayList<>();
         for (int[] preGeneratedValue : combs) {
             ValidatingPrimeSet set = new ValidatingPrimeSet();
-            boolean isValid = Arrays.stream(preGeneratedValue).allMatch(prime -> set.tryToAddEntry(prime));
+            boolean isValid = true;
+            for (int prime : preGeneratedValue) {
+                if (!set.tryToAddEntry(prime)) {
+                    isValid = false;
+                    break;
+                }
+            }
             if (isValid) {
                 sets.add(set);
             }

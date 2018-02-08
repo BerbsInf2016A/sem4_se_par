@@ -86,7 +86,11 @@ public class ValidatingPrimeSet {
      */
     public boolean tryToAddEntry(Integer newEntry) {
         // The new entry can be added, if the set is empty.
-        if (this.nextInsertIndex == 0) return true;
+        if (this.nextInsertIndex == 0){
+            this.entries[nextInsertIndex] = newEntry;
+            nextInsertIndex++;
+            return true;
+        }
 
         // Iterate the existing entries and check if the new entry
         // is already part of the set.
