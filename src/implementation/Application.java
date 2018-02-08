@@ -1,29 +1,15 @@
 package implementation;
 
 
-import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import static implementation.Combinations.merge;
-
 public class Application {
-    public static int countDigits(long number) {
-        number = Math.abs(number);
 
-        int count = 0;
 
-        if(number<10) {
-            count++;
-        }
-        else {
-            count += countDigits(number/10) + 1;
-        }
-
-        return count;
-    }
-
-    private void printNumberCounts(List<Integer> numbers){
+    private void printNumberCounts(List<Integer> numbers) {
 
         int[] array = new int[10];
         for (Integer number : numbers) {
@@ -72,61 +58,79 @@ public class Application {
         }
 
     }
-    int[] toIntArray(List<Integer> list){
-        int[] ret = new int[list.size()];
-        for(int i = 0;i < ret.length;i++)
-            ret[i] = list.get(i);
-        return ret;
-    }
 
-    private int[] getNumbersContainingDigit(List<Integer> source, int digit){
+
+    private int[] getNumbersContainingDigit(List<Integer> source, int digit) {
         ArrayList<Integer> hits = new ArrayList<>();
 
-        for (int entry : source ) {
+        for (int entry : source) {
             String value = String.valueOf(entry);
-            for (Character c : value.toCharArray() ) {
-                    if (Character.getNumericValue(c) == digit){
-                        hits.add(entry);
-                    }
+            for (Character c : value.toCharArray()) {
+                if (Character.getNumericValue(c) == digit) {
+                    hits.add(entry);
+                }
             }
         }
-        return toIntArray(hits.stream().distinct().collect(Collectors.toList()));
+        return Helpers.toIntArray(hits.stream().distinct().collect(Collectors.toList()));
     }
 
     public void run() {
 
         long runtimeStart = System.currentTimeMillis();
 
-        // Generate
+        // Generate the prim numbers.
         ConcurrentPrimeFinder finder = new ConcurrentPrimeFinder();
         List<Integer> p = finder.findPrimes(0, 1000);
-        System.out.println("Found primes "  +  p.size());
+        System.out.println("Found primes " + p.size());
+
+        // Filter out all invalid primes e.g. primes containing a zero.
         p = p.stream().filter(t -> Validator.isCandidate(t)).collect(Collectors.toList());
-        System.out.println("Filtered valid primes "  +  p.size());
+        System.out.println("Filtered valid primes " + p.size());
+
+        // See comment below.
+        //this.printNumberCounts(p);
 
         // Preset some combinations:
+        // The method printNumberCounts was used to get the counts of prime numbers for each number from 1 to 9.
+        // The result of this small analysis showed, that the numbers eights is relative rare. But the eight must
+        // be the second-most number in a valid set. So the combinations of eights get generated before the other
+        // numbers are added. This increases the chance to find a valid set.
         int[] primesContainingNine = this.getNumbersContainingDigit(p, 8);
-        List<int[]> combs =  Combinations.combination(primesContainingNine, 8);
-        PrimeCategorizer categorizer = new PrimeCategorizer(toIntArray(p));
+        List<int[]> combs = Combinations.combination(primesContainingNine, 8);
+        PrimeCategorizer categorizer = new PrimeCategorizer(Helpers.toIntArray(p));
 
+        // Generate the sets and filter out invalid combinations.
         List<ValidatingPrimeSet> sets = new ArrayList<>();
-        for (int[] preGeneratedValue : combs ) {
+        for (int[] preGeneratedValue : combs) {
             ValidatingPrimeSet set = new ValidatingPrimeSet();
-            boolean isValid = true;
-            for (int prime : preGeneratedValue ) {
-                if (!set.addEntry(prime)){
-                    isValid = false;
-                    break;
-                }
+            boolean isValid = Arrays.stream(preGeneratedValue).allMatch(prime -> set.addEntry(prime));
+            if (isValid) {
+                sets.add(set);
             }
-            if (isValid) { sets.add(set); }
         }
-        this.printNumberCounts(p);
 
         ConcurrentPrimeCombinationFinder runner = new ConcurrentPrimeCombinationFinder(categorizer);
-        runner.run(sets);
+        try {
+            runner.run(sets);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
-        System.out.println("runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart));
+        // Wait 3 seconds after the execution and the probable interruption of threads, before the result is
+        // printed to the console. This trick is used, to enhance the chance, that the final result message will be
+        // the last printed message on the console..
+        try {
+
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println("Found minimum: " + ConcurrentPrimeCombinationFinder.globalMinimumSum.get() + " Set: "
+                + ConcurrentPrimeCombinationFinder.globalMinimumSet.get());
+
+        System.out.println("Total runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart));
     }
 
 

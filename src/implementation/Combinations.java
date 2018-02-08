@@ -6,16 +6,16 @@ import java.util.List;
 public class Combinations {
 
     final static
-    public int[] merge(final int[] ...arrays ) {
+    public int[] merge(final int[]... arrays) {
         int size = 0;
-        for ( int[] a: arrays )
+        for (int[] a : arrays)
             size += a.length;
 
         int[] res = new int[size];
 
         int destPos = 0;
-        for ( int i = 0; i < arrays.length; i++ ) {
-            if ( i > 0 ) destPos += arrays[i-1].length;
+        for (int i = 0; i < arrays.length; i++) {
+            if (i > 0) destPos += arrays[i - 1].length;
             int length = arrays[i].length;
             System.arraycopy(arrays[i], 0, res, destPos, length);
         }
@@ -39,12 +39,12 @@ public class Combinations {
 
         if (length <= elements.length) {
             // first index sequence: 0, 1, 2, ...
-            for (int i = 0; (s[i] = i) < length - 1; i++);
+            for (int i = 0; (s[i] = i) < length - 1; i++) ;
             subsets.add(getSubset(elements, s));
-            for(;;) {
+            for (; ; ) {
                 int i;
                 // find position of item that can be incremented
-                for (i = length - 1; i >= 0 && s[i] == elements.length - length + i; i--);
+                for (i = length - 1; i >= 0 && s[i] == elements.length - length + i; i--) ;
                 if (i < 0) {
                     break;
                 }

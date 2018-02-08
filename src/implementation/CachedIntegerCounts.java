@@ -6,10 +6,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class CachedIntegerCounts {
-    private static ConcurrentMap<Integer, Map<Integer,Integer>> cache = new ConcurrentHashMap<>();
+    private static ConcurrentMap<Integer, Map<Integer, Integer>> cache = new ConcurrentHashMap<>();
 
-    public static Map<Integer, Integer> countCharsInInteger(int value){
-        if(cache.containsKey(value)) {
+    public static Map<Integer, Integer> countCharsInInteger(int value) {
+        if (cache.containsKey(value)) {
             return cache.get(value);
         }
         int p = value;
@@ -17,12 +17,9 @@ public class CachedIntegerCounts {
 
         while (p != 0) {
             int val = p % 10;
-            if (!numChars.containsKey(val))
-            {
+            if (!numChars.containsKey(val)) {
                 numChars.put(val, 1);
-            }
-            else
-            {
+            } else {
                 numChars.put(val, numChars.get(val) + 1);
             }
             p = p / 10;

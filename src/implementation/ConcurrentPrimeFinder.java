@@ -44,11 +44,11 @@ public class ConcurrentPrimeFinder {
     private List<Integer> findPrimesInRange(Integer from, Integer end) {
         List<Integer> primes = new ArrayList<>();
 
-        for (int i = from; i <= end; i++){
-            if(i == 2) primes.add(i);
-            if(i == 1) continue;
+        for (int i = from; i <= end; i++) {
+            if (i == 2) primes.add(i);
+            if (i == 1) continue;
 
-            if(isPrime(i)) {
+            if (isPrime(i)) {
                 primes.add(i);
             }
         }
@@ -59,10 +59,10 @@ public class ConcurrentPrimeFinder {
     // Copied from https://www.mkyong.com/java/how-to-determine-a-prime-number-in-java/
     boolean isPrime(long n) {
         //check if n is a multiple of 2
-        if (n%2==0) return false;
+        if (n % 2 == 0) return false;
         //if not, then just check the odds
-        for(int i=3;i*i<=n;i+=2) {
-            if(n%i==0)
+        for (int i = 3; i * i <= n; i += 2) {
+            if (n % i == 0)
                 return false;
         }
         return true;

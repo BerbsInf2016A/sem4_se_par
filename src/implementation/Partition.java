@@ -8,7 +8,7 @@ public class Partition {
 
 
     public static ArrayList<ArrayList<Integer>> partition(int n) {
-        if (cachedValues.containsKey(n)){
+        if (cachedValues.containsKey(n)) {
             return cachedValues.get(n);
         }
         ArrayList<ArrayList<Integer>> result = innerPartition(n);
@@ -20,11 +20,11 @@ public class Partition {
         ArrayList<String> result = new ArrayList<>();
         partition(n, n, "", result);
         ArrayList<ArrayList<Integer>> intResult = new ArrayList<>();
-        for (String entry : result ) {
-            String[] numberStrings =  entry.split(" ");
+        for (String entry : result) {
+            String[] numberStrings = entry.split(" ");
             ArrayList<Integer> numbers = new ArrayList<>();
-            for (String numberString : numberStrings ) {
-                if(numberString.length() == 0) continue;
+            for (String numberString : numberStrings) {
+                if (numberString.length() == 0) continue;
                 numbers.add(Integer.parseInt(numberString));
             }
             intResult.add(numbers);
@@ -40,7 +40,7 @@ public class Partition {
         }
 
         for (int i = Math.min(max, n); i >= 1; i--) {
-            partition(n-i, i, prefix + " " + i, result);
+            partition(n - i, i, prefix + " " + i, result);
         }
     }
 }
