@@ -10,19 +10,44 @@ import java.util.stream.Collectors;
 
 import static implementation.Combinations.merge;
 
-
+/**
+ * Helper methods to generate combinations, based on a partitioned value.
+ */
 public class PartitionCombinationGenerator {
 
+    /**
+     * The cached prime numbers, categorized by the different occurrences of digits.
+     */
     private static CachedPrimeCategories categories;
 
+    /**
+     * Getter for the categories.
+     *
+     * @return The categories.
+     */
     public static CachedPrimeCategories getCategories() {
         return categories;
     }
 
+    /**
+     * Setter for the categories.
+     *
+     * @param categories The categories to set.
+     */
     public static void setCategories(CachedPrimeCategories categories) {
         PartitionCombinationGenerator.categories = categories;
     }
 
+    /**
+     * Get all combinations which fulfill the requirements, specified by count of missing and the value.
+     * E.g. The six is missing three times -> countOfMissing = 3; value = 6 and filterPrimes is the current set.
+     *
+     * @param countOfMissing How often is the value missing.
+     * @param value          The value of the digit which is wanted.
+     * @param filterPrimes   The current set, to filter out combinations, which contain prime numbers, which are already
+     *                       in the set.
+     * @return A partitionCombinationResult, containing the different combinations to fulfill the missing numbers.
+     */
     public static PartitionCombinationResult getCombinations(int countOfMissing, int value, int[] filterPrimes) {
         ArrayList<ArrayList<Integer>> partitions = CachedPartition.partition(countOfMissing);
         return getCombinationsForPartitionsAndValue(partitions, value, filterPrimes);
@@ -82,7 +107,8 @@ public class PartitionCombinationGenerator {
             }
         }
 
-        // TODO This slowed the generation..
+        // The following code should filter out all combinations, which can not be added to the existing set.
+        // But filtering here, is slower than trying to add a combination and throw it away.
         /*
         // Filter invalid combinations:
         List<int[]> validCombinations = new ArrayList<>();
@@ -104,8 +130,8 @@ public class PartitionCombinationGenerator {
             }
         }
         // result.setCombination(validCombinations);
-
         */
+
         result.setCombination(generatedCombinations);
         return result;
     }

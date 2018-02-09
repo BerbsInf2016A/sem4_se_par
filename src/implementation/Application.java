@@ -74,6 +74,8 @@ public class Application {
         System.out.println("Found minimum: " + ResultSetHandler.globalMinimumSum.get() + " Set: "
                 + ResultSetHandler.globalMinimumSet.get());
 
+        System.out.println("Created " + ResultSetHandler.globalValidSetsCounter + " valid sets");
+
         System.out.println("Total runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart));
     }
 

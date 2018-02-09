@@ -5,13 +5,25 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * A handler for possible results.
+ */
 public class ResultSetHandler {
 
-    public static AtomicInteger globalDebugCounter = new AtomicInteger();
+    /**
+     * The atomic variables are used to gather information on the current run.
+     */
+    public static AtomicInteger globalValidSetsCounter = new AtomicInteger();
     public static AtomicInteger globalMinimumSum = new AtomicInteger();
     public static AtomicReference<String> globalMinimumSet = new AtomicReference<>();
     public static LinkedBlockingQueue<String> strings = new LinkedBlockingQueue<>();
 
+    /**
+     * Handles a possible result.
+     *
+     * @param set The set to analyze.
+     * @return Null, this is a Void function, which is used as parameter.
+     */
     public static Void handlePossibleResult(ValidatingPrimeSet set) {
         boolean isValid = Validator.validateFinalSet(set);
         if (isValid) {
@@ -26,7 +38,7 @@ public class ResultSetHandler {
      * @param set The set of primes.
      */
     private static void calculateResultAndPrintSet(ValidatingPrimeSet set) {
-        int counter = globalDebugCounter.incrementAndGet();
+        int counter = globalValidSetsCounter.incrementAndGet();
         if (counter % Configuration.instance.printFoundSetsCounterInterval == 0) {
             System.out.println("Found valid sets: " + counter);
             System.out.println("Stringsize: " + strings.size() + " distinct count: " + strings.stream().distinct().count());

@@ -9,10 +9,19 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
-
+/**
+ * Generates sets and validates them to find valid prime number sets.
+ */
 public class ConcurrentPrimeCombinationFinder {
 
-
+    /**
+     * Execute the search.
+     *
+     * @param sets The starting sets.
+     * @throws RuntimeException     Throws a runtime exception, if a exception is occurred during the execution.
+     * @throws InterruptedException Can throw a a InterruptedException because of a Thread.sleep, which is used as a
+     *                              delay at the start.
+     */
     public void run(List<ValidatingPrimeSet> sets) throws RuntimeException, InterruptedException {
         // Just get a chance to connect with visual vm
         try {
@@ -23,7 +32,12 @@ public class ConcurrentPrimeCombinationFinder {
         }
     }
 
-    public void runConcurrent(List<ValidatingPrimeSet> sets) {
+    /**
+     * Run the search in a concurrent way.
+     *
+     * @param sets The starting sets.
+     */
+    private void runConcurrent(List<ValidatingPrimeSet> sets) {
         try {
 
             final List<Callable<Boolean>> partitions = new ArrayList<>();
@@ -59,6 +73,12 @@ public class ConcurrentPrimeCombinationFinder {
         }
     }
 
+    /**
+     * The entry point of the search.
+     *
+     * @param sets The starting sets.
+     * @return True, if the search for this sets is finished, false if not.
+     */
     private boolean generateSets(List<ValidatingPrimeSet> sets) {
         for (ValidatingPrimeSet entry : sets) {
             ValidatingPrimeSet set = new ValidatingPrimeSet(entry);
