@@ -3,7 +3,6 @@ package implementation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -12,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Generates sets and validates them to find valid prime number sets.
  */
-public class ConcurrentPrimeCombinationFinder {
+class ConcurrentPrimeCombinationFinder {
 
     /**
      * Execute the search.
@@ -24,12 +23,8 @@ public class ConcurrentPrimeCombinationFinder {
      */
     public void run(List<ValidatingPrimeSet> sets) throws RuntimeException, InterruptedException {
         // Just get a chance to connect with visual vm
-        try {
-            Thread.sleep(Configuration.instance.startDelay);
-            this.runConcurrent(sets);
-        } catch (RuntimeException e) {
-            throw e;
-        }
+        Thread.sleep(Configuration.instance.startDelay);
+        this.runConcurrent(sets);
     }
 
     /**
@@ -48,12 +43,11 @@ public class ConcurrentPrimeCombinationFinder {
 
 
             for (int i = 0; i <= sets.size(); i += sliceSize) {
-                final int from = i;
                 int to = i + sliceSize;
                 if (to > sets.size())
                     to = sets.size();
                 final int end = to;
-                List<ValidatingPrimeSet> sublist = sets.subList(from, end);
+                List<ValidatingPrimeSet> sublist = sets.subList(i, end);
                 partitions.add(() -> generateSets(sublist));
             }
 
@@ -66,8 +60,6 @@ public class ConcurrentPrimeCombinationFinder {
             for (final Future<Boolean> result : resultFromParts)
                 result.get();
 
-        } catch (CancellationException e) {
-            throw new RuntimeException(e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

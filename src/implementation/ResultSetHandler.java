@@ -8,15 +8,15 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * A handler for possible results.
  */
-public class ResultSetHandler {
+class ResultSetHandler {
 
     /**
      * The atomic variables are used to gather information on the current run.
      */
-    public static AtomicInteger globalValidSetsCounter = new AtomicInteger();
-    public static AtomicInteger globalMinimumSum = new AtomicInteger();
-    public static AtomicReference<String> globalMinimumSet = new AtomicReference<>();
-    public static LinkedBlockingQueue<String> strings = new LinkedBlockingQueue<>();
+    public static final AtomicInteger globalValidSetsCounter = new AtomicInteger();
+    public static final AtomicInteger globalMinimumSum = new AtomicInteger();
+    public static final AtomicReference<String> globalMinimumSet = new AtomicReference<>();
+    private static final LinkedBlockingQueue<String> strings = new LinkedBlockingQueue<>();
 
     /**
      * Handles a possible result.
@@ -33,7 +33,7 @@ public class ResultSetHandler {
     }
 
     /**
-     * Calculates the sum of a set and prints the information (dependend on the current configuration).
+     * Calculates the sum of a set and prints the information (dependent on the current configuration).
      *
      * @param set The set of primes.
      */

@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * A concurrent prime finder.
  */
-public class ConcurrentPrimeFilter {
+class ConcurrentPrimeFilter {
     /**
      * A method to check, if a long is a prime.
      *

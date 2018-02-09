@@ -7,7 +7,7 @@ import java.util.function.Function;
  * The set handler analyzes a set and tries to add the different combinations to find a valid set
  * of prime numbers.
  */
-public class SetHandler {
+class SetHandler {
 
     /**
      * This is used to filter out invalid sets and to abort the execution, if the Thread was interrupted.
@@ -18,13 +18,13 @@ public class SetHandler {
      * @param i   The count of the number, which should already be fulfilled by the set.
      * @return True if valid, false if not.
      */
-    private static boolean preCheckConditions(ValidatingPrimeSet set, int i) {
+    private static boolean preCheckAbort(ValidatingPrimeSet set, int i) {
         if (Thread.interrupted()) {
             // Executor has probably asked us to stop
             System.out.println(Thread.currentThread().toString() + " has been interrupted!");
             throw new CancellationException("Thread has been requested to stop");
         }
-        return set.countReached(i - 1);
+        return !set.countReached(i - 1);
     }
 
     /**
@@ -80,7 +80,6 @@ public class SetHandler {
                         handleTwo(newSet);
                     }
                 }
-                return;
         }
     }
 
@@ -90,9 +89,9 @@ public class SetHandler {
      * @param set The source set.
      * @return Null, this is a Void function, which is used as parameter.
      */
-    public static Void handleTwo(ValidatingPrimeSet set) {
+    private static Void handleTwo(ValidatingPrimeSet set) {
         int valueOfDigit = 2;
-        if (!preCheckConditions(set, valueOfDigit)) return null;
+        if (preCheckAbort(set, valueOfDigit)) return null;
         Function<ValidatingPrimeSet, Void> nextFunction = SetHandler::handleThree;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
@@ -117,9 +116,9 @@ public class SetHandler {
      * @param set The source set.
      * @return Null, this is a Void function, which is used as parameter.
      */
-    public static Void handleThree(ValidatingPrimeSet set) {
+    private static Void handleThree(ValidatingPrimeSet set) {
         int valueOfDigit = 3;
-        if (!preCheckConditions(set, valueOfDigit)) return null;
+        if (preCheckAbort(set, valueOfDigit)) return null;
         Function<ValidatingPrimeSet, Void> nextFunction = SetHandler::handleFour;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
@@ -148,9 +147,9 @@ public class SetHandler {
      * @param set The source set.
      * @return Null, this is a Void function, which is used as parameter.
      */
-    public static Void handleFour(ValidatingPrimeSet set) {
+    private static Void handleFour(ValidatingPrimeSet set) {
         int valueOfDigit = 4;
-        if (!preCheckConditions(set, valueOfDigit)) return null;
+        if (preCheckAbort(set, valueOfDigit)) return null;
         Function<ValidatingPrimeSet, Void> nextFunction = SetHandler::handleFive;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
@@ -183,9 +182,9 @@ public class SetHandler {
      * @param set The source set.
      * @return Null, this is a Void function, which is used as parameter.
      */
-    public static Void handleFive(ValidatingPrimeSet set) {
+    private static Void handleFive(ValidatingPrimeSet set) {
         int valueOfDigit = 5;
-        if (!preCheckConditions(set, valueOfDigit)) return null;
+        if (preCheckAbort(set, valueOfDigit)) return null;
         Function<ValidatingPrimeSet, Void> nextFunction = SetHandler::handleSix;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
@@ -222,9 +221,9 @@ public class SetHandler {
      * @param set The source set.
      * @return Null, this is a Void function, which is used as parameter.
      */
-    public static Void handleSix(ValidatingPrimeSet set) {
+    private static Void handleSix(ValidatingPrimeSet set) {
         int valueOfDigit = 6;
-        if (!preCheckConditions(set, valueOfDigit)) return null;
+        if (preCheckAbort(set, valueOfDigit)) return null;
         Function<ValidatingPrimeSet, Void> nextFunction = SetHandler::handleSeven;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
@@ -265,9 +264,9 @@ public class SetHandler {
      * @param set The source set.
      * @return Null, this is a Void function, which is used as parameter.
      */
-    public static Void handleSeven(ValidatingPrimeSet set) {
+    private static Void handleSeven(ValidatingPrimeSet set) {
         int valueOfDigit = 7;
-        if (!preCheckConditions(set, valueOfDigit)) return null;
+        if (preCheckAbort(set, valueOfDigit)) return null;
         Function<ValidatingPrimeSet, Void> nextFunction = SetHandler::handleEight;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
@@ -312,9 +311,9 @@ public class SetHandler {
      * @param set The source set.
      * @return Null, this is a Void function, which is used as parameter.
      */
-    public static Void handleEight(ValidatingPrimeSet set) {
+    private static Void handleEight(ValidatingPrimeSet set) {
         int valueOfDigit = 8;
-        if (!preCheckConditions(set, valueOfDigit)) return null;
+        if (preCheckAbort(set, valueOfDigit)) return null;
         Function<ValidatingPrimeSet, Void> nextFunction = SetHandler::handleNine;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {
@@ -363,9 +362,9 @@ public class SetHandler {
      * @param set The source set.
      * @return Null, this is a Void function, which is used as parameter.
      */
-    public static Void handleNine(ValidatingPrimeSet set) {
+    private static Void handleNine(ValidatingPrimeSet set) {
         int valueOfDigit = 9;
-        if (!preCheckConditions(set, valueOfDigit)) return null;
+        if (preCheckAbort(set, valueOfDigit)) return null;
         Function<ValidatingPrimeSet, Void> nextFunction = ResultSetHandler::handlePossibleResult;
         int missing = set.countOfMissingOccurrences(valueOfDigit);
         switch (missing) {

@@ -7,8 +7,8 @@ import java.util.HashMap;
  * The partition class creates the partition for a given number.
  * E.g. The 4 can be partitioned to: 4; 3+1; 2+2; 2+1+1 and 1+1+1+1.
  */
-public class CachedPartition {
-    private static HashMap<Integer, ArrayList<ArrayList<Integer>>> cachedValues = new HashMap<>();
+class CachedPartition {
+    private static final HashMap<Integer, ArrayList<ArrayList<Integer>>> cachedValues = new HashMap<>();
 
     /**
      * Calculates the partition or returns a cached value.

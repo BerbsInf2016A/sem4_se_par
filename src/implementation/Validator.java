@@ -2,7 +2,10 @@ package implementation;
 
 import java.util.Arrays;
 
-public class Validator {
+/**
+ *
+ */
+class Validator {
 
     /**
      * Checks if the integer is acceptable in a prime or not.

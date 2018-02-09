@@ -20,7 +20,7 @@ public class CachedPrimeCategories {
     /**
      * Constructor for the CachedPrimeCategories.
      *
-     * @param primes
+     * @param primes The prime numbers which should be categorized.
      */
     public CachedPrimeCategories(int[] primes) {
         this.cache = new ConcurrentHashMap<>();

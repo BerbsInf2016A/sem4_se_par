@@ -6,15 +6,15 @@ import java.util.Map;
 /**
  * A set of prime numbers which validates, if a new entry can be added.
  */
-public class ValidatingPrimeSet {
+class ValidatingPrimeSet {
+    /**
+     * The prime numbers in this set.
+     */
+    private final int[] entries;
     /**
      * The index for the next insertion.
      */
     private int nextInsertIndex;
-    /**
-     * The prime numbers in this set.
-     */
-    private int[] entries;
 
     /**
      * Constructor for the ValidatingPrimeSet.
@@ -74,8 +74,7 @@ public class ValidatingPrimeSet {
     private boolean isCountReached(int digit) {
         if (this.nextInsertIndex == 0) return false;
         int currentCount = this.countDigitInArray(digit);
-        if (currentCount >= digit) return true;
-        return false;
+        return currentCount >= digit;
     }
 
     /**
@@ -99,14 +98,12 @@ public class ValidatingPrimeSet {
             if (entry == newEntry) return false;
         }
         // Check if the new entry can be added, without violating the count rules.
-        if (this.nextInsertIndex != 0) {
-            Map<Integer, Integer> newPrimeCounts = CachedIntegerCounts.countCharsInInteger(newEntry);
-            for (Map.Entry<Integer, Integer> entry : newPrimeCounts.entrySet()) {
-                int keyValue = entry.getKey();
-                int keyCount = entry.getValue();
-                int missingCount = this.countOfMissingOccurrences(keyValue);
-                if (keyCount > missingCount) return false;
-            }
+        Map<Integer, Integer> newPrimeCounts = CachedIntegerCounts.countCharsInInteger(newEntry);
+        for (Map.Entry<Integer, Integer> entry : newPrimeCounts.entrySet()) {
+            int keyValue = entry.getKey();
+            int keyCount = entry.getValue();
+            int missingCount = this.countOfMissingOccurrences(keyValue);
+            if (keyCount > missingCount) return false;
         }
 
         // Add the entry.

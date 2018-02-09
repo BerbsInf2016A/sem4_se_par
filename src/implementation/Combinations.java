@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * A class to build combinations and some necessary helper methods.
  */
-public class Combinations {
+class Combinations {
 
     /**
      * Merges several arrays into one.
@@ -53,17 +53,16 @@ public class Combinations {
      * @return The combinations of the elements in the given length.
      */
     public static List<int[]> combination(int[] elements, int length) {
-// TODO Fix comments.
+        // Copied from: https://stackoverflow.com/questions/29910312/algorithm-to-get-all-the-combinations-of-size-n-from-an-array-java
         List<int[]> subsets = new ArrayList<>();
 
-        int[] s = new int[length];                  // here we'll keep indices
-        // pointing to elements in input array
+        int[] s = new int[length];                  // here we'll keep indices pointing to elements in input array
 
         if (length <= elements.length) {
             // first index sequence: 0, 1, 2, ...
             for (int i = 0; (s[i] = i) < length - 1; i++) ;
             subsets.add(getSubset(elements, s));
-            for (; ; ) {
+            while (true) {
                 int i;
                 // find position of item that can be incremented
                 for (i = length - 1; i >= 0 && s[i] == elements.length - length + i; i--) ;

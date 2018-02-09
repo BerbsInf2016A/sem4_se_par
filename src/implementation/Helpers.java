@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Helpers {
+/**
+ *
+ */
+class Helpers {
     /**
      * Converting a list of Integers to an int array.
      *

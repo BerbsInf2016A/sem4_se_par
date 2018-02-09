@@ -25,17 +25,15 @@ public class ConcurrentPrimeFilterTest {
 
     @Test
     public void isPrime_6_noPrime() {
-        ConcurrentPrimeFilter finder = new ConcurrentPrimeFilter();
 
-        Assert.assertFalse(finder.isPrime(6));
+        Assert.assertFalse(ConcurrentPrimeFilter.isPrime(6));
 
     }
 
     @Test
     public void isPrime_3_Prime() {
-        ConcurrentPrimeFilter finder = new ConcurrentPrimeFilter();
 
-        Assert.assertTrue(finder.isPrime(3));
+        Assert.assertTrue(ConcurrentPrimeFilter.isPrime(3));
 
     }
 

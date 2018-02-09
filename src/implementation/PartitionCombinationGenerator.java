@@ -13,7 +13,7 @@ import static implementation.Combinations.merge;
 /**
  * Helper methods to generate combinations, based on a partitioned value.
  */
-public class PartitionCombinationGenerator {
+class PartitionCombinationGenerator {
 
     /**
      * The cached prime numbers, categorized by the different occurrences of digits.
@@ -96,9 +96,7 @@ public class PartitionCombinationGenerator {
                 if (!necessaryDataAvailable) continue;
 
                 int[] partitionCombination = new int[0];
-                for (int occurence : partition) {
-                    distinctOccurrence.add(occurence);
-                }
+                distinctOccurrence.addAll(partition);
 
                 for (int occurrence : distinctOccurrence) {
                     partitionCombination = merge(partitionCombination, filteredValues.get(occurrence));

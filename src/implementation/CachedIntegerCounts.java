@@ -8,11 +8,11 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * Counts the characters (1-9) in integers and caches the result to avoid multiple calculations.
  */
-public class CachedIntegerCounts {
+class CachedIntegerCounts {
     /**
      * The cache to save the values.
      */
-    private static ConcurrentMap<Integer, Map<Integer, Integer>> cache = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<Integer, Map<Integer, Integer>> cache = new ConcurrentHashMap<>();
 
     /**
      * Counts the characters in a integer.
