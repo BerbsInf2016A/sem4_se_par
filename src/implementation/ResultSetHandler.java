@@ -1,7 +1,6 @@
 package implementation;
 
 import java.util.Arrays;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -16,7 +15,6 @@ class ResultSetHandler {
     public static final AtomicInteger globalValidSetsCounter = new AtomicInteger();
     public static final AtomicInteger globalMinimumSum = new AtomicInteger();
     public static final AtomicReference<String> globalMinimumSet = new AtomicReference<>();
-    private static final LinkedBlockingQueue<String> strings = new LinkedBlockingQueue<>();
 
     /**
      * Handles a possible result.
@@ -41,7 +39,6 @@ class ResultSetHandler {
         int counter = globalValidSetsCounter.incrementAndGet();
         if (counter % Configuration.instance.printFoundSetsCounterInterval == 0) {
             System.out.println("Found valid sets: " + counter);
-            System.out.println("Stringsize: " + strings.size() + " distinct count: " + strings.stream().distinct().count());
         }
 
         int[] primes = Arrays.stream(set.getPrimes()).filter(t -> t != 0).toArray();
@@ -59,10 +56,5 @@ class ResultSetHandler {
                 System.out.println("Found: Sum: " + sum + " " + Arrays.toString(primes));
             }
         }
-
-
-        // TODO Remove global string array
-        strings.add(Arrays.toString(primes));
-
     }
 }

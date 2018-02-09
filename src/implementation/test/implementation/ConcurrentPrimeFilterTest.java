@@ -1,6 +1,4 @@
 package implementation;
-
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,32 +7,13 @@ import java.util.List;
 
 public class ConcurrentPrimeFilterTest {
     @Test
-    public void addEntry() throws Exception {
-        // TODO Check
-        ValidatingPrimeSet set = new ValidatingPrimeSet();
-        List<Integer> primes = Arrays.asList(5, 7, 29, 47, 59, 61, 67, 79, 83, 89, 269, 463, 467, 487, 569, 599, 859, 883, 887);
-        boolean isValid = true;
-        for (Integer prime : primes) {
-            if (!set.tryToAddEntry(prime)) {
-                isValid = false;
-                break;
-            }
-        }
-        Assert.assertTrue(isValid);
-    }
-
-    @Test
     public void isPrime_6_noPrime() {
-
         Assert.assertFalse(ConcurrentPrimeFilter.isPrime(6));
-
     }
 
     @Test
     public void isPrime_3_Prime() {
-
         Assert.assertTrue(ConcurrentPrimeFilter.isPrime(3));
-
     }
 
     @Test
@@ -57,20 +36,4 @@ public class ConcurrentPrimeFilterTest {
 
     }
 
-    @Test
-    public void addEntry_TooMuch() {
-        ValidatingPrimeSet set = new ValidatingPrimeSet();
-        Assert.assertTrue(set.tryToAddEntry(1));
-        Assert.assertFalse(set.tryToAddEntry(17));
-    }
-
-    @Test
-    public void countOfMissingDigits() {
-        ValidatingPrimeSet set = new ValidatingPrimeSet();
-        set.tryToAddEntry(1);
-        set.tryToAddEntry(3);
-
-        Assert.assertEquals(2, set.countOfMissingOccurrences(2));
-        Assert.assertEquals(2, set.countOfMissingOccurrences(3));
-    }
 }
