@@ -2,7 +2,6 @@ package implementation;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +34,7 @@ public class Application {
         // numbers are added. This increases the chance to find a valid set.
         int[] primesContainingEight = Helpers.getNumbersContainingDigit(p, 8);
         List<int[]> combs = Combinations.combination(primesContainingEight, 8);
-        CachedPrimeCategories categorizer = new CachedPrimeCategories(Helpers.toIntArray(p));
+        CachedPrimeCategories categories = new CachedPrimeCategories(Helpers.toIntArray(p));
 
         // Generate the sets and filter out invalid combinations.
         List<ValidatingPrimeSet> sets = new ArrayList<>();
@@ -53,7 +52,8 @@ public class Application {
             }
         }
 
-        ConcurrentPrimeCombinationFinder runner = new ConcurrentPrimeCombinationFinder(categorizer);
+        PartitionCombinationGenerator.setCategories(categories);
+        ConcurrentPrimeCombinationFinder runner = new ConcurrentPrimeCombinationFinder();
         try {
             runner.run(sets);
         } catch (Exception e) {
@@ -71,8 +71,8 @@ public class Application {
         }
 
 
-        System.out.println("Found minimum: " + ConcurrentPrimeCombinationFinder.globalMinimumSum.get() + " Set: "
-                + ConcurrentPrimeCombinationFinder.globalMinimumSet.get());
+        System.out.println("Found minimum: " + ResultSetHandler.globalMinimumSum.get() + " Set: "
+                + ResultSetHandler.globalMinimumSet.get());
 
         System.out.println("Total runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart));
     }
