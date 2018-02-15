@@ -1,132 +1,82 @@
 package implementation;
 
 
-import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import static implementation.Combinations.merge;
+class Application {
 
-public class Application {
-    public static int countDigits(long number) {
-        number = Math.abs(number);
 
-        int count = 0;
-
-        if(number<10) {
-            count++;
-        }
-        else {
-            count += countDigits(number/10) + 1;
-        }
-
-        return count;
-    }
-
-    private void printNumberCounts(List<Integer> numbers){
-
-        int[] array = new int[10];
-        for (Integer number : numbers) {
-            String adjustedValue = number.toString().replace("0", "");
-            for (int i = 0; i < adjustedValue.length(); i++) {
-                Character c = adjustedValue.charAt(i);
-                switch (c) {
-                    case ',':
-                        continue;
-                    case '0':
-                        // System.out.println("Validated: False Value: " + value);
-                    case '1':
-                        array[1] = array[1] + 1;
-                        break;
-                    case '2':
-                        array[2] = array[2] + 1;
-                        break;
-                    case '3':
-                        array[3] = array[3] + 1;
-                        break;
-                    case '4':
-                        array[4] = array[4] + 1;
-                        break;
-                    case '5':
-                        array[5] = array[5] + 1;
-                        break;
-                    case '6':
-                        array[6] = array[6] + 1;
-                        break;
-                    case '7':
-                        array[7] = array[7] + 1;
-                        break;
-                    case '8':
-                        array[8] = array[8] + 1;
-                        break;
-                    case '9':
-                        array[9] = array[9] + 1;
-                        break;
-                }
-            }
-        }
-
-        for (int i = 0; i < 10; i++) {
-            int digitCount = array[i];
-            System.out.println(i + " " + digitCount);
-        }
-
-    }
-    int[] toIntArray(List<Integer> list){
-        int[] ret = new int[list.size()];
-        for(int i = 0;i < ret.length;i++)
-            ret[i] = list.get(i);
-        return ret;
-    }
-
-    private int[] getNumbersContainingDigit(List<Integer> source, int digit){
-        ArrayList<Integer> hits = new ArrayList<>();
-
-        for (int entry : source ) {
-            String value = String.valueOf(entry);
-            for (Character c : value.toCharArray() ) {
-                    if (Character.getNumericValue(c) == digit){
-                        hits.add(entry);
-                    }
-            }
-        }
-        return toIntArray(hits.stream().distinct().collect(Collectors.toList()));
-    }
-
+    /**
+     * Run the application.
+     */
     public void run() {
 
         long runtimeStart = System.currentTimeMillis();
 
-        // Generate
-        ConcurrentPrimeFinder finder = new ConcurrentPrimeFinder();
-        List<Integer> p = finder.findPrimes(0, 1000);
-        System.out.println("Found primes "  +  p.size());
-        p = p.stream().filter(t -> Validator.isCandidate(t)).collect(Collectors.toList());
-        System.out.println("Filtered valid primes "  +  p.size());
+        // Generate the prim numbers.
+        ConcurrentPrimeFilter finder = new ConcurrentPrimeFilter();
+        List<Integer> p = finder.filterPrimes(0, 1000);
+        System.out.println("Found primes " + p.size());
+
+        // Filter out all invalid primes e.g. primes containing a zero.
+        p = p.stream().filter(t -> Validator.isUsablePrimeCandidate(t)).collect(Collectors.toList());
+        System.out.println("Filtered valid primes " + p.size());
+
+        // See comment below.
+        //Helpers.printNumberCounts(p);
 
         // Preset some combinations:
-        int[] primesContainingNine = this.getNumbersContainingDigit(p, 8);
-        List<int[]> combs =  Combinations.combination(primesContainingNine, 8);
-        PrimeCategorizer categorizer = new PrimeCategorizer(toIntArray(p));
+        // The method printNumberCounts was used to get the counts of prime numbers for each number from 1 to 9.
+        // The result of this small analysis showed, that the numbers eights is relative rare. But the eight must
+        // be the second-most number in a valid set. So the combinations of eights get generated before the other
+        // numbers are added. This increases the chance to find a valid set.
+        int[] primesContainingEight = Helpers.getNumbersContainingDigit(p, 8);
+        List<int[]> combs = Combinations.combination(primesContainingEight, 8);
+        CachedPrimeCategories categories = new CachedPrimeCategories(Helpers.toIntArray(p));
 
+        // Generate the sets and filter out invalid combinations.
         List<ValidatingPrimeSet> sets = new ArrayList<>();
-        for (int[] preGeneratedValue : combs ) {
+        for (int[] preGeneratedValue : combs) {
             ValidatingPrimeSet set = new ValidatingPrimeSet();
             boolean isValid = true;
-            for (int prime : preGeneratedValue ) {
-                if (!set.addEntry(prime)){
+            for (int prime : preGeneratedValue) {
+                if (!set.tryToAddEntry(prime)) {
                     isValid = false;
                     break;
                 }
             }
-            if (isValid) { sets.add(set); }
+            if (isValid) {
+                sets.add(set);
+            }
         }
-        this.printNumberCounts(p);
 
-        ConcurrentPrimeCombinationFinder runner = new ConcurrentPrimeCombinationFinder(categorizer);
-        runner.run(sets);
+        PartitionCombinationGenerator.setCategories(categories);
+        ConcurrentPrimeCombinationFinder runner = new ConcurrentPrimeCombinationFinder();
+        try {
+            runner.run(sets);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
-        System.out.println("runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart));
+        // Wait 3 seconds after the execution and the probable interruption of threads, before the result is
+        // printed to the console. This trick is used, to enhance the chance, that the final result message will be
+        // the last printed message on the console..
+        try {
+
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println("Found minimum: " + ResultSetHandler.globalMinimumSum.get() + " Set: "
+                + ResultSetHandler.globalMinimumSet.get());
+
+        System.out.println("Created " + ResultSetHandler.globalValidSetsCounter + " valid sets");
+
+        System.out.println("Total runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart));
     }
 
 

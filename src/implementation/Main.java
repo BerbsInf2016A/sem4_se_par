@@ -2,10 +2,8 @@ package implementation;
 
 public class Main {
 
-    public static void main(String ... args) {
-        long runtimeStart = System.currentTimeMillis();
+    public static void main(String... args) {
         Application app = new Application();
         app.run();
-        System.out.println("Main runtime (ms)   : " + (System.currentTimeMillis() - runtimeStart));
     }
 }
