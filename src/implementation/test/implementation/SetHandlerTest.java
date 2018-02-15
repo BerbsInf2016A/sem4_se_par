@@ -22,6 +22,8 @@ public class SetHandlerTest {
 
     @Test
     public void validUnfinishedSet()  {
+        ResultSetHandler.globalValidSetsCounter.set(0);
+
         int[] preSetValues = {89, 281, 283, 787, 853, 857, 859, 863, 467, 499, 449, 569, 659, 67, 769};
 
         ConcurrentPrimeFilter finder = new ConcurrentPrimeFilter();
