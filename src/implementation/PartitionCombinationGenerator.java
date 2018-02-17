@@ -55,7 +55,6 @@ class PartitionCombinationGenerator {
 
 
     private static PartitionCombinationResult getCombinationsForPartitionsAndValue(ArrayList<ArrayList<Integer>> partitions, int value, int[] alreadyUsed) {
-
         // Combine the possible candidates with the partitions.
         Map<Integer, int[]> values = new HashMap<>();
         for (List<Integer> partition : partitions) {

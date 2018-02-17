@@ -53,7 +53,6 @@ class Combinations {
      * @return The combinations of the elements in the given length.
      */
     public static List<int[]> combination(int[] elements, int length) {
-        // Copied from: https://stackoverflow.com/questions/29910312/algorithm-to-get-all-the-combinations-of-size-n-from-an-array-java
         List<int[]> subsets = new ArrayList<>();
 
         int[] s = new int[length];                  // here we'll keep indices pointing to elements in input array

@@ -6,12 +6,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 class Application {
-
-
     /**
      * Run the application.
      */
     public void run() {
+
+        // Erinnerung: Aufgabe wurde dahin gehend geändert, dass nicht im Bereich der 10-stelligen
+        // Primzahlen gesucht werden soll, sondern in den Primzahlen von 0 bis 1000.
 
         long runtimeStart = System.currentTimeMillis();
 
