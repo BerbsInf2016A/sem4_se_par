@@ -2,46 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c30047cc-f51c-4f10-803e-4f205a5383a5" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/_name" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/dictionaries/Andre.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Arquillian_JUnit_Release.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/Application.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/CachedIntegerCounts.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/CachedPartition.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/CachedPrimeCategories.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/Combinations.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/ConcurrentPrimeCombinationFinder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/ConcurrentPrimeFilter.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/ConcurrentPrimeFilterTest.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/Configuration.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/Helpers.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/Main.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/PartitionCombinationResult.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/ValidatingPrimeSet.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/build/implementation/Validator.class" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/CachedPartitionTest.class" afterPath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/CachedPartitionTest.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/CachedPrimeCategoriesTest.class" afterPath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/CachedPrimeCategoriesTest.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/CombinationsTest.class" afterPath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/CombinationsTest.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/ConcurrentPrimeFilterTest.class" afterPath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/ConcurrentPrimeFilterTest.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/HelpersTest.class" afterPath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/HelpersTest.class" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/PartitionCombinationGeneratorTest.class" afterPath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/PartitionCombinationGeneratorTest.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/SetHandlerTest.class" afterPath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/SetHandlerTest.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/ValidatingPrimeSetTest.class" afterPath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/ValidatingPrimeSetTest.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/ValidatorTest.class" afterPath="$PROJECT_DIR$/out/test/sem4_se_par/implementation/ValidatorTest.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sem4_se_par.iml" afterPath="$PROJECT_DIR$/sem4_se_par.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/test/implementation/CachedIntegerCountsTest.java" afterPath="$PROJECT_DIR$/src/implementation/test/implementation/CachedIntegerCountsTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/test/implementation/CachedPartitionTest.java" afterPath="$PROJECT_DIR$/src/implementation/test/implementation/CachedPartitionTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/test/implementation/CachedPrimeCategoriesTest.java" afterPath="$PROJECT_DIR$/src/implementation/test/implementation/CachedPrimeCategoriesTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/test/implementation/CombinationsTest.java" afterPath="$PROJECT_DIR$/src/implementation/test/implementation/CombinationsTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/test/implementation/ConcurrentPrimeFilterTest.java" afterPath="$PROJECT_DIR$/src/implementation/test/implementation/ConcurrentPrimeFilterTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/test/implementation/HelpersTest.java" afterPath="$PROJECT_DIR$/src/implementation/test/implementation/HelpersTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/test/implementation/PartitionCombinationGeneratorTest.java" afterPath="$PROJECT_DIR$/src/implementation/test/implementation/PartitionCombinationGeneratorTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/test/implementation/SetHandlerTest.java" afterPath="$PROJECT_DIR$/src/implementation/test/implementation/SetHandlerTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/implementation/test/implementation/ValidatorTest.java" afterPath="$PROJECT_DIR$/src/implementation/test/implementation/ValidatorTest.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/02_run2.bat" afterPath="$PROJECT_DIR$/02_run2.bat" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -194,6 +162,12 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1612" />
+    <option name="height" value="876" />
+  </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <flattenPackages />
@@ -217,11 +191,6 @@
             <path>
               <item name="sem4_se_par" type="b2602c69:ProjectViewProjectNode" />
               <item name="sem4_se_par" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="sem4_se_par" type="b2602c69:ProjectViewProjectNode" />
-              <item name="sem4_se_par" type="462c0819:PsiDirectoryNode" />
-              <item name="out" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="sem4_se_par" type="b2602c69:ProjectViewProjectNode" />
@@ -425,7 +394,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1518884888330</updated>
-      <workItem from="1518884889732" duration="260000" />
+      <workItem from="1518884889732" duration="580000" />
     </task>
     <servers />
   </component>
@@ -435,11 +404,10 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="260000" />
+    <option name="totallyTimeSpent" value="580000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -454,7 +422,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
