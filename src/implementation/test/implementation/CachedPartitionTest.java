@@ -6,11 +6,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CachedPartitionTest {
     @Test
-    public void getPartition()  {
+    public void getPartition() {
         ArrayList<ArrayList<Integer>> partitions = CachedPartition.partition(4);
 
         assertEquals("Should contain four partitions", 5, partitions.size());
@@ -33,12 +34,12 @@ public class CachedPartitionTest {
         expectedPartitions.add(fifthPartition);
 
         for (List<Integer> expected : expectedPartitions) {
-            assertTrue("Should contain all partitions",partitions.contains(expected));
+            assertTrue("Should contain all partitions", partitions.contains(expected));
         }
     }
 
     @Test
-    public void getPartition_MultipleTimes()  {
+    public void getPartition_MultipleTimes() {
         ArrayList<ArrayList<Integer>> partitions = CachedPartition.partition(4);
 
         assertEquals("Should contain four partitions", 5, partitions.size());
@@ -61,12 +62,12 @@ public class CachedPartitionTest {
         expectedPartitions.add(fifthPartition);
 
         for (List<Integer> expected : expectedPartitions) {
-            assertTrue("Should contain all partitions",partitions.contains(expected));
+            assertTrue("Should contain all partitions", partitions.contains(expected));
         }
 
         ArrayList<ArrayList<Integer>> secondPartitions = CachedPartition.partition(4);
         for (List<Integer> expected : expectedPartitions) {
-            assertTrue("Should contain all partitions",secondPartitions.contains(expected));
+            assertTrue("Should contain all partitions", secondPartitions.contains(expected));
         }
     }
 

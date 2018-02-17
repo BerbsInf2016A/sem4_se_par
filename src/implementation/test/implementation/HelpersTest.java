@@ -6,16 +6,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 
 public class HelpersTest {
     @Test
     public void toIntArray() {
-        List<Integer> ints = Arrays.asList(1,2,3,4,55);
+        List<Integer> ints = Arrays.asList(1, 2, 3, 4, 55);
         int[] result = Helpers.toIntArray(ints);
 
-        assertEquals("Count should be equal", ints.size(),result.length);
-        for (int value : ints ) {
+        assertEquals("Count should be equal", ints.size(), result.length);
+        for (int value : ints) {
             IntStream innerStream = Arrays.stream(result).filter(t -> t == value);
             assertEquals("Should be contained only once", 1, innerStream.count());
         }

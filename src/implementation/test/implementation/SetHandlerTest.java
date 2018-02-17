@@ -1,27 +1,28 @@
 package implementation;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class SetHandlerTest {
     @Test
-    public void validFinishedSet()  {
+    public void validFinishedSet() {
         int[] preSetValues = {89, 281, 283, 787, 853, 857, 859, 863, 467, 499, 449, 569, 659, 67, 769, 79};
         ValidatingPrimeSet validSet = new ValidatingPrimeSet();
-        for (int value : preSetValues ) {
+        for (int value : preSetValues) {
             validSet.tryToAddEntry(value);
         }
         SetHandler.handleOne(validSet);
 
-        assertEquals("Should be one valid set", 1, ResultSetHandler.globalValidSetsCounter.get());
+        Assert.assertEquals("Should be one valid set", 1, ResultSetHandler.globalValidSetsCounter.get());
     }
 
     @Test
-    public void validUnfinishedSet()  {
+    public void validUnfinishedSet() {
         ResultSetHandler.globalValidSetsCounter.set(0);
 
         int[] preSetValues = {89, 281, 283, 787, 853, 857, 859, 863, 467, 499, 449, 569, 659, 67, 769};
@@ -34,7 +35,7 @@ public class SetHandlerTest {
         PartitionCombinationGenerator.setCategories(categories);
 
         ValidatingPrimeSet validSet = new ValidatingPrimeSet();
-        for (int value : preSetValues ) {
+        for (int value : preSetValues) {
             validSet.tryToAddEntry(value);
         }
         SetHandler.handleOne(validSet);

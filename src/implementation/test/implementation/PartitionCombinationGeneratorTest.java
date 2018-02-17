@@ -10,7 +10,7 @@ import static org.junit.Assert.*;
 public class PartitionCombinationGeneratorTest {
     @Test
     public void getCombinations_unfiltered() {
-        int[] primes = {2, 89,  233, 281, 283, 787, 853, 857, 859, 863, 47, 499, 449, 569, 659, 67, 769, 967};
+        int[] primes = {2, 89, 233, 281, 283, 787, 853, 857, 859, 863, 47, 499, 449, 569, 659, 67, 769, 967};
 
         CachedPrimeCategories primeCategories = new CachedPrimeCategories(primes);
         PartitionCombinationGenerator.setCategories(primeCategories);
@@ -35,7 +35,7 @@ public class PartitionCombinationGeneratorTest {
 
     @Test
     public void getCombinations_filtered() {
-        int[] primes = {2, 89,  233, 281, 283, 787, 853, 857, 859, 863, 47, 499, 449, 569, 659, 67, 769, 967};
+        int[] primes = {2, 89, 233, 281, 283, 787, 853, 857, 859, 863, 47, 499, 449, 569, 659, 67, 769, 967};
 
         CachedPrimeCategories primeCategories = new CachedPrimeCategories(primes);
         PartitionCombinationGenerator.setCategories(primeCategories);
@@ -47,8 +47,7 @@ public class PartitionCombinationGeneratorTest {
                 3, existingSet);
 
 
-
-        List<int[]> expectedCombinations = Arrays.asList( new int[]{853, 863});
+        List<int[]> expectedCombinations = Arrays.asList(new int[]{853, 863});
 
         assertFalse("Should not contain a single result", combinations.hasSingleResult());
         assertTrue("Should contain combinations results", combinations.hasCombinationResult());
