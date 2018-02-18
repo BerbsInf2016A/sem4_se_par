@@ -17,7 +17,7 @@ class Application {
         // Ordners "visualVM_analysis".
 
         long runtimeStart = System.currentTimeMillis();
-        
+
         // Generate the prim numbers.
         ConcurrentPrimeFilter finder = new ConcurrentPrimeFilter();
         List<Integer> p = finder.filterPrimes(0, 1000);
