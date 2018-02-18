@@ -54,8 +54,8 @@ class Combinations {
      */
     public static List<int[]> combination(int[] elements, int length) {
         List<int[]> subsets = new ArrayList<>();
-
-        int[] s = new int[length];                  // here we'll keep indices pointing to elements in input array
+        // here we'll keep indices pointing to elements in input array
+        int[] s = new int[length];
 
         if (length <= elements.length) {
             // first index sequence: 0, 1, 2, ...
@@ -68,8 +68,8 @@ class Combinations {
                 if (i < 0) {
                     break;
                 }
-                s[i]++;                    // increment this item
-                for (++i; i < length; i++) {    // fill up remaining items
+                s[i]++; // increment this item
+                for (++i; i < length; i++) { // fill up remaining items
                     s[i] = s[i - 1] + 1;
                 }
                 subsets.add(getSubset(elements, s));

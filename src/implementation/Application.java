@@ -13,6 +13,8 @@ class Application {
 
         // Erinnerung: Aufgabe wurde dahin gehend geändert, dass nicht im Bereich der 10-stelligen
         // Primzahlen gesucht werden soll, sondern in den Primzahlen von 0 bis 1000.
+        // Algorithmus skaliert besser mit großem Heap und vielen Threads. Siehe dazu auch Inhalt des
+        // Ordners "visualVM_analysis".
 
         long runtimeStart = System.currentTimeMillis();
 
